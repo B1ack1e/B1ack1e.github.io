@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://b1ack1e.github.io/about/index.html</loc>
+    
+    <lastmod>2021-07-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://b1ack1e.github.io/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/</loc>
     
     <lastmod>2021-07-09</lastmod>
@@ -37,6 +44,13 @@
   </url>
   
   <url>
+    <loc>https://b1ack1e.github.io/books/index.html</loc>
+    
+    <lastmod>2021-05-31</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://b1ack1e.github.io/categories/index.html</loc>
     
     <lastmod>2021-05-31</lastmod>
@@ -51,14 +65,7 @@
   </url>
   
   <url>
-    <loc>https://b1ack1e.github.io/about/index.html</loc>
-    
-    <lastmod>2021-05-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://b1ack1e.github.io/books/index.html</loc>
+    <loc>https://b1ack1e.github.io/repository/index.html</loc>
     
     <lastmod>2021-05-31</lastmod>
     
@@ -66,13 +73,6 @@
   
   <url>
     <loc>https://b1ack1e.github.io/tags/index.html</loc>
-    
-    <lastmod>2021-05-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://b1ack1e.github.io/repository/index.html</loc>
     
     <lastmod>2021-05-31</lastmod>
     
