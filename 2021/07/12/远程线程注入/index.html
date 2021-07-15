@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>远程线程注入 | b1ackie</title>
+  <meta name="description" content="远程线程注入远程线程注入是指一个进程在另一个进程中创建线程的技术。 函数介绍OpenProcess打开现有的本地进程对象 12345HANDLE OpenProcess(  DWORD dwDesiredAccess,  BOOL  bInheritHandle,  DWORD dwProcessId);  dwDesiredAccess：访问进程对象。此访问权限为针对进程的安全描述符进行检查，此">
+<meta property="og:type" content="article">
+<meta property="og:title" content="远程线程注入">
+<meta property="og:url" content="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="远程线程注入远程线程注入是指一个进程在另一个进程中创建线程的技术。 函数介绍OpenProcess打开现有的本地进程对象 12345HANDLE OpenProcess(  DWORD dwDesiredAccess,  BOOL  bInheritHandle,  DWORD dwProcessId);  dwDesiredAccess：访问进程对象。此访问权限为针对进程的安全描述符进行检查，此">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/1.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/2.png">
+<meta property="article:published_time" content="2021-07-12T03:56:15.000Z">
+<meta property="article:modified_time" content="2021-07-12T11:10:48.423Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="恶意代码">
+<meta property="article:tag" content="黑客编程">
+<meta property="article:tag" content="注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>嚯！</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/CrackMe/" style="font-size: 13px;">CrackMe</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.75px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.25px;">病毒分析</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.5px;">逆向工程</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 14px;">黑客编程</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/14/%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8BAPI/" class="title">创建进程API</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-14T07:15:24.000Z" itemprop="datePublished">2021-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/14/160CrackMe-001/" class="title">160CrackMe--001</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-14T02:23:13.000Z" itemprop="datePublished">2021-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/13/APC%E6%B3%A8%E5%85%A5/" class="title">APC注入</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-13T07:25:36.000Z" itemprop="datePublished">2021-07-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/13/%E7%AA%81%E7%A0%B4SESSION%200%E9%9A%94%E7%A6%BB%E7%9A%84%E8%BF%9C%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" class="title">突破session 0隔离的远线程注入</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-13T02:02:17.000Z" itemprop="datePublished">2021-07-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" class="title">远程线程注入</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-12T03:56:15.000Z" itemprop="datePublished">2021-07-12</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-远程线程注入" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      远程线程注入
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" class="article-date">
+	  <time datetime="2021-07-12T03:56:15.000Z" itemprop="datePublished">2021-07-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.7k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h4 id="远程线程注入"><a href="#远程线程注入" class="headerlink" title="远程线程注入"></a>远程线程注入</h4><p>远程线程注入是指一个进程在另一个进程中创建线程的技术。</p>
+<h4 id="函数介绍"><a href="#函数介绍" class="headerlink" title="函数介绍"></a>函数介绍</h4><h5 id="OpenProcess"><a href="#OpenProcess" class="headerlink" title="OpenProcess"></a>OpenProcess</h5><p>打开现有的本地进程对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HANDLE OpenProcess(</span><br><span class="line">  DWORD dwDesiredAccess,</span><br><span class="line">  BOOL  bInheritHandle,</span><br><span class="line">  DWORD dwProcessId</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>dwDesiredAccess：访问进程对象。此访问权限为针对进程的安全描述符进行检查，此参数可以是一个或者多个进程访问权限。如果调用了该函数的进程启用了SeDebugPrivilege权限，则无论安全描述符的内容是什么，它都会授予所请求的访问权限。</p>
+<p>bInheritHandle：若此值为TRUE，则此进程创建的进程将继承该句柄。否则，进程不会进程此句柄。</p>
+<p>dwProcessId：要打开的本地进程PID。</p>
+<p>返回值：如果函数成功，则返回值是指定进程的打开句柄；如果失败，则返回值为NULL。</p>
+<h5 id="VirtualAllocEx"><a href="#VirtualAllocEx" class="headerlink" title="VirtualAllocEx"></a>VirtualAllocEx</h5><p>在指定进程的虚拟地址空间内保留、提交或更改内存的状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LPVOID VirtualAllocEx(</span><br><span class="line">  HANDLE hProcess,</span><br><span class="line">  LPVOID lpAddress,</span><br><span class="line">  SIZE_T dwSize,</span><br><span class="line">  DWORD  flAllocationType,</span><br><span class="line">  DWORD  flProtect</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>hProcess：进程的句柄。此函数在该进程的虚拟地址空间内分配内存，句柄必须具有PROCESS_VM_OPERATION访问权限。</p>
+<p>lpAddress：指定要分配页面所需起始地址的指针。如果为NULL，则该函数自动分配内存。</p>
+<p>dwSize：要分配的内存大小，以字节为单位。</p>
+<p>flAllocationType：内存分配类型。此参数必须为以下值之一。</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MEM_COMMIT<BR>0x00001000</BR></td>
+<td>在磁盘的分页文件和整体内存中，为指定的预留内存页分配内存</td>
+</tr>
+<tr>
+<td>MEM_RESERVE<BR>0x00002000</BR></td>
+<td>保留进程中虚拟地址空间的范围，但不会在内存或磁盘上的分页文件中分配任何实际物理存储位置</td>
+</tr>
+<tr>
+<td>MEM_RESET<BR>0x00080000</BR></td>
+<td>表示不再关注由lpAddress和dwSize指定的内存范围内的数据，页面不应从页面文件中读取或写入。</td>
+</tr>
+<tr>
+<td>MEM_RESET_UNDO<BR>0x1000000</BR></td>
+<td>只能在早期成功应用了MEM_RESET的地址范围内调用MEM_RESET_UNDO</td>
+</tr>
+</tbody></table>
+<p>flProtect：要分配的页面区域的内存保护。如果页面已提交，则可以指定任何一个内存保护常量。如果lpAddress指定了一个地址，则flProtect不能是以下任何值：</p>
+<ul>
+<li>PAGE_NOACCESS</li>
+<li>PAGE_GUARD</li>
+<li>PAGE_NOCACHE</li>
+<li>PAGE_WRITECOMBINE</li>
+</ul>
+<p>返回值：如果函数成功，则返回值是分配页面的基址；如果失败，则返回为NULL。</p>
+<h5 id="WriteProcessMemory"><a href="#WriteProcessMemory" class="headerlink" title="WriteProcessMemory"></a>WriteProcessMemory</h5><p>在指定的进程中将数据写入内存区域，要写入的整个区域必须可访问，否则操作失败。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BOOL WriteProcessMemory(</span><br><span class="line">  HANDLE  hProcess,</span><br><span class="line">  LPVOID  lpBaseAddress,</span><br><span class="line">  LPCVOID lpBuffer,</span><br><span class="line">  SIZE_T  nSize,</span><br><span class="line">  SIZE_T  *lpNumberOfBytesWritten</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>hProcess：要修改的进程内存的句柄。句柄必须具有PROCESS_VM_WRITE和PROCESS_VM_OPERATION访问权限。</p>
+<p>lpBaseAddress：指向指定进程中写入数据的基地址指针。在数据传输发生之前，系统会验证指定大小的基地址和内存中的所有数据是否可以进行写入访问，如果不可以访问，则该函数将失败。</p>
+<p>lpBuffer：指向缓冲区的指针，其中包含要写入指定进程的地址空间中的数据。</p>
+<p>nSize：要写入指定进程的字节数。</p>
+<p>lpNumberOfBytesWritten：指向变量的指针，该变量接受传输到指定进程的字节数。如果为NULL，则忽略该参数。</p>
+<p>返回值：如果函数成功，则返回值不为0；如果失败，则为0；</p>
+<h5 id="CreateRemoteThread"><a href="#CreateRemoteThread" class="headerlink" title="CreateRemoteThread"></a>CreateRemoteThread</h5><p>创建一个在另一个进程的虚拟地址空间中运行的线程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateRemoteThread(</span><br><span class="line">  HANDLE                 hProcess,</span><br><span class="line">  LPSECURITY_ATTRIBUTES  lpThreadAttributes,</span><br><span class="line">  SIZE_T                 dwStackSize,</span><br><span class="line">  LPTHREAD_START_ROUTINE lpStartAddress,</span><br><span class="line">  LPVOID                 lpParameter,</span><br><span class="line">  DWORD                  dwCreationFlags,</span><br><span class="line">  LPDWORD                lpThreadId</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>hProcess：要创建线程的进程的句柄。句柄必须具有PROCESS_CREATE_THREAD、PROCESS_QUERY_INFORMATION、PROCESS_VM_OPERATION、PROCESS_VM_WRITE和PROCESS_VM_READ访问权限。</p>
+<p>lpThreadAttributes：指向SECURITY_ATTRIBUTES结构的指针，该结构指定新线程的安全描述符，并确定子进程是否可以继承返回的句柄。如果为NULL，则线程将会获得默认的安全描述符，并且不能继承该句柄。</p>
+<p>dwStackSize：堆栈的初始大小，以字节为单位。如果参数为0，则新线程使用可执行文件的默认大小。</p>
+<p>lpStartAddress：指向由线程执行类型为LPTHREAD_START_ROUTINE的应用程序定义的函数指针，并表示远程进程中线程的起始地址，该函数必须存在于远程进程中。</p>
+<p>lpParameter：指向要传递给线程函数的变量的指针。</p>
+<p>dwCreationFlags：控制线程创建的标志。</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>线程在创建后立即运行</td>
+</tr>
+<tr>
+<td>CREATE_SUSPENDED<BR></BR></td>
+<td>该线程在挂起状态下创建，并且在调用ResumeThread函数之前不会运行</td>
+</tr>
+<tr>
+<td>STACK_SIZE_PARAM_IS_A_RESERVATION<BR></BR></td>
+<td>所述dwStackSize参数指定堆栈的初始保留大小。如果未指定此标志，则dwStackSize指定提交大小。</td>
+</tr>
+</tbody></table>
+<p>lpThreadId：指向接受线程标识符的变量的指针。如果此参数为NULL，则不返回线程标识符。</p>
+<p>返回值：如果成功，则返回值是新线程的句柄；如果失败，则返回NULL。</p>
+<h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><p>RemoteThreadInject.cpp代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pch.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;processthreadsapi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function">BOOL <span class="title">CreateRemoteThreadInject</span><span class="params">(DWORD dwProcessId, WCHAR* pszDllFileName)</span> </span>&#123;</span><br><span class="line">	HANDLE hProcess = <span class="literal">NULL</span>;</span><br><span class="line">	DWORD dwSize = <span class="number">0</span>;</span><br><span class="line">	LPVOID pDllAddr = <span class="literal">NULL</span>;</span><br><span class="line">	FARPROC pFuncProcAddr = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="comment">//获取注入进程句柄</span></span><br><span class="line">	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwProcessId);</span><br><span class="line">	<span class="keyword">if</span> (hProcess == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;打开进程失败\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	dwSize = lstrlen(pszDllFileName) + <span class="number">1</span>;</span><br><span class="line">	<span class="comment">//申请内存</span></span><br><span class="line">	pDllAddr = VirtualAllocEx(hProcess, <span class="literal">NULL</span>, <span class="number">0x100</span>, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">	<span class="keyword">if</span> (pDllAddr == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;申请内存失败\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//向申请的内存写入数据</span></span><br><span class="line">	BOOL WriteFlag = WriteProcessMemory(hProcess, pDllAddr, pszDllFileName, dwSize * <span class="number">2</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (WriteFlag == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;写入内存失败\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//获取loadlibrary</span></span><br><span class="line">	pFuncProcAddr = GetProcAddress(GetModuleHandle(<span class="string">L&quot;kernel32.dll&quot;</span>), <span class="string">&quot;LoadLibraryW&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (pFuncProcAddr == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;获取loadlibrary地址失败\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	HANDLE hRemoteThread = CreateRemoteThread(hProcess, <span class="literal">NULL</span>, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)pFuncProcAddr, pDllAddr, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (hRemoteThread == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;创建线程失败\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	WaitForSingleObject(hRemoteThread, <span class="number">-1</span>);</span><br><span class="line">	DWORD code;</span><br><span class="line">	GetExitCodeThread(hRemoteThread, &amp;code);</span><br><span class="line">	code = GetLastError();</span><br><span class="line">	VirtualFreeEx(hProcess, pDllAddr, <span class="number">0</span>, MEM_RELEASE);</span><br><span class="line">	CloseHandle(hProcess);</span><br><span class="line">	CloseHandle(hRemoteThread);</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;按下回车开始注入\n&quot;</span>);</span><br><span class="line">	getchar();</span><br><span class="line">	HWND hNotepadWindow = FindWindow(<span class="string">L&quot;Notepad&quot;</span>,<span class="string">L&quot;无标题 - 记事本&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (hNotepadWindow == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;打开进程失败\n&quot;</span>);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	DWORD dwPID = <span class="number">0</span>;</span><br><span class="line">	GetWindowThreadProcessId(hNotepadWindow, &amp;dwPID);</span><br><span class="line">	<span class="keyword">if</span> (dwPID == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;获取PID失败\n&quot;</span>);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">bool</span> flag = CreateRemoteThreadInject(dwPID, <span class="string">L&quot;C:\\Users\\Tophanter\\Desktop\\RemoteTest.dll&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (flag == FALSE) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;注入失败\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;注入成功\n&quot;</span>);</span><br><span class="line">	getchar();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>dllmain.cpp代码如下，主要实现一个弹窗功能。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dllmain.cpp : 定义 DLL 应用程序的入口点。</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pch.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">BOOL APIENTRY <span class="title">DllMain</span><span class="params">( HMODULE hModule,</span></span></span><br><span class="line"><span class="params"><span class="function">                       DWORD  ul_reason_for_call,</span></span></span><br><span class="line"><span class="params"><span class="function">                       LPVOID lpReserved</span></span></span><br><span class="line"><span class="params"><span class="function">                     )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ul_reason_for_call)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">case</span> DLL_PROCESS_ATTACH:</span><br><span class="line">        MessageBox(<span class="literal">NULL</span>, <span class="string">L&quot;注入成功！&quot;</span>, <span class="string">L&quot;ok&quot;</span>, MB_OK);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> DLL_THREAD_ATTACH:</span><br><span class="line">    <span class="keyword">case</span> DLL_THREAD_DETACH:</span><br><span class="line">    <span class="keyword">case</span> DLL_PROCESS_DETACH:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="效果查看"><a href="#效果查看" class="headerlink" title="效果查看"></a>效果查看</h4><p>先打开notepad再打开我们编写的程序，将DLL文件放在指定路径下。</p>
+<p><img src="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/1.png"></p>
+<p>开始注入，就可以看到已经成功弹出了窗口。</p>
+<p><img src="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/2.png"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://b1ack1e.github.io/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="远程线程注入" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/12/远程线程注入/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/07/13/%E7%AA%81%E7%A0%B4SESSION%200%E9%9A%94%E7%A6%BB%E7%9A%84%E8%BF%9C%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="突破session 0隔离的远线程注入"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" title="病毒分析-资源释放+钩子注入"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

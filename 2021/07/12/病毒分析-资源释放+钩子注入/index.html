@@ -17,30 +17,32 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>恶意代码分析-资源释放 | b1ackie</title>
-  <meta name="description" content="本篇来分析一下自己写的资源释放的小demo。  打开程序，发现没有任何改变，没有明显的行为。 使用die工具查一下文件的基本信息  查看一下导入表，可以看到FindResource等函数，这几个函数是用来操作资源的，猜测有可能是释放了一个资源节中的资源到电脑上。  还可以看到fwrite，fopen这样的函数，那么应该就是把资源释放到了一个路径中去。  可以使用resource hacker来查看">
+  <title>病毒分析-资源释放+钩子注入 | b1ackie</title>
+  <meta name="description" content="把上次写的资源释放和全局钩子注入结合起来，做了一个小demo，实现功能就是把自己的写的DLL作为资源加入，然后自释放出来，再调用这个DLL进行钩子注入。 使用dir工具先查看一下基本信息，可以看到当前程序未加壳。  再查看一下导入表的相关信息，看看都使用了哪些API。可以看到一些资源相关API，还有Loadlibrary和getprocaddress，这两个API，写过shellcode都知道使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="恶意代码分析-资源释放">
-<meta property="og:url" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/index.html">
+<meta property="og:title" content="病毒分析-资源释放+钩子注入">
+<meta property="og:url" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/index.html">
 <meta property="og:site_name" content="b1ackie&#39;blog">
-<meta property="og:description" content="本篇来分析一下自己写的资源释放的小demo。  打开程序，发现没有任何改变，没有明显的行为。 使用die工具查一下文件的基本信息  查看一下导入表，可以看到FindResource等函数，这几个函数是用来操作资源的，猜测有可能是释放了一个资源节中的资源到电脑上。  还可以看到fwrite，fopen这样的函数，那么应该就是把资源释放到了一个路径中去。  可以使用resource hacker来查看">
+<meta property="og:description" content="把上次写的资源释放和全局钩子注入结合起来，做了一个小demo，实现功能就是把自己的写的DLL作为资源加入，然后自释放出来，再调用这个DLL进行钩子注入。 使用dir工具先查看一下基本信息，可以看到当前程序未加壳。  再查看一下导入表的相关信息，看看都使用了哪些API。可以看到一些资源相关API，还有Loadlibrary和getprocaddress，这两个API，写过shellcode都知道使用">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/1.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/2.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/3.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/4.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/5.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/6.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/7.png">
-<meta property="article:published_time" content="2021-07-09T01:54:29.000Z">
-<meta property="article:modified_time" content="2021-07-09T02:42:28.245Z">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/1.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/2.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/3.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/4.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/5.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/7.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/8.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/9.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/6.png">
+<meta property="article:published_time" content="2021-07-12T02:15:02.000Z">
+<meta property="article:modified_time" content="2021-07-12T03:52:12.644Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="逆向工程">
 <meta property="article:tag" content="病毒分析">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/1.png">
+<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/1.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/index.html">
+  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/index.html">
   
     <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
   
@@ -200,7 +202,7 @@
   <div class="widget">
     <h3 class="widget-title">分类</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -210,7 +212,7 @@
   <div class="widget">
     <h3 class="widget-title">标签</h3>
     <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -220,7 +222,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13px;">病毒分析</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13px;">逆向工程</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 14px;">黑客编程</a>
+      <a href="/tags/CrackMe/" style="font-size: 13px;">CrackMe</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.75px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.25px;">病毒分析</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.5px;">逆向工程</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 14px;">黑客编程</a>
     </div>
   </div>
 
@@ -229,7 +231,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">4</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 
@@ -245,13 +247,28 @@
             
             <div class="item-inner">
               <p class="item-category">
-                <a class="category-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
               </p>
               <p class="item-title">
-                <a href="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" class="title">恶意代码分析-资源释放</a>
+                <a href="/2021/07/14/%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8BAPI/" class="title">创建进程API</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-07-09T01:54:29.000Z" itemprop="datePublished">2021-07-09</time>
+                <time datetime="2021-07-14T07:15:24.000Z" itemprop="datePublished">2021-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/14/160CrackMe-001/" class="title">160CrackMe--001</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-14T02:23:13.000Z" itemprop="datePublished">2021-07-14</time>
               </p>
             </div>
           </li>
@@ -263,10 +280,10 @@
                 <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
               </p>
               <p class="item-title">
-                <a href="/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" class="title">全局钩子注入</a>
+                <a href="/2021/07/13/APC%E6%B3%A8%E5%85%A5/" class="title">APC注入</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-07-08T09:52:07.000Z" itemprop="datePublished">2021-07-08</time>
+                <time datetime="2021-07-13T07:25:36.000Z" itemprop="datePublished">2021-07-13</time>
               </p>
             </div>
           </li>
@@ -278,10 +295,10 @@
                 <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
               </p>
               <p class="item-title">
-                <a href="/2021/07/08/%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" class="title">资源释放</a>
+                <a href="/2021/07/13/%E7%AA%81%E7%A0%B4SESSION%200%E9%9A%94%E7%A6%BB%E7%9A%84%E8%BF%9C%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" class="title">突破session 0隔离的远线程注入</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-07-08T03:52:26.000Z" itemprop="datePublished">2021-07-08</time>
+                <time datetime="2021-07-13T02:02:17.000Z" itemprop="datePublished">2021-07-13</time>
               </p>
             </div>
           </li>
@@ -290,13 +307,13 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
               </p>
               <p class="item-title">
-                <a href="/2021/07/08/%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D/" class="title">写在前面的话</a>
+                <a href="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" class="title">远程线程注入</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-07-08T03:50:10.000Z" itemprop="datePublished">2021-07-08</time>
+                <time datetime="2021-07-12T03:56:15.000Z" itemprop="datePublished">2021-07-12</time>
               </p>
             </div>
           </li>
@@ -314,14 +331,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-恶意代码分析-资源释放" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-病毒分析-资源释放+钩子注入" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      恶意代码分析-资源释放
+      病毒分析-资源释放+钩子注入
     </h1>
   
 
@@ -329,8 +346,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" class="article-date">
-	  <time datetime="2021-07-09T01:54:29.000Z" itemprop="datePublished">2021-07-09</time>
+	<a href="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" class="article-date">
+	  <time datetime="2021-07-12T02:15:02.000Z" itemprop="datePublished">2021-07-12</time>
 	</a>
 </span>
         
@@ -355,10 +372,10 @@
 	</span>
 
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 266(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 425(字)</span>
 	
 	
 		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
@@ -368,22 +385,25 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p>本篇来分析一下自己写的资源释放的小demo。</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/1.png"></p>
-<p>打开程序，发现没有任何改变，没有明显的行为。</p>
-<p>使用die工具查一下文件的基本信息</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/2.png"></p>
-<p>查看一下导入表，可以看到FindResource等函数，这几个函数是用来操作资源的，猜测有可能是释放了一个资源节中的资源到电脑上。</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/3.png"></p>
-<p>还可以看到fwrite，fopen这样的函数，那么应该就是把资源释放到了一个路径中去。</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/4.png"></p>
-<p>可以使用resource hacker来查看程序中的资源，如图可以看到资源信息“this is a test”</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/5.png"></p>
-<p>再使用IDA进行查看，可以很清楚的看到所有的流程，并且看到程序将释放的文件存放在了C:\Windows\System32下。</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/6.png"></p>
-<p>因为程序是32位程序，系统是64位，所以资源会被释放到SysWOW64文件下。因为此文件夹是用来处理运行在64位系统上的32位程序的。</p>
-<p>到路径下查找free.txt即可找到</p>
-<p><img src="/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/7.png"></p>
+        <p>把上次写的资源释放和全局钩子注入结合起来，做了一个小demo，实现功能就是把自己的写的DLL作为资源加入，然后自释放出来，再调用这个DLL进行钩子注入。</p>
+<p>使用dir工具先查看一下基本信息，可以看到当前程序未加壳。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/1.png"></p>
+<p>再查看一下导入表的相关信息，看看都使用了哪些API。可以看到一些资源相关API，还有Loadlibrary和getprocaddress，这两个API，写过shellcode都知道使用这两个API可以获取所有dll和其中的函数。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/2.png"></p>
+<p>再查看一下字符串的一些信息，可以看到有这样一个字符串“C:\Windows\SysWOW64\kerne132.dll”，可以看到这个dll和系统dll”kernel32.dll”区别是最后一位，用1代替了l。可能是一个恶意的dll被释放到了C:\Windows\SysWOW64\下。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/3.png"></p>
+<p>使用IDA查看一下，F5查看伪代码，可以先看到资源释放的过程，其释放了一个名为“kerne132.dll”的文件到C:\Windows\SysWOW64\下。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/4.png"></p>
+<p>然后调用了这个DLL里面的函数setglobalhook，从名字可以看出来，这应该是一个钩子的函数。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/5.png"></p>
+<p>到目标目录下去查看一下，可以看到这个伪装成kernel32.dll的恶意dll文件。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/7.png"></p>
+<p>使用IDA查看一下这个DLL文件，看一下它的导出表，可以看到导出了两个函数SetGlobalHook和UnsetGlobalHook，从名字上猜测应该是安装钩子和卸载钩子。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/8.png"></p>
+<p>查看SetGlobalHook，可以看到使用了SetWindowsHookExW函数，IDHOOK的值是3,3是WH_GETMESSAGE代表这是一个全局钩子。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/9.png"></p>
+<p>使用PC hunter工具可以很方便的查看是否存在钩子。</p>
+<p><img src="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/6.png"></p>
 
       
     </div>
@@ -393,7 +413,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://b1ack1e.github.io/2021/07/09/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" title="恶意代码分析-资源释放" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/09/恶意代码分析-资源释放/</a>
+      <a href="https://b1ack1e.github.io/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" title="病毒分析-资源释放+钩子注入" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/12/病毒分析-资源释放+钩子注入/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -439,9 +459,13 @@
   
   <ul class="pager pull-left">
     
+    <li class="prev">
+      <a href="/2021/07/12/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="远程线程注入"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
     
     <li class="next">
-      <a href="/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" title="全局钩子注入"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" title="病毒分析-资源释放"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
