@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://b1ack1e.github.io/2021/07/20/BypassUAC/</loc>
+    
+    <lastmod>2021-07-20</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://b1ack1e.github.io/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E7%9B%AE%E5%BD%95/</loc>
     
     <lastmod>2021-07-20</lastmod>
@@ -135,14 +142,14 @@
   </url>
   
   <url>
-    <loc>https://b1ack1e.github.io/tags/index.html</loc>
+    <loc>https://b1ack1e.github.io/repository/index.html</loc>
     
     <lastmod>2021-05-31</lastmod>
     
   </url>
   
   <url>
-    <loc>https://b1ack1e.github.io/repository/index.html</loc>
+    <loc>https://b1ack1e.github.io/tags/index.html</loc>
     
     <lastmod>2021-05-31</lastmod>
     
@@ -187,6 +194,20 @@
   
   <url>
     <loc>https://b1ack1e.github.io/tags/%E6%B3%A8%E5%85%A5/</loc>
+    <lastmod>2021-07-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1ack1e.github.io/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2021-07-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1ack1e.github.io/tags/UAC/</loc>
     <lastmod>2021-07-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
