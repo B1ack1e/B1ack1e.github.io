@@ -17,16 +17,28 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>b1ackie</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="b1ackie&#39;blog">
-<meta property="og:url" content="https://b1ack1e.github.io/page/2/index.html">
+  <title>160CrackMe--002 | b1ackie</title>
+  <meta name="description" content="初探打开程序，看到提示输入name和serial，输入后，提示错误。  分析查壳，看到程序没有加壳，是用VB语言写的。  使用OD进行分析，搜索错误提示的字符串，可以直接定位到关键的跳转  开始分析生成serial的过程，首先是获取了name的长度然后将其乘以17CFB再加上name的第一个ASCII码，最后转为十进制字符串。 1234567891011121314151600402412   .">
+<meta property="og:type" content="article">
+<meta property="og:title" content="160CrackMe--002">
+<meta property="og:url" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/index.html">
 <meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="初探打开程序，看到提示输入name和serial，输入后，提示错误。  分析查壳，看到程序没有加壳，是用VB语言写的。  使用OD进行分析，搜索错误提示的字符串，可以直接定位到关键的跳转  开始分析生成serial的过程，首先是获取了name的长度然后将其乘以17CFB再加上name的第一个ASCII码，最后转为十进制字符串。 1234567891011121314151600402412   .">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/1.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/2.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/3.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/4.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/5.png">
+<meta property="article:published_time" content="2021-07-20T02:17:33.000Z">
+<meta property="article:modified_time" content="2021-07-20T02:28:03.719Z">
 <meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="CrackMe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/1.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://b1ack1e.github.io/page/2/index.html">
+  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/index.html">
   
     <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
   
@@ -312,205 +324,157 @@
 </aside>
 
   
-  <main class="main" role="main">
   
-  <div class="content article-list">
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-160CrackMe-002" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
+    <div class="article-header">
+      
+        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/">病毒分析-资源释放</a>
+    <h1 class="article-title" itemprop="name">
+      160CrackMe--002
     </h1>
   
 
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
+      
+      <div class="article-meta">
+        <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" class="article-date">
-	  <time datetime="2021-07-09T01:54:29.000Z" itemprop="datePublished">7月 9</time>
+	<a href="/2021/07/20/160CrackMe-002/" class="article-date">
+	  <time datetime="2021-07-20T02:17:33.000Z" itemprop="datePublished">2021-07-20</time>
 	</a>
 </span>
-    
+        
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
   </span>
 
-    
+        
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
+	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
   </span>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/#comments" class="article-comment-link">评论</a></span>
-    
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/20/160CrackMe-002/#comments" class="article-comment-link">评论</a></span>
+        
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 266(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 557(字)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
 	
 
-  </p>
-</article>
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h4 id="初探"><a href="#初探" class="headerlink" title="初探"></a>初探</h4><p>打开程序，看到提示输入name和serial，输入后，提示错误。</p>
+<p><img src="/2021/07/20/160CrackMe-002/1.png"></p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>查壳，看到程序没有加壳，是用VB语言写的。</p>
+<p><img src="/2021/07/20/160CrackMe-002/2.png"></p>
+<p>使用OD进行分析，搜索错误提示的字符串，可以直接定位到关键的跳转</p>
+<p><img src="/2021/07/20/160CrackMe-002/3.png"></p>
+<p>开始分析生成serial的过程，首先是获取了name的长度然后将其乘以17CFB再加上name的第一个ASCII码，最后转为十进制字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">00402412   .  50            push eax                                   ; /String = 0000000A ???</span><br><span class="line">00402413   .  8B1A          mov ebx,dword ptr ds:[edx]                 ; |</span><br><span class="line">00402415   .  FF15 E4404000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaLenBstr&gt;; \__vbaLenBstr</span><br><span class="line">0040241B   .  8BF8          mov edi,eax                                ;  获取输入的name长度传入edi以便运算</span><br><span class="line">0040241D   .  8B4D E8       mov ecx,dword ptr ss:[ebp-0x18]</span><br><span class="line">00402420   .  69FF FB7C0100 imul edi,edi,0x17CFB                       ;  长度乘0x17CFB</span><br><span class="line">00402426   .  51            push ecx                                   ; /String = 80020004 ???</span><br><span class="line">00402427   .  0F80 91020000 jo Afkayas_.004026BE                       ; |</span><br><span class="line">0040242D   .  FF15 F8404000 call dword ptr ds:[&lt;&amp;MSVBVM50.#516&gt;]       ; \rtcAnsiValueBstr</span><br><span class="line">00402433   .  0FBFD0        movsx edx,ax                               ;  获取输入的第一个ascii传给edx</span><br><span class="line">00402436   .  03FA          add edi,edx                                ;  乘法后的结果加上第一个ascii</span><br><span class="line">00402438   .  0F80 80020000 jo Afkayas_.004026BE</span><br><span class="line">0040243E   .  57            push edi                                   ;  MSVBVM50.__vbaStrCat</span><br><span class="line">0040243F   .  FF15 E0404000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrI4&gt;] ;  计算结果转为字符串（十进制）</span><br><span class="line">00402445   .  8BD0          mov edx,eax</span><br><span class="line">00402447   .  8D4D E0       lea ecx,dword ptr ss:[ebp-0x20]</span><br></pre></td></tr></table></figure>
 
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/">全局钩子注入</a>
-    </h1>
-  
+<p>然后将计算出的结果与“AKA-”进行拼接，再获取serial进行比较。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">00402510   &gt; \8B45 E8       mov eax,dword ptr ss:[ebp-0x18]            ;  输入的Serial</span><br><span class="line">00402513   .  8B4D E4       mov ecx,dword ptr ss:[ebp-0x1C]            ;  计算后的结果</span><br><span class="line">00402516   .  8B3D 00414000 mov edi,dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrC&gt;;  MSVBVM50.__vbaStrCat</span><br><span class="line">0040251C   .  50            push eax</span><br><span class="line">0040251D   .  68 701B4000   push Afkayas_.00401B70                     ;  AKA-</span><br><span class="line">00402522   .  51            push ecx                                   ; /String = 80020004 ???</span><br><span class="line">00402523   .  FFD7          call edi                                   ; \将AKA- 与计算后的数值拼接起来</span><br><span class="line">00402525   .  8B1D 70414000 mov ebx,dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrM&gt;;  MSVBVM50.__vbaStrMove</span><br><span class="line">0040252B   .  8BD0          mov edx,eax</span><br><span class="line">0040252D   .  8D4D E0       lea ecx,dword ptr ss:[ebp-0x20]</span><br><span class="line">00402530   .  FFD3          call ebx                                   ;  MSVBVM50.__vbaStrMove; &lt;&amp;MSVBVM50.__vbaStrMove&gt;</span><br><span class="line">00402532   .  50            push eax</span><br><span class="line">00402533   .  FF15 28414000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrCmp&gt;&gt;;  比较</span><br></pre></td></tr></table></figure>
 
+<h4 id="注册机编写"><a href="#注册机编写" class="headerlink" title="注册机编写"></a>注册机编写</h4><p>根据分析的结果进行注册机编写</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;输入name\n&quot;</span>);</span><br><span class="line">	<span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">	gets_s(name, <span class="number">20</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="built_in">strlen</span>(name);</span><br><span class="line">	<span class="keyword">int</span> num = length * <span class="number">0x17CFB</span>;</span><br><span class="line">	num += name[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">char</span>* s1 = <span class="string">&quot;AKA-&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span>* serial = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(<span class="number">100</span>);</span><br><span class="line">	<span class="built_in">sprintf</span>(serial, <span class="string">&quot;%s%d&quot;</span>,s1,num);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;用户名是%s\n注册码是%s\n&quot;</span>,name, serial);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行输入name:b1ackie，输出serial:AKA-682815。</p>
+<p><img src="/2021/07/20/160CrackMe-002/4.png"></p>
+<p>输入正确的name和serial后，弹出正确提示</p>
+<p><img src="/2021/07/20/160CrackMe-002/5.png"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://b1ack1e.github.io/2021/07/20/160CrackMe-002/" title="160CrackMe--002" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/20/160CrackMe-002/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
   </div>
+</div>
+
+
+    </div>
+  </article>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" class="article-date">
-	  <time datetime="2021-07-08T09:52:07.000Z" itemprop="datePublished">7月 8</time>
-	</a>
-</span>
     
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
     
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
+  </section>
 
 
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/08/%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.7k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/08/%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/">资源释放</a>
-    </h1>
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
   
-
-  </div>
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E7%9B%AE%E5%BD%95/" title="自启动技术-快速启动目录"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
   
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/08/%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" class="article-date">
-	  <time datetime="2021-07-08T03:52:26.000Z" itemprop="datePublished">7月 8</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/08/%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 952(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 3(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/08/%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D/">写在前面的话</a>
-    </h1>
   
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/08/%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D/" class="article-date">
-	  <time datetime="2021-07-08T03:50:10.000Z" itemprop="datePublished">7月 8</time>
-	</a>
-</span>
+  <div class="bar-right">
     
-    
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/08/%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 104(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
-	
-
-  </p>
-</article>
-
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
     
   </div>
-
+  </div>
+</nav>
   
-    
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev">
-                <a href="/">
-                    <i class="icon icon-angle-left"></i>
-                    上一页
-                </a>
-            </li>
-            
-            
-            <li class="next disabled">
-                <a href="javascript:;">
-                    下一页
-                    <i class="icon icon-angle-right"></i>                    
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 2 of 2</div>
-        </div>
-    </nav>
-    
- 
+
+
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -569,6 +533,33 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
 
 
 
