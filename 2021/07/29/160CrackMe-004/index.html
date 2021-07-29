@@ -29,8 +29,17 @@
 <meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/2.png">
 <meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/3.png">
 <meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/4.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/5.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/6.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/7.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/8.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/9.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/10.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/12.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/13.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/29/160CrackMe-004/11.png">
 <meta property="article:published_time" content="2021-07-29T02:29:39.000Z">
-<meta property="article:modified_time" content="2021-07-29T03:57:23.294Z">
+<meta property="article:modified_time" content="2021-07-29T07:13:43.913Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="逆向工程">
 <meta property="article:tag" content="CrackMe">
@@ -370,10 +379,10 @@
         <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/29/160CrackMe-004/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 186(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.1k(字)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
 	
 
       </div>
@@ -388,6 +397,35 @@
 <p><img src="/2021/07/29/160CrackMe-004/3.png"></p>
 <p>下断点在恭喜这里，但是看不到什么有用的信息，在获取用户名的长度，然后加上循环次数这样，但是这并不是注册码，然后跳转的关键在esi+0x30c这里，如果这里的值不等于0x85就会跳转到失败。</p>
 <p><img src="/2021/07/29/160CrackMe-004/4.png"></p>
+<p>此时想到刚才的黑头这样的字样，在程序中出现这样的感觉多少会和注册码有点关系。</p>
+<p>那个地方只有在程序运行的时候才会到达，当跑起来下断是不会断下来的，那里如果出现这样的字眼，并且调用的都是同一个函数，那么有没有可能就是把字符串存在内存里，找到地方下一个断点看看，如果注册码确实用到的话肯定会调用。</p>
+<p>根据字符串找到地方跟一下，发现这里有一个地方向一个地址写入了这些字符串，在这里下一个硬件访问断点看看。</p>
+<p><img src="/2021/07/29/160CrackMe-004/5.png"></p>
+<p>下断点之后，刚输入注册码就断下来在一个地方，跑几步，看到寄存器有一个值，这很像注册码。</p>
+<p><img src="/2021/07/29/160CrackMe-004/6.png"></p>
+<p>大致分析看一下，可以看到在这里有一个向esi+0x30c写入3c的地方，这里有一个JNZ决定是否执行，那么这里应该是一个很关键的地方</p>
+<p><img src="/2021/07/29/160CrackMe-004/7.png"></p>
+<p>看这里，在前面进行了一个比较，然后决定是否跳转。12345是我们输入的注册码</p>
+<p>而黑头Sun Bird12dseloffc-012-OKb1ackie这个是生成的，可以看到b1ackie是用户名目前只有中间这个12不知道是如何生成的，继续分析一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">00457D2C  |.  8B45 E0       mov eax,dword ptr ss:[ebp-0x20]                  ;  输入的注册码</span><br><span class="line">00457D2F  |.  8B93 18030000 mov edx,dword ptr ds:[ebx+0x318]                 ;  生成的</span><br><span class="line">00457D35  |.  E8 52BFFAFF   call CKme.00403C8C</span><br><span class="line">00457D3A  |.  75 0A         jnz short CKme.00457D46</span><br><span class="line">00457D3C  |.  C783 0C030000&gt;mov dword ptr ds:[ebx+0x30C],0x3E</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/29/160CrackMe-004/8.png"></p>
+<p>这个数字是在前面生成的，是根据输入用户名的长度加上0x5生成的。ebx+0x2F8中是长度，可以通过同样的下断点方法去分析这里的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">00457C66  |.  8BB3 F8020000 mov esi,dword ptr ds:[ebx+0x2F8]                 ;  用户名长度</span><br><span class="line">00457C6C  |.  83C6 05       add esi,0x5                                      ;  加上0x5</span><br><span class="line">00457C6F  |.  FFB3 10030000 push dword ptr ds:[ebx+0x310]</span><br><span class="line">00457C75  |.  8D55 F8       lea edx,dword ptr ss:[ebp-0x8]</span><br><span class="line">00457C78  |.  8BC6          mov eax,esi</span><br><span class="line">00457C7A  |.  E8 85FEFAFF   call CKme.00407B04                               ;  转字符串（10进制）</span><br></pre></td></tr></table></figure>
+
+<p>这里只要相等就会给关键地址赋值0x3E，但是并不是0x85，继续在这里下断点看一下什么情况。（此时输入黑头Sun Bird12dseloffc-012-OKb1ackie就可以注册成功，不过点击一次是不行的，要连续点击好几次才行）</p>
+<p>但是每次点击都会断在恭喜的那个JNZ那里，可以发现值并没有被改变，还是3E，是我断点的问题，不要下访问断点，改成写入断点，看看在哪里可以写入85。</p>
+<p><img src="/2021/07/29/160CrackMe-004/9.png"></p>
+<p>然后疯狂点击图片，就会断下来，可以看到这里先判断是否等于0x3E然后再赋值0x85。</p>
+<p><img src="/2021/07/29/160CrackMe-004/10.png"></p>
+<p>什么情况才会到这里，其实就是双击会到这里，而普通的点击就是刚开始0x85比较那里，还是借助Dedark工具可以看的更仔细，可以看到事件，用这个工具可以很方便的定位到刚才的几个地方而不需要借助硬件断点，很方便。</p>
+<p><img src="/2021/07/29/160CrackMe-004/12.png"></p>
+<p>那么现在整个流程就清楚了，需要输入正确的注册码之后，先双击再点击就可以成功注册。</p>
+<h4 id="注册机编写"><a href="#注册机编写" class="headerlink" title="注册机编写"></a>注册机编写</h4><p>注册码很简单，获取用户名的长度，然后加上5，放在黑头Sun Bird和dseloffc-012-OK中间，最后再加上用户名即可。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;输入name：\n&quot;</span>);</span><br><span class="line">	<span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">	gets_s(name, <span class="number">20</span>);</span><br><span class="line">	<span class="keyword">int</span> len = <span class="built_in">strlen</span>(name);</span><br><span class="line">	len += <span class="number">5</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;注册码：\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;黑头Sun Bird%ddseloffc-012-OK%s&quot;</span>, len, name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/29/160CrackMe-004/13.png"></p>
+<p><img src="/2021/07/29/160CrackMe-004/11.png"></p>
 
       
     </div>
