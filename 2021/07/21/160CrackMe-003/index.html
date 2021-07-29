@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>160CrackMe-003 | b1ackie</title>
+  <meta name="description" content="初探打开程序看到需要输入用户名和序列号尝试输入后提示错误  分析使用工具查看，发现未加壳，语言是VB。  用OD打开程序，直接搜素错误字符串即可定位。首先还是和002一样，先是获取长度然后进行一些操作再加上NAME[0] 1234567891011121314151617004081E3   .  FF15 18B14000 call dword ptr ds:[&lt;&amp;MSVBVM50">
+<meta property="og:type" content="article">
+<meta property="og:title" content="160CrackMe-003">
+<meta property="og:url" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="初探打开程序看到需要输入用户名和序列号尝试输入后提示错误  分析使用工具查看，发现未加壳，语言是VB。  用OD打开程序，直接搜素错误字符串即可定位。首先还是和002一样，先是获取长度然后进行一些操作再加上NAME[0] 1234567891011121314151617004081E3   .  FF15 18B14000 call dword ptr ds:[&lt;&amp;MSVBVM50">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/1.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/2.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/3.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/4.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/5.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/6.png">
+<meta property="article:published_time" content="2021-07-21T07:11:38.000Z">
+<meta property="article:modified_time" content="2021-07-21T10:41:29.824Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="CrackMe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>嚯！</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ShellCode/">ShellCode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">12</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HOOK/" rel="tag">HOOK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PE/" rel="tag">PE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ShellCode/" rel="tag">ShellCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UAC/" rel="tag">UAC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">自启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">13</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/CrackMe/" style="font-size: 13.33px;">CrackMe</a> <a href="/tags/HOOK/" style="font-size: 13px;">HOOK</a> <a href="/tags/Inline-Hook/" style="font-size: 13px;">Inline Hook</a> <a href="/tags/PE/" style="font-size: 13px;">PE</a> <a href="/tags/ShellCode/" style="font-size: 13px;">ShellCode</a> <a href="/tags/UAC/" style="font-size: 13px;">UAC</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">提权技术</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.5px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.17px;">病毒分析</a> <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">自启动技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.67px;">逆向工程</a> <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">隐藏技术</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 13.83px;">黑客编程</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">20</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/28/HOOK-Inline%20Hook/" class="title">HOOK-Inline Hook</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="title">隐藏技术-进程隐藏</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">2021-07-27</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ShellCode/">ShellCode</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" class="title">shellcode学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-22T01:58:08.000Z" itemprop="datePublished">2021-07-22</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/21/160CrackMe-003/" class="title">160CrackMe-003</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-21T07:11:38.000Z" itemprop="datePublished">2021-07-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" class="title">隐藏技术-进程伪装</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-21T06:02:59.000Z" itemprop="datePublished">2021-07-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-160CrackMe-003" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      160CrackMe-003
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/07/21/160CrackMe-003/" class="article-date">
+	  <time datetime="2021-07-21T07:11:38.000Z" itemprop="datePublished">2021-07-21</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/21/160CrackMe-003/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 926(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h4 id="初探"><a href="#初探" class="headerlink" title="初探"></a>初探</h4><p>打开程序看到需要输入用户名和序列号尝试输入后提示错误</p>
+<p><img src="/2021/07/21/160CrackMe-003/1.png"></p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>使用工具查看，发现未加壳，语言是VB。</p>
+<p><img src="/2021/07/21/160CrackMe-003/2.png"></p>
+<p>用OD打开程序，直接搜素错误字符串即可定位。首先还是和002一样，先是获取长度然后进行一些操作再加上NAME[0]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">004081E3   .  FF15 18B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaHresu&gt;;  Msvbvm50.__vbaHresultCheckObj</span><br><span class="line">004081E9   &gt;  8B95 50FFFFFF mov edx,dword ptr ss:[ebp-0xB0]</span><br><span class="line">004081EF   .  8B45 E4       mov eax,dword ptr ss:[ebp-0x1C]          ;  获取输入的name</span><br><span class="line">004081F2   .  50            push eax                                 ; /String = 00004000 ???</span><br><span class="line">004081F3   .  8B1A          mov ebx,dword ptr ds:[edx]               ; |</span><br><span class="line">004081F5   .  FF15 F8B04000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaLenBs&gt;; \获取name长度</span><br><span class="line">004081FB   .  8BF8          mov edi,eax</span><br><span class="line">004081FD   .  8B4D E8       mov ecx,dword ptr ss:[ebp-0x18]</span><br><span class="line">00408200   .  69FF 385B0100 imul edi,edi,0x15B38                     ;  长度乘以0x15B38</span><br><span class="line">00408206   .  51            push ecx                                 ; /String = 091C840A ???</span><br><span class="line">00408207   .  0F80 B7050000 jo AfKayAs_.004087C4                     ; |</span><br><span class="line">0040820D   .  FF15 0CB14000 call dword ptr ds:[&lt;&amp;MSVBVM50.#516&gt;]     ; \获取输入name的第一次ascii码</span><br><span class="line">00408213   .  0FBFD0        movsx edx,ax</span><br><span class="line">00408216   .  03FA          add edi,edx                              ;  长度计算后加上name[0]</span><br><span class="line">00408218   .  0F80 A6050000 jo AfKayAs_.004087C4</span><br><span class="line">0040821E   .  57            push edi                                 ;  Msvbvm50.__vbaObjSet</span><br><span class="line">0040821F   .  FF15 F4B04000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrI4&gt;;  转字符串（十进制）</span><br></pre></td></tr></table></figure>
+
+<p>然后将结果转为浮点数执行了几次操作。</p>
+<p>第一次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">004082E9   .  FF15 74B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaR8Str&gt;;  转为浮点数</span><br><span class="line">004082EF   .  D905 08104000 fld dword ptr ds:[0x401008]              ;  １０</span><br><span class="line">004082F5   .  833D 00904000&gt;cmp dword ptr ds:[0x409000],0x0</span><br><span class="line">004082FC   .  75 08         jnz short AfKayAs_.00408306</span><br><span class="line">004082FE   .  D835 0C104000 fdiv dword ptr ds:[0x40100C]             ;  １０／５</span><br><span class="line">00408304   .  EB 0B         jmp short AfKayAs_.00408311</span><br><span class="line">00408306   &gt;  FF35 0C104000 push dword ptr ds:[0x40100C]</span><br><span class="line">0040830C   .  E8 578DFFFF   call &lt;jmp.&amp;MSVBVM50._adj_fdiv_m32&gt;</span><br><span class="line">00408311   &gt;  83EC 08       sub esp,0x8</span><br><span class="line">00408314   .  DFE0          fstsw ax</span><br><span class="line">00408316   .  A8 0D         test al,0xD</span><br><span class="line">00408318   .  0F85 A1040000 jnz AfKayAs_.004087BF</span><br><span class="line">0040831E   .  DEC1          faddp st(1),st                           ;  ＋２</span><br><span class="line">00408320   .  DFE0          fstsw ax</span><br><span class="line">00408322   .  A8 0D         test al,0xD</span><br><span class="line">00408324   .  0F85 95040000 jnz AfKayAs_.004087BF</span><br><span class="line">0040832A   .  DD1C24        fstp qword ptr ss:[esp]</span><br><span class="line">0040832D   .  FF15 48B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrR8&gt;;  转回去</span><br></pre></td></tr></table></figure>
+
+<p>第二次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">004083F5   .  FF15 74B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaR8Str&gt;;  Msvbvm50.__vbaR8Str</span><br><span class="line">004083FB   .  DC0D 10104000 fmul qword ptr ds:[0x401010]             ;  ＊３</span><br><span class="line">00408401   .  83EC 08       sub esp,0x8</span><br><span class="line">00408404   .  DC25 18104000 fsub qword ptr ds:[0x401018]             ;  －２</span><br><span class="line">0040840A   .  DFE0          fstsw ax</span><br><span class="line">0040840C   .  A8 0D         test al,0xD</span><br><span class="line">0040840E   .  0F85 AB030000 jnz AfKayAs_.004087BF</span><br><span class="line">00408414   .  DD1C24        fstp qword ptr ss:[esp]</span><br><span class="line">00408417   .  FF15 48B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrR8&gt;;  Msvbvm50.__vbaStrR8</span><br></pre></td></tr></table></figure>
+
+<p>第三次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">004084DF   .  FF15 74B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaR8Str&gt;;  Msvbvm50.__vbaR8Str</span><br><span class="line">004084E5   .  DC25 20104000 fsub qword ptr ds:[0x401020]             ;  ＋１５</span><br><span class="line">004084EB   .  83EC 08       sub esp,0x8</span><br><span class="line">004084EE   .  DFE0          fstsw ax</span><br><span class="line">004084F0   .  A8 0D         test al,0xD</span><br><span class="line">004084F2   .  0F85 C7020000 jnz AfKayAs_.004087BF</span><br><span class="line">004084F8   .  DD1C24        fstp qword ptr ss:[esp]</span><br><span class="line">004084FB   .  FF15 48B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaStrR8&gt;;  Msvbvm50.__vbaStrR8</span><br></pre></td></tr></table></figure>
+
+<p>最后的比较也是使用浮点数进行比较，用计算出结果除以我们输入，再与1进行比较。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">004085F1   .  DCBD 1CFFFFFF fdivr qword ptr ss:[ebp-0xE4]            ;  计算的ｓｅｒｉａｌ／输入</span><br><span class="line">004085F7   .  EB 11         jmp short AfKayAs_.0040860A</span><br><span class="line">004085F9   &gt;  FFB5 20FFFFFF push dword ptr ss:[ebp-0xE0]</span><br><span class="line">004085FF   .  FFB5 1CFFFFFF push dword ptr ss:[ebp-0xE4]</span><br><span class="line">00408605   .  E8 888AFFFF   call &lt;jmp.&amp;MSVBVM50._adj_fdivr_m64&gt;</span><br><span class="line">0040860A   &gt;  DFE0          fstsw ax</span><br><span class="line">0040860C   .  A8 0D         test al,0xD</span><br><span class="line">0040860E   .  0F85 AB010000 jnz AfKayAs_.004087BF</span><br><span class="line">00408614   .  FF15 34B14000 call dword ptr ds:[&lt;&amp;MSVBVM50.__vbaFpR8&gt;&gt;;  Msvbvm50.__vbaFpR8</span><br><span class="line">0040861A   .  DC1D 28104000 fcomp qword ptr ds:[0x401028]            ;  结果与１进行比较</span><br><span class="line">00408620   .  DFE0          fstsw ax                                 ;  将寄存器的值传给ＡＸ</span><br><span class="line">00408622   .  F6C4 40       test ah,0x40                             ;  比较ａｈ值与０ｘ４０</span><br><span class="line">00408625   .  74 07         je short AfKayAs_.0040862E               ;  若不相等就会跳到清空ｅｓｉ处</span><br><span class="line">00408627   .  BE 01000000   mov esi,0x1                              ;  相等ｅｓｉ赋值１</span><br><span class="line">0040862C   .  EB 02         jmp short AfKayAs_.00408630</span><br><span class="line">0040862E   &gt;  33F6          xor esi,esi                              ;  清空寄存器</span><br></pre></td></tr></table></figure>
+
+<p>这里 fcomp是比较后改变寄存器状态，然后再由fstsw指令将寄存器值传给ax</p>
+<table>
+<thead>
+<tr>
+<th>比较结果</th>
+<th>C3</th>
+<th>C0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ST(0)&gt;源操作数</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ST(0)&lt;源操作数</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>ST(0)=源操作数</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ST(0)不可比较</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>看一下FST寄存器，看到寄存器中的值，此时是输入等于计算的时候，看到FST是4000，C3是1</p>
+<p><img src="/2021/07/21/160CrackMe-003/3.png"></p>
+<p>计算器转换一下看的仔细</p>
+<p><img src="/2021/07/21/160CrackMe-003/4.png"></p>
+<h4 id="注册机"><a href="#注册机" class="headerlink" title="注册机"></a>注册机</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pch.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;输入name\n&quot;</span>);</span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">    gets_s(name, <span class="number">20</span>);</span><br><span class="line">    <span class="keyword">int</span> len = <span class="built_in">strlen</span>(name);</span><br><span class="line">    <span class="keyword">int</span> serial;</span><br><span class="line">    serial = len * <span class="number">0x15B38</span>;</span><br><span class="line">    serial += name[<span class="number">0</span>];</span><br><span class="line">    serial = (serial + <span class="number">2</span>) * <span class="number">3</span> - <span class="number">2</span> + <span class="number">15</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;serial:%d\n&quot;</span>, serial);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/21/160CrackMe-003/5.png"></p>
+<p>输入正确的serial</p>
+<p><img src="/2021/07/21/160CrackMe-003/6.png"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://b1ack1e.github.io/2021/07/21/160CrackMe-003/" title="160CrackMe-003" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/21/160CrackMe-003/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" title="shellcode学习"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" title="隐藏技术-进程伪装"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
