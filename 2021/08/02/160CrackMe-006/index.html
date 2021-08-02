@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>160CrackMe-006 | b1ackie</title>
+  <meta name="description" content="初探打开程序如下看到OK是不可点击的，是一个灰色按钮。  点击about查看一下，可以看到我们需要让两个按钮都消失以便可以看到Ringzer0的logo  那么先想办法让OK变得可以点击吧。 分析查看壳，发现未加壳，是用Delphi写的  使用API断点，给IsEnableWindow下断，但是发现怎么都无法断下来，说明肯定是有条件的，而当前还没有满足这个条件。 使用dedark工具帮忙查看，直接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="160CrackMe-006">
+<meta property="og:url" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="初探打开程序如下看到OK是不可点击的，是一个灰色按钮。  点击about查看一下，可以看到我们需要让两个按钮都消失以便可以看到Ringzer0的logo  那么先想办法让OK变得可以点击吧。 分析查看壳，发现未加壳，是用Delphi写的  使用API断点，给IsEnableWindow下断，但是发现怎么都无法断下来，说明肯定是有条件的，而当前还没有满足这个条件。 使用dedark工具帮忙查看，直接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/1.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/2.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/3.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/4.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/5.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/6.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/7.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/8.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/9.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/10.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/11.png">
+<meta property="og:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/12.png">
+<meta property="article:published_time" content="2021-08-02T10:19:24.000Z">
+<meta property="article:modified_time" content="2021-08-02T11:19:49.350Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="CrackMe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>嚯！</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ShellCode/">ShellCode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">12</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HOOK/" rel="tag">HOOK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PE/" rel="tag">PE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ShellCode/" rel="tag">ShellCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UAC/" rel="tag">UAC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">自启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">13</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/CrackMe/" style="font-size: 13.5px;">CrackMe</a> <a href="/tags/HOOK/" style="font-size: 13px;">HOOK</a> <a href="/tags/Inline-Hook/" style="font-size: 13px;">Inline Hook</a> <a href="/tags/PE/" style="font-size: 13px;">PE</a> <a href="/tags/ShellCode/" style="font-size: 13px;">ShellCode</a> <a href="/tags/UAC/" style="font-size: 13px;">UAC</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">提权技术</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.33px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.17px;">病毒分析</a> <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">自启动技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.67px;">逆向工程</a> <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">隐藏技术</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 13.83px;">黑客编程</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">21</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/08/02/160CrackMe-006/" class="title">160CrackMe-006</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">2021-08-02</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/29/160CrackMe-004/" class="title">160CrackMe-004</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-29T02:29:39.000Z" itemprop="datePublished">2021-07-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/28/HOOK-Inline%20Hook/" class="title">HOOK-Inline Hook</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="title">隐藏技术-进程隐藏</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">2021-07-27</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ShellCode/">ShellCode</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" class="title">shellcode学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-22T01:58:08.000Z" itemprop="datePublished">2021-07-22</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-160CrackMe-006" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      160CrackMe-006
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/08/02/160CrackMe-006/" class="article-date">
+	  <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">2021-08-02</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/02/160CrackMe-006/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.9k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 15(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h4 id="初探"><a href="#初探" class="headerlink" title="初探"></a>初探</h4><p>打开程序如下看到OK是不可点击的，是一个灰色按钮。</p>
+<p><img src="/2021/08/02/160CrackMe-006/1.png"></p>
+<p>点击about查看一下，可以看到我们需要让两个按钮都消失以便可以看到Ringzer0的logo</p>
+<p><img src="/2021/08/02/160CrackMe-006/2.png"></p>
+<p>那么先想办法让OK变得可以点击吧。</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>查看壳，发现未加壳，是用Delphi写的</p>
+<p><img src="/2021/08/02/160CrackMe-006/3.png"></p>
+<p>使用API断点，给IsEnableWindow下断，但是发现怎么都无法断下来，说明肯定是有条件的，而当前还没有满足这个条件。</p>
+<p>使用dedark工具帮忙查看，直接分析真的是太难找了，可以看到主要四个事件，这四个事件应该比较关键</p>
+<p><img src="/2021/08/02/160CrackMe-006/4.png"></p>
+<p>根据函数地址找到函数下好断点之后，查看可以发现nomechange和codicechange几乎是一样的，将两处明显的跳转更改条件使跳转失效，让程序跑起来后都会断在之前下的API断点上。那么它们都是比较关键的地方。</p>
+<p>第一个关键跳转都是判断eax+0x47这个地址的值是否等于0，而第二个跳转都是先调用了00442A3C这个函数。</p>
+<p>nomechange：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">00442E04  /.  55            push ebp                                 ;  nomeChange</span><br><span class="line">00442E05  |.  8BEC          mov ebp,esp</span><br><span class="line">00442E07  |.  6A 00         push 0x0</span><br><span class="line">00442E09  |.  6A 00         push 0x0</span><br><span class="line">00442E0B  |.  53            push ebx</span><br><span class="line">00442E0C  |.  8BD8          mov ebx,eax</span><br><span class="line">00442E0E  |.  33C0          xor eax,eax</span><br><span class="line">00442E10  |.  55            push ebp</span><br><span class="line">00442E11  |.  68 9B2E4400   push aLoNg3x_.00442E9B</span><br><span class="line">00442E16  |.  64:FF30       push dword ptr fs:[eax]</span><br><span class="line">00442E19  |.  64:8920       mov dword ptr fs:[eax],esp</span><br><span class="line">00442E1C  |.  8B83 D0020000 mov eax,dword ptr ds:[ebx+0x2D0]</span><br><span class="line">00442E22  |.  8078 47 00    cmp byte ptr ds:[eax+0x47],0x0</span><br><span class="line">00442E26  |.  75 0F         jnz short aLoNg3x_.00442E37              ;  关键跳转1</span><br><span class="line">00442E28  |.  B2 01         mov dl,0x1</span><br><span class="line">00442E2A  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]</span><br><span class="line">00442E30  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442E32  |.  FF51 60       call dword ptr ds:[ecx+0x60]             ;  IsEnableWindow</span><br><span class="line">00442E35  |.  EB 49         jmp short aLoNg3x_.00442E80</span><br><span class="line">00442E37  |&gt;  8D55 FC       lea edx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442E3A  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442E40  |.  E8 7B04FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442E45  |.  8B45 FC       mov eax,dword ptr ss:[ebp-0x4]           ;  user32.75B17276</span><br><span class="line">00442E48  |.  50            push eax</span><br><span class="line">00442E49  |.  8D55 F8       lea edx,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442E4C  |.  8B83 DC020000 mov eax,dword ptr ds:[ebx+0x2DC]         ;  comctl_1.74646957</span><br><span class="line">00442E52  |.  E8 6904FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442E57  |.  8B45 F8       mov eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442E5A  |.  5A            pop edx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442E5B  |.  E8 DCFBFFFF   call aLoNg3x_.00442A3C</span><br><span class="line">00442E60  |.  84C0          test al,al</span><br><span class="line">00442E62  |.  74 0F         je short aLoNg3x_.00442E73               ;  关键跳转2</span><br><span class="line">00442E64  |.  B2 01         mov dl,0x1</span><br><span class="line">00442E66  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]</span><br><span class="line">00442E6C  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442E6E  |.  FF51 60       call dword ptr ds:[ecx+0x60]             ;  IsEnableWindow</span><br><span class="line">00442E71  |.  EB 0D         jmp short aLoNg3x_.00442E80</span><br><span class="line">00442E73  |&gt;  33D2          xor edx,edx</span><br><span class="line">00442E75  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]</span><br><span class="line">00442E7B  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442E7D  |.  FF51 60       call dword ptr ds:[ecx+0x60]</span><br><span class="line">00442E80  |&gt;  33C0          xor eax,eax</span><br><span class="line">00442E82  |.  5A            pop edx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442E83  |.  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442E84  |.  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442E85  |.  64:8910       mov dword ptr fs:[eax],edx</span><br><span class="line">00442E88  |.  68 A22E4400   push aLoNg3x_.00442EA2</span><br><span class="line">00442E8D  |&gt;  8D45 F8       lea eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442E90  |.  BA 02000000   mov edx,0x2</span><br><span class="line">00442E95  |.  E8 4209FCFF   call aLoNg3x_.004037DC</span><br><span class="line">00442E9A  \.  C3            retn</span><br><span class="line">00442E9B   .^ E9 D803FCFF   jmp aLoNg3x_.00403278</span><br><span class="line">00442EA0   .^ EB EB         jmp short aLoNg3x_.00442E8D</span><br><span class="line">00442EA2   .  5B            pop ebx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442EA3   .  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442EA4   .  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442EA5   .  5D            pop ebp                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442EA6   .  C3            retn</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>codicechange：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">00442C78  /.  55            push ebp                                 ;  codiceChange</span><br><span class="line">00442C79  |.  8BEC          mov ebp,esp</span><br><span class="line">00442C7B  |.  33C9          xor ecx,ecx</span><br><span class="line">00442C7D  |.  51            push ecx</span><br><span class="line">00442C7E  |.  51            push ecx</span><br><span class="line">00442C7F  |.  51            push ecx</span><br><span class="line">00442C80  |.  51            push ecx</span><br><span class="line">00442C81  |.  53            push ebx</span><br><span class="line">00442C82  |.  56            push esi</span><br><span class="line">00442C83  |.  8BD8          mov ebx,eax</span><br><span class="line">00442C85  |.  33C0          xor eax,eax</span><br><span class="line">00442C87  |.  55            push ebp</span><br><span class="line">00442C88  |.  68 562D4400   push aLoNg3x_.00442D56</span><br><span class="line">00442C8D  |.  64:FF30       push dword ptr fs:[eax]</span><br><span class="line">00442C90  |.  64:8920       mov dword ptr fs:[eax],esp</span><br><span class="line">00442C93  |.  8D55 F8       lea edx,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442C96  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442C9C  |.  E8 1F06FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442CA1  |.  8B45 F8       mov eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442CA4  |.  8D55 FC       lea edx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442CA7  |.  E8 ACFCFBFF   call aLoNg3x_.00402958</span><br><span class="line">00442CAC  |.  8BF0          mov esi,eax</span><br><span class="line">00442CAE  |.  837D FC 00    cmp dword ptr ss:[ebp-0x4],0x0</span><br><span class="line">00442CB2  |.  74 18         je short aLoNg3x_.00442CCC</span><br><span class="line">00442CB4  |.  8D55 F4       lea edx,dword ptr ss:[ebp-0xC]</span><br><span class="line">00442CB7  |.  8BC6          mov eax,esi</span><br><span class="line">00442CB9  |.  E8 8249FCFF   call aLoNg3x_.00407640</span><br><span class="line">00442CBE  |.  8B55 F4       mov edx,dword ptr ss:[ebp-0xC]</span><br><span class="line">00442CC1  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442CC7  |.  E8 2406FEFF   call aLoNg3x_.004232F0</span><br><span class="line">00442CCC  |&gt;  8B83 D0020000 mov eax,dword ptr ds:[ebx+0x2D0]</span><br><span class="line">00442CD2  |.  8078 47 00    cmp byte ptr ds:[eax+0x47],0x0</span><br><span class="line">00442CD6  |.  75 0F         jnz short aLoNg3x_.00442CE7              ;  关键跳转1</span><br><span class="line">00442CD8  |.  B2 01         mov dl,0x1</span><br><span class="line">00442CDA  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]         ;  comctl_1.74646957</span><br><span class="line">00442CE0  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442CE2  |.  FF51 60       call dword ptr ds:[ecx+0x60]             ;  IsEnableWindow</span><br><span class="line">00442CE5  |.  EB 49         jmp short aLoNg3x_.00442D30</span><br><span class="line">00442CE7  |&gt;  8D55 F8       lea edx,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442CEA  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442CF0  |.  E8 CB05FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442CF5  |.  8B45 F8       mov eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442CF8  |.  50            push eax</span><br><span class="line">00442CF9  |.  8D55 F0       lea edx,dword ptr ss:[ebp-0x10]</span><br><span class="line">00442CFC  |.  8B83 DC020000 mov eax,dword ptr ds:[ebx+0x2DC]</span><br><span class="line">00442D02  |.  E8 B905FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442D07  |.  8B45 F0       mov eax,dword ptr ss:[ebp-0x10]</span><br><span class="line">00442D0A  |.  5A            pop edx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442D0B  |.  E8 2CFDFFFF   call aLoNg3x_.00442A3C</span><br><span class="line">00442D10  |.  84C0          test al,al</span><br><span class="line">00442D12  |.  74 0F         je short aLoNg3x_.00442D23               ;  关键跳转2</span><br><span class="line">00442D14  |.  B2 01         mov dl,0x1</span><br><span class="line">00442D16  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]         ;  comctl_1.74646957</span><br><span class="line">00442D1C  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442D1E  |.  FF51 60       call dword ptr ds:[ecx+0x60]             ;  IsEnableWindow</span><br><span class="line">00442D21  |.  EB 0D         jmp short aLoNg3x_.00442D30</span><br><span class="line">00442D23  |&gt;  33D2          xor edx,edx</span><br><span class="line">00442D25  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]         ;  comctl_1.74646957</span><br><span class="line">00442D2B  |.  8B08          mov ecx,dword ptr ds:[eax]               ;  aLoNg3x_.0044282C</span><br><span class="line">00442D2D  |.  FF51 60       call dword ptr ds:[ecx+0x60]</span><br><span class="line">00442D30  |&gt;  33C0          xor eax,eax</span><br><span class="line">00442D32  |.  5A            pop edx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442D33  |.  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442D34  |.  59            pop ecx                                  ;  aLoNg3x_.0041E13E</span><br><span class="line">00442D35  |.  64:8910       mov dword ptr fs:[eax],edx</span><br><span class="line">00442D38  |.  68 5D2D4400   push aLoNg3x_.00442D5D</span><br><span class="line">00442D3D  |&gt;  8D45 F0       lea eax,dword ptr ss:[ebp-0x10]</span><br><span class="line">00442D40  |.  E8 730AFCFF   call aLoNg3x_.004037B8</span><br><span class="line">00442D45  |.  8D45 F4       lea eax,dword ptr ss:[ebp-0xC]</span><br><span class="line">00442D48  |.  E8 6B0AFCFF   call aLoNg3x_.004037B8</span><br><span class="line">00442D4D  |.  8D45 F8       lea eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442D50  |.  E8 630AFCFF   call aLoNg3x_.004037B8</span><br><span class="line">00442D55  \.  C3            retn</span><br></pre></td></tr></table></figure>
+
+<p>尝试在eax+0x47这下硬件写入断点，发现并不能断下来，说明还是没有满足某个条件。</p>
+<p>看第二个关键函数，可以看到一个计算，通过用户名算出serial，懒得再解释了QAQ，直接看下面代码吧。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">00442A8E  |.  B8 01000000   mov eax,0x1</span><br><span class="line">00442A93  |&gt;  8B4D FC       /mov ecx,dword ptr ss:[ebp-0x4]          ;  user32.75B17276</span><br><span class="line">00442A96  |.  0FB64C01 FF   |movzx ecx,byte ptr ds:[ecx+eax-0x1]</span><br><span class="line">00442A9B  |.  8B75 FC       |mov esi,dword ptr ss:[ebp-0x4]          ;  user32.75B17276</span><br><span class="line">00442A9E  |.  0FB63406      |movzx esi,byte ptr ds:[esi+eax]</span><br><span class="line">00442AA2  |.  0FAFCE        |imul ecx,esi</span><br><span class="line">00442AA5  |.  0FAFC8        |imul ecx,eax</span><br><span class="line">00442AA8  |.  03D9          |add ebx,ecx</span><br><span class="line">00442AAA  |.  40            |inc eax</span><br><span class="line">00442AAB  |.  4A            |dec edx</span><br><span class="line">00442AAC  |.^ 75 E5         \jnz short aLoNg3x_.00442A93</span><br><span class="line">00442AAE  |&gt;  8B45 F8       mov eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">00442AB1  |.  E8 BA4BFCFF   call aLoNg3x_.00407670</span><br><span class="line">00442AB6  |.  2BD8          sub ebx,eax</span><br><span class="line">00442AB8  |.  81FB 9A020000 cmp ebx,0x29A</span><br><span class="line">00442ABE  |.  75 04         jnz short aLoNg3x_.00442AC4</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> len = <span class="built_in">strlen</span>(szname);</span><br><span class="line"><span class="keyword">int</span> sum = len;</span><br><span class="line"><span class="keyword">int</span> temp = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">	sum = ((szname[i] * szname[i + <span class="number">1</span>]) * temp) + sum;</span><br><span class="line">	temp++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> serial;</span><br><span class="line">serial = sum - <span class="number">0x29A</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, serial);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/02/160CrackMe-006/5.png"></p>
+<p>输入发现OK按钮已经亮了</p>
+<p><img src="/2021/08/02/160CrackMe-006/6.png"></p>
+<p>点击OK按钮发现，没有用，codice清0，然后OK又灰色了。</p>
+<p><img src="/2021/08/02/160CrackMe-006/7.png"></p>
+<p>从OK按钮入手，发现刚进来的第一个跳转就是熟悉的判断条件，说明程序并不是直接点击OK的，在这之前肯定还有一个条件要满足的。先继续在这里看一下，修改这个条件往下走，可以看到第二个跳转，修改这个跳转，按钮就会小时，经过分析之前这个函数就是算法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">00442D64  /.  55            push ebp</span><br><span class="line">00442D65  |.  8BEC          mov ebp,esp</span><br><span class="line">00442D67  |.  6A 00         push 0x0</span><br><span class="line">00442D69  |.  53            push ebx</span><br><span class="line">00442D6A  |.  8BD8          mov ebx,eax</span><br><span class="line">00442D6C  |.  33C0          xor eax,eax</span><br><span class="line">00442D6E  |.  55            push ebp</span><br><span class="line">00442D6F  |.  68 ED2D4400   push aLoNg3x_.00442DED</span><br><span class="line">00442D74  |.  64:FF30       push dword ptr fs:[eax]</span><br><span class="line">00442D77  |.  64:8920       mov dword ptr fs:[eax],esp</span><br><span class="line">00442D7A  |.  8B83 D0020000 mov eax,dword ptr ds:[ebx+0x2D0]</span><br><span class="line">00442D80  |.  8078 47 01    cmp byte ptr ds:[eax+0x47],0x1           ;  熟悉的地址</span><br><span class="line">00442D84  |.  75 12         jnz short aLoNg3x_.00442D98</span><br><span class="line">00442D86  |.  BA 002E4400   mov edx,aLoNg3x_.00442E00                ;  UNICODE &quot;0&quot;</span><br><span class="line">00442D8B  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442D91  |.  E8 5A05FEFF   call aLoNg3x_.004232F0</span><br><span class="line">00442D96  |.  EB 3F         jmp short aLoNg3x_.00442DD7</span><br><span class="line">00442D98  |&gt;  8D55 FC       lea edx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442D9B  |.  8B83 E0020000 mov eax,dword ptr ds:[ebx+0x2E0]</span><br><span class="line">00442DA1  |.  E8 1A05FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442DA6  |.  8B45 FC       mov eax,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442DA9  |.  E8 C248FCFF   call aLoNg3x_.00407670</span><br><span class="line">00442DAE  |.  50            push eax</span><br><span class="line">00442DAF  |.  8D55 FC       lea edx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442DB2  |.  8B83 DC020000 mov eax,dword ptr ds:[ebx+0x2DC]</span><br><span class="line">00442DB8  |.  E8 0305FEFF   call aLoNg3x_.004232C0</span><br><span class="line">00442DBD  |.  8B45 FC       mov eax,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442DC0  |.  5A            pop edx                                  ;  0018F8D4</span><br><span class="line">00442DC1  |.  E8 DAFDFFFF   call aLoNg3x_.00442BA0                   ;  算法</span><br><span class="line">00442DC6  |.  84C0          test al,al</span><br><span class="line">00442DC8  |.  74 0D         je short aLoNg3x_.00442DD7</span><br><span class="line">00442DCA  |.  33D2          xor edx,edx</span><br><span class="line">00442DCC  |.  8B83 CC020000 mov eax,dword ptr ds:[ebx+0x2CC]</span><br><span class="line">00442DD2  |.  E8 D903FEFF   call aLoNg3x_.004231B0</span><br><span class="line">00442DD7  |&gt;  33C0          xor eax,eax</span><br><span class="line">00442DD9  |.  5A            pop edx                                  ;  0018F8D4</span><br><span class="line">00442DDA  |.  59            pop ecx                                  ;  0018F8D4</span><br><span class="line">00442DDB  |.  59            pop ecx                                  ;  0018F8D4</span><br><span class="line">00442DDC  |.  64:8910       mov dword ptr fs:[eax],edx</span><br><span class="line">00442DDF  |.  68 F42D4400   push aLoNg3x_.00442DF4</span><br><span class="line">00442DE4  |&gt;  8D45 FC       lea eax,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442DE7  |.  E8 CC09FCFF   call aLoNg3x_.004037B8</span><br><span class="line">00442DEC  \.  C3            retn</span><br></pre></td></tr></table></figure>
+
+<p>进入算法进行查看，可以看到一个通过注册码求用户名的过程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">00442C09  |.  0FB64430 FF   |movzx eax,byte ptr ds:[eax+esi-0x1]     ;  获取最后一位</span><br><span class="line">00442C0E  |.  F7E8          |imul eax                                ;  平方</span><br><span class="line">00442C10  |.  0FBFC0        |movsx eax,ax</span><br><span class="line">00442C13  |.  F7EE          |imul esi                                ;  乘以长度/长度不断-1</span><br><span class="line">00442C15  |.  B9 19000000   |mov ecx,0x19</span><br><span class="line">00442C1A  |.  99            |cdq</span><br><span class="line">00442C1B  |.  F7F9          |idiv ecx</span><br><span class="line">00442C1D  |.  83C2 41       |add edx,0x41                            ;  除以0x19余数+0x41</span><br><span class="line">00442C20  |.  58            |pop eax                                 ;  0018F8D4</span><br><span class="line">00442C21  |.  8810          |mov byte ptr ds:[eax],dl</span><br><span class="line">00442C23  |.  4E            |dec esi</span><br><span class="line">00442C24  |.  85F6          |test esi,esi</span><br><span class="line">00442C26  |.^ 75 D1         \jnz short aLoNg3x_.00442BF9</span><br><span class="line">00442C28  |&gt;  8B45 F4       mov eax,dword ptr ss:[ebp-0xC]</span><br><span class="line">00442C2B  |.  8B55 FC       mov edx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442C2E  |.  E8 110FFCFF   call aLoNg3x_.00403B44                   ;  与输入的用户名进行比较</span><br><span class="line">00442C33  |.  75 17         jnz short aLoNg3x_.00442C4C</span><br></pre></td></tr></table></figure>
+
+<p>代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">itoa(serial, name,<span class="number">10</span>);</span><br><span class="line"><span class="keyword">int</span> len = <span class="built_in">strlen</span>(name);</span><br><span class="line"><span class="keyword">int</span> a = len;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">	<span class="keyword">int</span> temp = name[a<span class="number">-1</span>] * name[a<span class="number">-1</span>];</span><br><span class="line">	temp = temp *  a;</span><br><span class="line">	temp = temp % <span class="number">0x19</span>;</span><br><span class="line">	temp = temp + <span class="number">0x41</span>;</span><br><span class="line">	name[a - <span class="number">1</span>] = temp;</span><br><span class="line">	a = a -  <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, name);</span><br></pre></td></tr></table></figure>
+
+<p>现在就剩下最后一个事件，CancellaClick</p>
+<p>进去查看，发现里面没有那个熟悉的地址，那么基本上那个地址的赋值应该就是在这里了吧，只有一个跳转，修改条件后，最早下的硬件断点终于断下来了。那么查看一下算法的过程。</p>
+<p><img src="/2021/08/02/160CrackMe-006/8.png"></p>
+<p>进入函数查看，可以看到具体的算法，是一个通过用户名求注册码的过程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">00442B20  |.  83F8 05       cmp eax,0x5                              ;  判断输入的name是否大于5</span><br><span class="line">00442B23  |.  7E 53         jle short aLoNg3x_.00442B78</span><br><span class="line">00442B25  |.  8B45 FC       mov eax,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442B28  |.  0FB640 04     movzx eax,byte ptr ds:[eax+0x4]          ;  获取name第五位</span><br><span class="line">00442B2C  |.  B9 07000000   mov ecx,0x7</span><br><span class="line">00442B31  |.  33D2          xor edx,edx</span><br><span class="line">00442B33  |.  F7F1          div ecx                                  ;  除以7</span><br><span class="line">00442B35  |.  8BC2          mov eax,edx                              ;  余数</span><br><span class="line">00442B37  |.  83C0 02       add eax,0x2</span><br><span class="line">00442B3A  |.  E8 E1FEFFFF   call aLoNg3x_.00442A20                   ;  阶乘</span><br><span class="line">00442B3F  |.  8BF0          mov esi,eax</span><br><span class="line">00442B41  |.  33DB          xor ebx,ebx</span><br><span class="line">00442B43  |.  8B45 FC       mov eax,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442B46  |.  E8 E90EFCFF   call aLoNg3x_.00403A34</span><br><span class="line">00442B4B  |.  85C0          test eax,eax</span><br><span class="line">00442B4D  |.  7E 16         jle short aLoNg3x_.00442B65</span><br><span class="line">00442B4F  |.  BA 01000000   mov edx,0x1</span><br><span class="line">00442B54  |&gt;  8B4D FC       /mov ecx,dword ptr ss:[ebp-0x4]</span><br><span class="line">00442B57  |.  0FB64C11 FF   |movzx ecx,byte ptr ds:[ecx+edx-0x1]     ;  逐位获取</span><br><span class="line">00442B5C  |.  0FAFCE        |imul ecx,esi</span><br><span class="line">00442B5F  |.  03D9          |add ebx,ecx                             ;  user32.75B16D51</span><br><span class="line">00442B61  |.  42            |inc edx</span><br><span class="line">00442B62  |.  48            |dec eax</span><br><span class="line">00442B63  |.^ 75 EF         \jnz short aLoNg3x_.00442B54</span><br><span class="line">00442B65  |&gt;  2B5D F8       sub ebx,dword ptr ss:[ebp-0x8]           ;  减去注册码十六进制</span><br><span class="line">00442B68  |.  81FB 697A0000 cmp ebx,0x7A69</span><br><span class="line">00442B6E  |.  75 04         jnz short aLoNg3x_.00442B74</span><br><span class="line">00442B70  |.  B3 01         mov bl,0x1                               ;  关键的赋值</span><br><span class="line">00442B72  |.  EB 06         jmp short aLoNg3x_.00442B7A</span><br><span class="line">00442B74  |&gt;  33DB          xor ebx,ebx</span><br><span class="line">00442B76  |.  EB 02         jmp short aLoNg3x_.00442B7A</span><br></pre></td></tr></table></figure>
+
+<p>代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = szname[<span class="number">4</span>] % <span class="number">0x7</span>;</span><br><span class="line">a = a + <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> num = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= a; i++) &#123;</span><br><span class="line">	num = num * i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> len = <span class="built_in">strlen</span>(szname);</span><br><span class="line"><span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">	sum += szname[i] * num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> serial;</span><br><span class="line">serial = sum - <span class="number">0x7A69</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, serial);</span><br><span class="line"><span class="keyword">return</span> serial;</span><br></pre></td></tr></table></figure>
+
+<p>当经过了这个判断之后，那个地址就会被赋值，同时cancle按钮也会消失，ok按钮会常亮。</p>
+<p><img src="/2021/08/02/160CrackMe-006/9.png"></p>
+<p>那么整体的流程就很清楚，首先要通过用户名计算一个注册码输入cancle按钮消失，ok变亮，然后再通过注册码计算出一个用户名输入后，ok消失，完成注册</p>
+<h4 id="注册机编写"><a href="#注册机编写" class="headerlink" title="注册机编写"></a>注册机编写</h4><p>完整注册机代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CancleClick</span><span class="params">(<span class="keyword">char</span>* szname)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = szname[<span class="number">4</span>] % <span class="number">0x7</span>;</span><br><span class="line">	a = a + <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> num = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= a; i++) &#123;</span><br><span class="line">		num = num * i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> len = <span class="built_in">strlen</span>(szname);</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">		sum += szname[i] * num;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> serial;</span><br><span class="line">	serial = sum - <span class="number">0x7A69</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, serial);</span><br><span class="line">	<span class="keyword">return</span> serial;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CodiceChange</span><span class="params">(<span class="keyword">char</span>* szname)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> len = <span class="built_in">strlen</span>(szname);</span><br><span class="line">	<span class="keyword">int</span> sum = len;</span><br><span class="line">	<span class="keyword">int</span> temp = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">		sum = ((szname[i] * szname[i + <span class="number">1</span>]) * temp) + sum;</span><br><span class="line">		temp++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> serial;</span><br><span class="line">	serial = sum - <span class="number">0x29A</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, serial);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OkClick</span><span class="params">(<span class="keyword">int</span> serial)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">	itoa(serial, name,<span class="number">10</span>);</span><br><span class="line">	<span class="keyword">int</span> len = <span class="built_in">strlen</span>(name);</span><br><span class="line">	<span class="keyword">int</span> a = len;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">		<span class="keyword">int</span> temp = name[a<span class="number">-1</span>] * name[a<span class="number">-1</span>];</span><br><span class="line">		temp = temp *  a;</span><br><span class="line">		temp = temp % <span class="number">0x19</span>;</span><br><span class="line">		temp = temp + <span class="number">0x41</span>;</span><br><span class="line">		name[a - <span class="number">1</span>] = temp;</span><br><span class="line">		a = a -  <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">	gets_s(name, <span class="number">20</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;让cancle消失，通过用户名求出的serial\n&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> serial = CancleClick(name);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;-------------------------\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;仅仅只是显示OK按钮\n&quot;</span>);</span><br><span class="line">	CodiceChange(name);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;-------------------------\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;让OK消失，通过serial：%d\n求出的用户名\n&quot;</span>,serial);</span><br><span class="line">	OkClick(serial);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/02/160CrackMe-006/10.png"></p>
+<p>cancle按钮</p>
+<p><img src="/2021/08/02/160CrackMe-006/11.png"></p>
+<p>OK按钮</p>
+<p><img src="/2021/08/02/160CrackMe-006/12.png"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>程序共有三个算法</p>
+<ul>
+<li>nomechange和codicechange里的，仅仅只是让OK亮起来</li>
+<li>cancleClick里的，消失cancle按钮，赋值给那个关键地方，OK亮起</li>
+<li>OKClick里的，让OK按钮消失</li>
+</ul>
+<p>不知道nomechange和codicechange里的算法有什么用，感觉没必要。。。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://b1ack1e.github.io/2021/08/02/160CrackMe-006/" title="160CrackMe-006" target="_blank" rel="external">https://b1ack1e.github.io/2021/08/02/160CrackMe-006/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/07/29/160CrackMe-004/" title="160CrackMe-004"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
