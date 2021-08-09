@@ -1,597 +1,533 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-transform" />
-  <meta http-equiv="Cache-Control" content="no-siteapp" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no,email=no,adress=no">
-  <!-- Color theme for statusbar -->
-  <meta name="theme-color" content="#000000" />
-  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
-  <meta http-equiv="window-target" content="_top" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
   
-  <title>HOOK-Inline Hook | b1ackie</title>
-  <meta name="description" content="Inline HookInline Hook是Hook技术的一种，它是通过修改机器码来实现HOOK。当我们正常调用一个API函数时，正常的流程是，call API，然后就会到函数内部执行。我们写下如下语句，在OD中打开就是如图的样子。可以看到先压入参数，然后调用MessageBoxA函数。 1MessageBoxA(NULL, &quot;这是本来的窗口&quot;, &quot;未被HOOK&amp;q">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HOOK-Inline Hook">
-<meta property="og:url" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/index.html">
-<meta property="og:site_name" content="b1ackie&#39;blog">
-<meta property="og:description" content="Inline HookInline Hook是Hook技术的一种，它是通过修改机器码来实现HOOK。当我们正常调用一个API函数时，正常的流程是，call API，然后就会到函数内部执行。我们写下如下语句，在OD中打开就是如图的样子。可以看到先压入参数，然后调用MessageBoxA函数。 1MessageBoxA(NULL, &quot;这是本来的窗口&quot;, &quot;未被HOOK&amp;q">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/1.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/2.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/3.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/4.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/5.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/6.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/7.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/8.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/9.png">
-<meta property="article:published_time" content="2021-07-28T03:17:15.000Z">
-<meta property="article:modified_time" content="2021-07-29T08:32:24.574Z">
-<meta property="article:author" content="b1ackie">
-<meta property="article:tag" content="恶意代码">
-<meta property="article:tag" content="黑客编程">
-<meta property="article:tag" content="Inline Hook">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/1.png">
-  <!-- Canonical links -->
-  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/index.html">
-  
-    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  <title>HOOK-Inline Hook - b1ackie&#39;blog</title>
 
-  
-  
-  
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
-  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-  <div class="slimContent">
-    <div class="navbar-header">
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
       
-      
-      <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
-        </a>
-        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
-      </div>
-      
-      <div class="search" id="search-form-wrap">
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
 
-    <form class="search-form sidebar-form">
-        <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="搜索" />
-            <span class="input-group-btn">
-                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ack1e.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="HOOK-Inline Hook">
+              
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-28 11:17" pubdate>
+        2021-07-28 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
         </div>
-    </form>
-    <div class="ins-search">
-  <div class="ins-search-mask"></div>
-  <div class="ins-search-container">
-    <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
-      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    </div>
-    <div class="ins-section-wrapper">
-      <div class="ins-section-container"></div>
-    </div>
-  </div>
-</div>
-
-
-</div>
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
-      <ul class="nav navbar-nav main-nav ">
-        
-        
-        <li class="menu-item menu-item-home">
-          <a href="/.">
-            
-            <i class="icon icon-home-fill"></i>
-            
-            <span class="menu-title">首页</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives">
-            
-            <i class="icon icon-archives-fill"></i>
-            
-            <span class="menu-title">归档</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories">
-            
-            <i class="icon icon-folder"></i>
-            
-            <span class="menu-title">分类</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags">
-            
-            <i class="icon icon-tags"></i>
-            
-            <span class="menu-title">标签</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">关于</span>
-          </a>
-        </li>
-        
-      </ul>
-      
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    </nav>
-  </div>
-</header>
-
-  
-    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
-  <div class="slimContent">
-    
-      <div class="widget">
-    <h3 class="widget-title">公告</h3>
-    <div class="widget-body">
-        <div id="board">
-            <div class="content">
-                <p>嚯！</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">分类</h3>
-    <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ShellCode/">ShellCode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">12</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HOOK/" rel="tag">HOOK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PE/" rel="tag">PE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ShellCode/" rel="tag">ShellCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UAC/" rel="tag">UAC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">自启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">13</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget-body tagcloud">
-      <a href="/tags/CrackMe/" style="font-size: 13.5px;">CrackMe</a> <a href="/tags/HOOK/" style="font-size: 13px;">HOOK</a> <a href="/tags/Inline-Hook/" style="font-size: 13px;">Inline Hook</a> <a href="/tags/PE/" style="font-size: 13px;">PE</a> <a href="/tags/ShellCode/" style="font-size: 13px;">ShellCode</a> <a href="/tags/UAC/" style="font-size: 13px;">UAC</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">提权技术</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.33px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.17px;">病毒分析</a> <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">自启动技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.67px;">逆向工程</a> <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">隐藏技术</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 13.83px;">黑客编程</a>
-    </div>
-  </div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">21</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget-body">
-      <ul class="recent-post-list list-unstyled no-thumbnail">
-        
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/03/160CrackMe-007/" class="title">160CrackMe-007</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-03T02:52:32.000Z" itemprop="datePublished">2021-08-03</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/02/160CrackMe-006/" class="title">160CrackMe-006</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">2021-08-02</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/29/160CrackMe-004/" class="title">160CrackMe-004</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-29T02:29:39.000Z" itemprop="datePublished">2021-07-29</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/28/HOOK-Inline%20Hook/" class="title">HOOK-Inline Hook</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="title">隐藏技术-进程隐藏</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">2021-07-27</time>
-              </p>
-            </div>
-          </li>
-          
-      </ul>
-    </div>
-  </div>
-  
-
-    
-  </div>
-</aside>
-
-  
-  
-<main class="main" role="main">
-  <div class="content">
-  <article id="post-HOOK-Inline Hook" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-    
-    <div class="article-header">
-      
-        
-  
-    <h1 class="article-title" itemprop="name">
-      HOOK-Inline Hook
-    </h1>
-  
-
-      
-      <div class="article-meta">
-        <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/28/HOOK-Inline%20Hook/" class="article-date">
-	  <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
-	</a>
-</span>
-        
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
-  </span>
-
-        
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a>, <a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-        
-	<span class="article-read hidden-xs">
-	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
-	    <span id="busuanzi_container_page_pv">
-			<span id="busuanzi_value_page_pv">0</span>
-		</span>
-	</span>
-
-
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/28/HOOK-Inline%20Hook/#comments" class="article-comment-link">评论</a></span>
-        
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.4k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
-	
-
       </div>
     </div>
-    <div class="article-entry marked-body" itemprop="articleBody">
-      
-        <h4 id="Inline-Hook"><a href="#Inline-Hook" class="headerlink" title="Inline Hook"></a>Inline Hook</h4><p>Inline Hook是Hook技术的一种，它是通过修改机器码来实现HOOK。当我们正常调用一个API函数时，正常的流程是，call API，然后就会到函数内部执行。我们写下如下语句，在OD中打开就是如图的样子。可以看到先压入参数，然后调用MessageBoxA函数。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MessageBoxA(<span class="literal">NULL</span>, <span class="string">&quot;这是本来的窗口&quot;</span>, <span class="string">&quot;未被HOOK&quot;</span>, MB_OK);</span><br></pre></td></tr></table></figure>
+  </header>
 
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/1.png"></p>
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">HOOK-Inline Hook</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-07-29 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h4 id="Inline-Hook"><a href="#Inline-Hook" class="headerlink" title="Inline Hook"></a>Inline Hook</h4><p>Inline Hook是Hook技术的一种，它是通过修改机器码来实现HOOK。当我们正常调用一个API函数时，正常的流程是，call API，然后就会到函数内部执行。我们写下如下语句，在OD中打开就是如图的样子。可以看到先压入参数，然后调用MessageBoxA函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">MessageBoxA(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;这是本来的窗口&quot;</span>, <span class="hljs-string">&quot;未被HOOK&quot;</span>, MB_OK);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>进入函数可以看到函数的具体</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/2.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>Inline Hook就是了通过字节码更改了函数的流程，刚才我们看到的是正常的流程，如果调用正常函数的时候，我们修改它的执行流程，使其跳转到我们自定义的函数内部去执行就可以实现Inlie HOOK。</p>
 <h4 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h4><p>通过上面我们知道了，我们需要修改的就是程序的执行流程，而改变程序的执行流程就是jmp、call等，我们用最常见的jmp来进行分析。</p>
 <p>如图可以看到一条JMP指令，看到后面的地址是0x401254，再看旁边的机器码是E9 EF000000。我们知道E9是JMP的机器码，那么EF000000为什么和要跳转的地址不一样呢。这是因为在JMP后面使用的是一个偏移量而不是一个具体的地址。如果使用地址的话，数据重定位之后，每次都会变，但是使用偏移就不一样了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">00401160   . /E9 EF000000        jmp InlineHo.00401254</span><br></pre></td></tr></table></figure>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">00401160 </span>  . /E9 EF000000        jmp InlineHo.<span class="hljs-number">00401254</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/3.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>JMP后的偏移计算公式是：</p>
 <p>偏移=目的地址-原地址-5</p>
 <p>5是JMP指令的长度，如果是其他的一些指令的话，那么这里不是5，可能是6、7所以要注意要根据具体情况而来。</p>
 <p>想要用JMP进行修改，我们就需要构造机器码修改前五个字节。来尝试HOOK一下MessageBox函数。</p>
-<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> WINAPI <span class="title">My_MessageBoxA</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ HWND hWnd,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ LPCSTR lpText,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ LPCSTR lpCaption,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_ UINT uType)</span></span>;</span><br><span class="line">FARPROC MessageBoxAAddress;</span><br><span class="line">BYTE NewData[<span class="number">5</span>] = &#123; <span class="number">0xE9</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>,<span class="number">0</span> &#125;;</span><br><span class="line">BYTE OldData[<span class="number">5</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InlineHook</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnInlineHook</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">MessageBoxA</span>(<span class="literal">NULL</span>, <span class="string">&quot;原始窗口1&quot;</span>, <span class="string">&quot;未被HOOK&quot;</span>, MB_OK);</span><br><span class="line">    <span class="built_in">InlineHook</span>();</span><br><span class="line">    <span class="built_in">MessageBoxA</span>(<span class="literal">NULL</span>, <span class="string">&quot;原始窗口2&quot;</span>, <span class="string">&quot;未被HOOK&quot;</span>, MB_OK);</span><br><span class="line">    <span class="built_in">UnInlineHook</span>();</span><br><span class="line">    <span class="built_in">MessageBoxA</span>(<span class="literal">NULL</span>, <span class="string">&quot;原始窗口3&quot;</span>, <span class="string">&quot;未被HOOK&quot;</span>, MB_OK);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InlineHook</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MessageBoxAAddress = <span class="built_in">GetProcAddress</span>(<span class="built_in">LoadLibraryA</span>(<span class="string">&quot;user32.dll&quot;</span>), <span class="string">&quot;MessageBoxA&quot;</span>);</span><br><span class="line">    <span class="comment">//保存原数据</span></span><br><span class="line">    <span class="built_in">memcpy</span>(OldData, MessageBoxAAddress, <span class="number">5</span>);</span><br><span class="line">    <span class="comment">//计算需要跳转的偏移</span></span><br><span class="line">    DWORD dwOffset = (DWORD)My_MessageBoxA - (DWORD)MessageBoxAAddress  - <span class="number">5</span>;</span><br><span class="line">    <span class="comment">//写入新数据，跳转的偏移</span></span><br><span class="line">    <span class="built_in">memcpy</span>(&amp;NewData[<span class="number">1</span>], &amp;dwOffset, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    DWORD dwOldprotect = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//修改页属性</span></span><br><span class="line">    <span class="built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="number">5</span>, PAGE_EXECUTE_READWRITE, &amp;dwOldprotect);</span><br><span class="line">    <span class="comment">//写入五个字节</span></span><br><span class="line">    <span class="built_in">memcpy</span>(MessageBoxAAddress, NewData, <span class="number">5</span>);</span><br><span class="line">    <span class="comment">//恢复页属性</span></span><br><span class="line">    <span class="built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="number">5</span>, dwOldprotect, &amp;dwOldprotect);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnInlineHook</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MessageBoxAAddress = <span class="built_in">GetProcAddress</span>(<span class="built_in">LoadLibraryA</span>(<span class="string">&quot;user32.dll&quot;</span>), <span class="string">&quot;MessageBoxA&quot;</span>);</span><br><span class="line">    DWORD dwOldProtect = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="number">5</span>, PAGE_EXECUTE_READWRITE, &amp;dwOldProtect);</span><br><span class="line">    <span class="comment">//恢复原来的字节码</span></span><br><span class="line">    <span class="built_in">memcpy</span>(MessageBoxAAddress, OldData, <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="number">5</span>, dwOldProtect, &amp;dwOldProtect);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> WINAPI <span class="title">My_MessageBoxA</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ HWND hWnd,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ LPCSTR lpText,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_opt_ LPCSTR lpCaption,</span></span></span><br><span class="line"><span class="params"><span class="function">    _In_ UINT uType)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//先恢复原来的字节码，然后调用正常的MessageboxA弹窗</span></span><br><span class="line">    <span class="built_in">UnInlineHook</span>();</span><br><span class="line">    <span class="keyword">int</span> bRet = <span class="built_in">MessageBoxA</span>(<span class="literal">NULL</span>, <span class="string">&quot;Inline Hook\ni am b1ackie!!!&quot;</span>, <span class="string">&quot;hook&quot;</span>, MB_OK);</span><br><span class="line">    <span class="built_in">InlineHook</span>();</span><br><span class="line">    <span class="keyword">return</span> bRet;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Windows.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> WINAPI <span class="hljs-title">My_MessageBoxA</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ HWND hWnd,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ LPCSTR lpText,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ LPCSTR lpCaption,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_ UINT uType)</span></span>;<br>FARPROC MessageBoxAAddress;<br>BYTE NewData[<span class="hljs-number">5</span>] = &#123; <span class="hljs-number">0xE9</span>, <span class="hljs-number">0x0</span>, <span class="hljs-number">0x0</span>, <span class="hljs-number">0x0</span>,<span class="hljs-number">0</span> &#125;;<br>BYTE OldData[<span class="hljs-number">5</span>] = &#123; <span class="hljs-number">0</span> &#125;;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InlineHook</span><span class="hljs-params">()</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">UnInlineHook</span><span class="hljs-params">()</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <br>    <span class="hljs-built_in">MessageBoxA</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;原始窗口1&quot;</span>, <span class="hljs-string">&quot;未被HOOK&quot;</span>, MB_OK);<br>    <span class="hljs-built_in">InlineHook</span>();<br>    <span class="hljs-built_in">MessageBoxA</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;原始窗口2&quot;</span>, <span class="hljs-string">&quot;未被HOOK&quot;</span>, MB_OK);<br>    <span class="hljs-built_in">UnInlineHook</span>();<br>    <span class="hljs-built_in">MessageBoxA</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;原始窗口3&quot;</span>, <span class="hljs-string">&quot;未被HOOK&quot;</span>, MB_OK);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InlineHook</span><span class="hljs-params">()</span> </span>&#123;<br>    MessageBoxAAddress = <span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">LoadLibraryA</span>(<span class="hljs-string">&quot;user32.dll&quot;</span>), <span class="hljs-string">&quot;MessageBoxA&quot;</span>);<br>    <span class="hljs-comment">//保存原数据</span><br>    <span class="hljs-built_in">memcpy</span>(OldData, MessageBoxAAddress, <span class="hljs-number">5</span>);<br>    <span class="hljs-comment">//计算需要跳转的偏移</span><br>    DWORD dwOffset = (DWORD)My_MessageBoxA - (DWORD)MessageBoxAAddress  - <span class="hljs-number">5</span>;<br>    <span class="hljs-comment">//写入新数据，跳转的偏移</span><br>    <span class="hljs-built_in">memcpy</span>(&amp;NewData[<span class="hljs-number">1</span>], &amp;dwOffset, <span class="hljs-number">5</span>);<br><br>    DWORD dwOldprotect = <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//修改页属性</span><br>    <span class="hljs-built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="hljs-number">5</span>, PAGE_EXECUTE_READWRITE, &amp;dwOldprotect);<br>    <span class="hljs-comment">//写入五个字节</span><br>    <span class="hljs-built_in">memcpy</span>(MessageBoxAAddress, NewData, <span class="hljs-number">5</span>);<br>    <span class="hljs-comment">//恢复页属性</span><br>    <span class="hljs-built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="hljs-number">5</span>, dwOldprotect, &amp;dwOldprotect);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">UnInlineHook</span><span class="hljs-params">()</span> </span>&#123;<br>    MessageBoxAAddress = <span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">LoadLibraryA</span>(<span class="hljs-string">&quot;user32.dll&quot;</span>), <span class="hljs-string">&quot;MessageBoxA&quot;</span>);<br>    DWORD dwOldProtect = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="hljs-number">5</span>, PAGE_EXECUTE_READWRITE, &amp;dwOldProtect);<br>    <span class="hljs-comment">//恢复原来的字节码</span><br>    <span class="hljs-built_in">memcpy</span>(MessageBoxAAddress, OldData, <span class="hljs-number">5</span>);<br>    <span class="hljs-built_in">VirtualProtect</span>(MessageBoxAAddress, <span class="hljs-number">5</span>, dwOldProtect, &amp;dwOldProtect);<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> WINAPI <span class="hljs-title">My_MessageBoxA</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ HWND hWnd,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ LPCSTR lpText,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_opt_ LPCSTR lpCaption,</span></span><br><span class="hljs-params"><span class="hljs-function">    _In_ UINT uType)</span> </span>&#123;<br>    <span class="hljs-comment">//先恢复原来的字节码，然后调用正常的MessageboxA弹窗</span><br>    <span class="hljs-built_in">UnInlineHook</span>();<br>    <span class="hljs-keyword">int</span> bRet = <span class="hljs-built_in">MessageBoxA</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-string">&quot;Inline Hook\ni am b1ackie!!!&quot;</span>, <span class="hljs-string">&quot;hook&quot;</span>, MB_OK);<br>    <span class="hljs-built_in">InlineHook</span>();<br>    <span class="hljs-keyword">return</span> bRet;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>可以看到有三个弹窗，正常流程下肯定是1,2,3但是我们Inline Hook了MessageBoxA函数，并且将其中内容改了，如果成功的话，第二个弹窗会不一样，运行程序查看效果。</p>
 <p>先是第一个正常的窗口</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/4.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后是第二个窗口，开始了InlineHook，可以看到并没有弹出原始窗口2，说明此时已经被HOOK了</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/5.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>第三个窗口再取消InlineHook后弹出正常的窗口</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/6.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/6.png" srcset="/img/loading.gif" lazyload></p>
 <p>现在使用OD载入程序来看一下，直接查看第二个MessageBoxA函数，进入查看可以看到函数头部已经改变了，变成了JMP。</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/7.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/7.png" srcset="/img/loading.gif" lazyload></p>
 <p>跳过来看，就是我们自己编写的My_MessageBoxA函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">00401170 &gt;/.  55            push ebp</span><br><span class="line">00401171  |.  8BEC          mov ebp,esp</span><br><span class="line">00401173  |.  83EC 08       sub esp,0x8</span><br><span class="line">00401176  |.  A1 04304100   mov eax,dword ptr ds:[__security_cookie_fai&gt;</span><br><span class="line">0040117B  |.  33C5          xor eax,ebp</span><br><span class="line">0040117D  |.  8945 FC       mov dword ptr ss:[ebp-0x4],eax</span><br><span class="line">00401180  |.  56            push esi</span><br><span class="line">00401181  |.  68 4C1C4100   push InlineHo.00411C4C                      ; /MessageBoxA</span><br><span class="line">00401186  |.  68 581C4100   push InlineHo.00411C58                      ; |/user32.dll</span><br><span class="line">0040118B  |.  FF15 04D04000 call dword ptr ds:[&lt;&amp;KERNEL32.LoadLibraryA&gt;&gt;; |\LoadLibraryA</span><br><span class="line">00401191  |.  50            push eax                                    ; |hModule = 00000001</span><br><span class="line">00401192  |.  FF15 08D04000 call dword ptr ds:[&lt;&amp;KERNEL32.GetProcAddres&gt;; \GetProcAddress</span><br><span class="line">00401198  |.  8B35 00D04000 mov esi,dword ptr ds:[&lt;&amp;KERNEL32.VirtualPro&gt;;  kernel32.VirtualProtect</span><br><span class="line">0040119E  |.  8D4D F8       lea ecx,dword ptr ss:[ebp-0x8]</span><br><span class="line">004011A1  |.  51            push ecx                                    ; /pOldProtect = 049BE914</span><br><span class="line">004011A2  |.  6A 40         push 0x40                                   ; |NewProtect = PAGE_EXECUTE_READWRITE</span><br><span class="line">004011A4  |.  6A 05         push 0x5                                    ; |Size = 0x5</span><br><span class="line">004011A6  |.  50            push eax                                    ; |Address = 00000001</span><br><span class="line">004011A7  |.  A3 A0424100   mov dword ptr ds:[MessageBoxAAddressfailure&gt;; |</span><br><span class="line">004011AC  |.  C745 F8 00000&gt;mov dword ptr ss:[ebp-0x8],0x0              ; |</span><br><span class="line">004011B3  |.  FFD6          call esi                                    ; \VirtualProtect</span><br><span class="line">004011B5  |.  8B0D A0424100 mov ecx,dword ptr ds:[MessageBoxAAddressfai&gt;;  user32.MessageBoxA</span><br><span class="line">004011BB  |.  A1 98424100   mov eax,dword ptr ds:[OldDatan_table]</span><br><span class="line">004011C0  |.  8901          mov dword ptr ds:[ecx],eax</span><br><span class="line">004011C2  |.  A0 9C424100   mov al,byte ptr ds:[0x41429C]</span><br><span class="line">004011C7  |.  8841 04       mov byte ptr ds:[ecx+0x4],al</span><br><span class="line">004011CA  |.  8D45 F8       lea eax,dword ptr ss:[ebp-0x8]</span><br><span class="line">004011CD  |.  50            push eax                                    ; /pOldProtect = 00000001</span><br><span class="line">004011CE  |.  FF75 F8       push dword ptr ss:[ebp-0x8]                 ; |NewProtect = PAGE_NOACCESS|PAGE_WRITECOPY|PAGE_EXECUTE|PAGE_EXECUTE_READWRITE|MEM_COMMIT|400400</span><br><span class="line">004011D1  |.  6A 05         push 0x5                                    ; |Size = 0x5</span><br><span class="line">004011D3  |.  51            push ecx                                    ; |Address = 049BE914</span><br><span class="line">004011D4  |.  FFD6          call esi                                    ; \VirtualProtect</span><br><span class="line">004011D6  |.  6A 00         push 0x0                                    ; /Style = MB_OK|MB_APPLMODAL</span><br><span class="line">004011D8  |.  68 641C4100   push InlineHo.00411C64                      ; |hook</span><br><span class="line">004011DD  |.  68 6C1C4100   push InlineHo.00411C6C                      ; |Inline Hook\ni am b1ackie!!!</span><br><span class="line">004011E2  |.  6A 00         push 0x0                                    ; |hOwner = NULL</span><br><span class="line">004011E4  |.  FF15 10D14000 call dword ptr ds:[&lt;&amp;USER32.MessageBoxA&gt;]   ; \MessageBoxA</span><br><span class="line">004011EA  |.  8BF0          mov esi,eax</span><br><span class="line">004011EC  |.  E8 CFFEFFFF   call InlineHo.InlineHook_ansi_nolocketaryso&gt;</span><br><span class="line">004011F1  |.  8B4D FC       mov ecx,dword ptr ss:[ebp-0x4]</span><br><span class="line">004011F4  |.  8BC6          mov eax,esi</span><br><span class="line">004011F6  |.  33CD          xor ecx,ebp</span><br><span class="line">004011F8  |.  5E            pop esi                                     ;  InlineHo.0040103C</span><br><span class="line">004011F9  |.  E8 06000000   call InlineHo.__security_check_cookiepresen&gt;</span><br><span class="line">004011FE  |.  8BE5          mov esp,ebp</span><br><span class="line">00401200  |.  5D            pop ebp                                     ;  InlineHo.0040103C</span><br><span class="line">00401201  \.  C2 1000       retn 0x10</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">00401170</span> &gt;/.  <span class="hljs-number">55</span>            push ebp<br><span class="hljs-attribute">00401171</span>  |.  <span class="hljs-number">8</span>BEC          mov ebp,esp<br><span class="hljs-attribute">00401173</span>  |.  <span class="hljs-number">83</span>EC <span class="hljs-number">08</span>       sub esp,<span class="hljs-number">0</span>x<span class="hljs-number">8</span><br><span class="hljs-attribute">00401176</span>  |.  A<span class="hljs-number">1</span> <span class="hljs-number">04304100</span>   mov eax,dword ptr ds:[__security_cookie_fai&gt;<br><span class="hljs-attribute">0040117B</span>  |.  <span class="hljs-number">33</span>C<span class="hljs-number">5</span>          xor eax,ebp<br><span class="hljs-attribute">0040117D</span>  |.  <span class="hljs-number">8945</span> FC       mov dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">4</span>],eax<br><span class="hljs-attribute">00401180</span>  |.  <span class="hljs-number">56</span>            push esi<br><span class="hljs-attribute">00401181</span>  |.  <span class="hljs-number">68</span> <span class="hljs-number">4</span>C<span class="hljs-number">1</span>C<span class="hljs-number">4100</span>   push InlineHo.<span class="hljs-number">00411</span>C<span class="hljs-number">4</span>C                      ; /MessageBoxA<br><span class="hljs-attribute">00401186</span>  |.  <span class="hljs-number">68</span> <span class="hljs-number">581</span>C<span class="hljs-number">4100</span>   push InlineHo.<span class="hljs-number">00411</span>C<span class="hljs-number">58</span>                      ; |/user<span class="hljs-number">32</span>.dll<br><span class="hljs-attribute">0040118B</span>  |.  FF<span class="hljs-number">15</span> <span class="hljs-number">04</span>D<span class="hljs-number">04000</span> call dword ptr ds:[&lt;&amp;KERNEL<span class="hljs-number">32</span>.LoadLibraryA&gt;&gt;; |\LoadLibraryA<br><span class="hljs-attribute">00401191</span>  |.  <span class="hljs-number">50</span>            push eax                                    ; |hModule = <span class="hljs-number">00000001</span><br><span class="hljs-attribute">00401192</span>  |.  FF<span class="hljs-number">15</span> <span class="hljs-number">08</span>D<span class="hljs-number">04000</span> call dword ptr ds:[&lt;&amp;KERNEL<span class="hljs-number">32</span>.GetProcAddres&gt;; \GetProcAddress<br><span class="hljs-attribute">00401198</span>  |.  <span class="hljs-number">8</span>B<span class="hljs-number">35</span> <span class="hljs-number">00</span>D<span class="hljs-number">04000</span> mov esi,dword ptr ds:[&lt;&amp;KERNEL<span class="hljs-number">32</span>.VirtualPro&gt;;  kernel<span class="hljs-number">32</span>.VirtualProtect<br><span class="hljs-attribute">0040119E</span>  |.  <span class="hljs-number">8</span>D<span class="hljs-number">4</span>D F<span class="hljs-number">8</span>       lea ecx,dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">8</span>]<br><span class="hljs-attribute">004011A1</span>  |.  <span class="hljs-number">51</span>            push ecx                                    ; /pOldProtect = <span class="hljs-number">049</span>BE<span class="hljs-number">914</span><br><span class="hljs-attribute">004011A2</span>  |.  <span class="hljs-number">6</span>A <span class="hljs-number">40</span>         push <span class="hljs-number">0</span>x<span class="hljs-number">40</span>                                   ; |NewProtect = PAGE_EXECUTE_READWRITE<br><span class="hljs-attribute">004011A4</span>  |.  <span class="hljs-number">6</span>A <span class="hljs-number">05</span>         push <span class="hljs-number">0</span>x<span class="hljs-number">5</span>                                    ; |Size = <span class="hljs-number">0</span>x<span class="hljs-number">5</span><br><span class="hljs-attribute">004011A6</span>  |.  <span class="hljs-number">50</span>            push eax                                    ; |Address = <span class="hljs-number">00000001</span><br><span class="hljs-attribute">004011A7</span>  |.  A<span class="hljs-number">3</span> A<span class="hljs-number">0424100</span>   mov dword ptr ds:[MessageBoxAAddressfailure&gt;; |<br><span class="hljs-attribute">004011AC</span>  |.  C<span class="hljs-number">745</span> F<span class="hljs-number">8</span> <span class="hljs-number">00000</span>&gt;mov dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">8</span>],<span class="hljs-number">0</span>x<span class="hljs-number">0</span>              ; |<br><span class="hljs-attribute">004011B3</span>  |.  FFD<span class="hljs-number">6</span>          call esi                                    ; \VirtualProtect<br><span class="hljs-attribute">004011B5</span>  |.  <span class="hljs-number">8</span>B<span class="hljs-number">0</span>D A<span class="hljs-number">0424100</span> mov ecx,dword ptr ds:[MessageBoxAAddressfai&gt;;  user<span class="hljs-number">32</span>.MessageBoxA<br><span class="hljs-attribute">004011BB</span>  |.  A<span class="hljs-number">1</span> <span class="hljs-number">98424100</span>   mov eax,dword ptr ds:[OldDatan_table]<br><span class="hljs-attribute">004011C0</span>  |.  <span class="hljs-number">8901</span>          mov dword ptr ds:[ecx],eax<br><span class="hljs-attribute">004011C2</span>  |.  A<span class="hljs-number">0</span> <span class="hljs-number">9</span>C<span class="hljs-number">424100</span>   mov al,byte ptr ds:[<span class="hljs-number">0</span>x<span class="hljs-number">41429</span>C]<br><span class="hljs-attribute">004011C7</span>  |.  <span class="hljs-number">8841</span> <span class="hljs-number">04</span>       mov byte ptr ds:[ecx+<span class="hljs-number">0</span>x<span class="hljs-number">4</span>],al<br><span class="hljs-attribute">004011CA</span>  |.  <span class="hljs-number">8</span>D<span class="hljs-number">45</span> F<span class="hljs-number">8</span>       lea eax,dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">8</span>]<br><span class="hljs-attribute">004011CD</span>  |.  <span class="hljs-number">50</span>            push eax                                    ; /pOldProtect = <span class="hljs-number">00000001</span><br><span class="hljs-attribute">004011CE</span>  |.  FF<span class="hljs-number">75</span> F<span class="hljs-number">8</span>       push dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">8</span>]                 ; |NewProtect = PAGE_NOACCESS|PAGE_WRITECOPY|PAGE_EXECUTE|PAGE_EXECUTE_READWRITE|MEM_COMMIT|<span class="hljs-number">400400</span><br><span class="hljs-attribute">004011D1</span>  |.  <span class="hljs-number">6</span>A <span class="hljs-number">05</span>         push <span class="hljs-number">0</span>x<span class="hljs-number">5</span>                                    ; |Size = <span class="hljs-number">0</span>x<span class="hljs-number">5</span><br><span class="hljs-attribute">004011D3</span>  |.  <span class="hljs-number">51</span>            push ecx                                    ; |Address = <span class="hljs-number">049</span>BE<span class="hljs-number">914</span><br><span class="hljs-attribute">004011D4</span>  |.  FFD<span class="hljs-number">6</span>          call esi                                    ; \VirtualProtect<br><span class="hljs-attribute">004011D6</span>  |.  <span class="hljs-number">6</span>A <span class="hljs-number">00</span>         push <span class="hljs-number">0</span>x<span class="hljs-number">0</span>                                    ; /Style = MB_OK|MB_APPLMODAL<br><span class="hljs-attribute">004011D8</span>  |.  <span class="hljs-number">68</span> <span class="hljs-number">641</span>C<span class="hljs-number">4100</span>   push InlineHo.<span class="hljs-number">00411</span>C<span class="hljs-number">64</span>                      ; |hook<br><span class="hljs-attribute">004011DD</span>  |.  <span class="hljs-number">68</span> <span class="hljs-number">6</span>C<span class="hljs-number">1</span>C<span class="hljs-number">4100</span>   push InlineHo.<span class="hljs-number">00411</span>C<span class="hljs-number">6</span>C                      ; |Inline Hook\ni am b<span class="hljs-number">1</span>ackie!!!<br><span class="hljs-attribute">004011E2</span>  |.  <span class="hljs-number">6</span>A <span class="hljs-number">00</span>         push <span class="hljs-number">0</span>x<span class="hljs-number">0</span>                                    ; |hOwner = NULL<br><span class="hljs-attribute">004011E4</span>  |.  FF<span class="hljs-number">15</span> <span class="hljs-number">10</span>D<span class="hljs-number">14000</span> call dword ptr ds:[&lt;&amp;USER<span class="hljs-number">32</span>.MessageBoxA&gt;]   ; \MessageBoxA<br><span class="hljs-attribute">004011EA</span>  |.  <span class="hljs-number">8</span>BF<span class="hljs-number">0</span>          mov esi,eax<br><span class="hljs-attribute">004011EC</span>  |.  E<span class="hljs-number">8</span> CFFEFFFF   call InlineHo.InlineHook_ansi_nolocketaryso&gt;<br><span class="hljs-attribute">004011F1</span>  |.  <span class="hljs-number">8</span>B<span class="hljs-number">4</span>D FC       mov ecx,dword ptr ss:[ebp-<span class="hljs-number">0</span>x<span class="hljs-number">4</span>]<br><span class="hljs-attribute">004011F4</span>  |.  <span class="hljs-number">8</span>BC<span class="hljs-number">6</span>          mov eax,esi<br><span class="hljs-attribute">004011F6</span>  |.  <span class="hljs-number">33</span>CD          xor ecx,ebp<br><span class="hljs-attribute">004011F8</span>  |.  <span class="hljs-number">5</span>E            pop esi                                     ;  InlineHo.<span class="hljs-number">0040103</span>C<br><span class="hljs-attribute">004011F9</span>  |.  E<span class="hljs-number">8</span> <span class="hljs-number">06000000</span>   call InlineHo.__security_check_cookiepresen&gt;<br><span class="hljs-attribute">004011FE</span>  |.  <span class="hljs-number">8</span>BE<span class="hljs-number">5</span>          mov esp,ebp<br><span class="hljs-attribute">00401200</span>  |.  <span class="hljs-number">5</span>D            pop ebp                                     ;  InlineHo.<span class="hljs-number">0040103</span>C<br><span class="hljs-attribute">00401201</span>  \.  C<span class="hljs-number">2</span> <span class="hljs-number">1000</span>       retn <span class="hljs-number">0</span>x<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
 
 <h4 id="注入方式实现inline-hook"><a href="#注入方式实现inline-hook" class="headerlink" title="注入方式实现inline hook"></a>注入方式实现inline hook</h4><p>我们可以将inline hook写成一个dll文件，然后通过远线程注入的方式，将其注入到进程中。</p>
 <p>远程线程的具体实现：<a href="https://b1ack1e.github.io/2021/07/12/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/">注入技术-远程线程注入</a></p>
 <p>编写一个弹窗，实现效果如下</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/8.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/8.png" srcset="/img/loading.gif" lazyload></p>
 <p>当注入成功后，内容更改</p>
-<p><img src="/2021/07/28/HOOK-Inline%20Hook/9.png"></p>
+<p><img src="/2021/07/28/HOOK-Inline%20Hook/9.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本篇只介绍了32位的Inline Hook，但是64位原理相同，只是修改的字节数不同，还有跳转方式也只介绍了基于JMP的，还有其他几种跳转方式，感兴趣可以看《加密与解密第四版》其中有较为详细的介绍。</p>
 
-      
-    </div>
-    <div class="article-footer">
-      <blockquote class="mt-2x">
-  <ul class="post-copyright list-unstyled">
-    
-    <li class="post-copyright-link hidden-xs">
-      <strong>本文链接：</strong>
-      <a href="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/" title="HOOK-Inline Hook" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/28/HOOK-Inline Hook/</a>
-    </li>
-    
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-</blockquote>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Inline-Hook/">Inline Hook</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/29/160CrackMe-004/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">160CrackMe-004</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/">
+                        <span class="hidden-mobile">隐藏技术-进程隐藏</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-
-<div class="panel panel-default panel-badger">
-  <div class="panel-body">
-    <figure class="media">
-      <div class="media-left">
-        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
-        </a>
-      </div>
-      <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
-        <div></div>
-      </div>
-    </figure>
-  </div>
-</div>
-
-
-    </div>
-  </article>
-  
-    
-  <section id="comments">
-  	
-      <div id="vcomments"></div>
-    
-  </section>
-
-
-  
-</div>
-
-  <nav class="bar bar-footer clearfix" data-stick-bottom>
-  <div class="bar-inner">
-  
-  <ul class="pager pull-left">
-    
-    <li class="prev">
-      <a href="/2021/07/29/160CrackMe-004/" title="160CrackMe-004"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
-    
-    <li class="next">
-      <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" title="隐藏技术-进程隐藏"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
-    </li>
-    
-    
-  </ul>
-  
-  
-  
-  <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
-    
-  </div>
-  </div>
-</nav>
-  
-
-
-</main>
-
-  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
-	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    <div class="copyright">
-    	
-        <div class="publishby">
-        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+            
+          </article>
         </div>
+      </div>
     </div>
-</footer>
-  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-<script>
-window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
-</script>
-
-<script src="/js/plugin.min.js"></script>
-
-
-<script src="/js/application.js"></script>
-
-
-    <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-
-<script src="/js/insight.js"></script>
-
-
-
-
-
-
-   
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
-
-   
     
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/valine"></script>
-  <script type="text/javascript">
-  var GUEST = ['nick', 'mail', 'link'];
-  var meta = 'nick,mail,link';
-  meta = meta.split(',').filter(function(item) {
-    return GUEST.indexOf(item) > -1;
-  });
-  new Valine({
-    el: '#vcomments',
-    verify: false,
-    notify: false,
-    appId: '',
-    appKey: '',
-    placeholder: 'Just go go',
-    avatar: 'mm',
-    meta: meta,
-    pageSize: '10' || 10,
-    visitor: false
-  });
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
   </script>
 
-     
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 </body>

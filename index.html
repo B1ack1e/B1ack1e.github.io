@@ -1,845 +1,901 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-transform" />
-  <meta http-equiv="Cache-Control" content="no-siteapp" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no,email=no,adress=no">
-  <!-- Color theme for statusbar -->
-  <meta name="theme-color" content="#000000" />
-  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
-  <meta http-equiv="window-target" content="_top" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
   
-  <title>b1ackie</title>
-  <meta property="og:type" content="website">
-<meta property="og:title" content="b1ackie&#39;blog">
-<meta property="og:url" content="https://b1ack1e.github.io/index.html">
-<meta property="og:site_name" content="b1ackie&#39;blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="b1ackie">
-<meta name="twitter:card" content="summary">
-  <!-- Canonical links -->
-  <link rel="canonical" href="https://b1ack1e.github.io/index.html">
-  
-    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  <title>b1ackie&#39;blog</title>
 
-  
-  
-  
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
-  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-  <div class="slimContent">
-    <div class="navbar-header">
-      
-      
-      <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
-        </a>
-        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
-      </div>
-      
-      <div class="search" id="search-form-wrap">
 
-    <form class="search-form sidebar-form">
-        <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="搜索" />
-            <span class="input-group-btn">
-                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ack1e.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 100vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/123.jfif') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="b1ackie's blog">
+              
             </span>
+
+            
+          </div>
+
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
         </div>
-    </form>
-    <div class="ins-search">
-  <div class="ins-search-mask"></div>
-  <div class="ins-search-container">
-    <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
-      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
     </div>
-    <div class="ins-section-wrapper">
-      <div class="ins-section-container"></div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          style=margin-top:0>
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/06/%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF-SOCKET%E9%80%9A%E4%BF%A1/" target="_self">
+          传输技术-SOCKET通信
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/06/%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF-SOCKET%E9%80%9A%E4%BF%A1/" target="_self">
+          
+          
+            
+          
+          SOCKET通信socket也被叫做“套接字”，应用程序通常通过“套接字”向网络发出请求或者接收请求。socket表示是：IP地址加上端口号，如127.0.0.1:8080。Socket编程有两种通信协议可以选择，一种是TCP，另一种是UDP。先来说一下基于TCP的Socket编程。
+基于TCP Socket编程TCP是一种基于连接的协议，在进行通信之前，必须要建立连接，其中服务端监听请求，客户端
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-06 19:35" pubdate>
+              2021-08-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF/">传输技术</a>
+            
+              <a href="/tags/SOCKET%E7%BC%96%E7%A8%8B/">SOCKET编程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/06/%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF-windows%E5%8E%8B%E7%BC%A9API/" target="_self">
+          压缩技术-windows压缩API
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/06/%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF-windows%E5%8E%8B%E7%BC%A9API/" target="_self">
+          
+          
+            
+          
+          压缩技术为了实现windows上的数据压缩和解压缩，最方便的方法就是直接调用win32API函数。windows系统的ntdll专门提供了RtlCompressBuffer和RtlDecompressBuffer函数来负责数据压缩和解压缩操作。
+函数介绍RtlGetCompressionWorkSpaceSize确定RtlCompressBuffer和RtlDecompressBuffer函数工作
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-06 13:46" pubdate>
+              2021-08-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">压缩技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/04/160CrackMe-008/" target="_self">
+          160CrackMe-008
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/04/160CrackMe-008/" target="_self">
+          
+          
+            
+          
+          初探打开程序直接输入一个注册码，输入错误弹出错误提示窗口。
+
+分析无壳，是使用VB编写的的
+
+使用OD直接搜索错误弹窗的提示，可以直接定位一个关键跳转。
+
+开始分析一下，就在上面不远处，是明文比较输入与SynTaX 2oo1
+
+输入SynTaX 2oo1即可成功
+
+总结有点简单了。。。
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-04 17:38" pubdate>
+              2021-08-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/03/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E5%82%80%E5%84%A1%E8%BF%9B%E7%A8%8B/" target="_self">
+          隐藏技术-傀儡进程
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/03/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E5%82%80%E5%84%A1%E8%BF%9B%E7%A8%8B/" target="_self">
+          
+          
+            
+          
+          傀儡进程借着正常的软件进程或者系统进程的外壳来进行恶意的操作。
+函数介绍GetThreadContext检索指定线程的上下文
+64位程序可以使用Wow64GetThreadContext检索WOW64线程的上下文。
+1234BOOL GetThreadContext(  HANDLE    hThread,  LPCONTEXT lpContext);
+
+hThread：要检索其上下文的线程的句柄
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-03 17:37" pubdate>
+              2021-08-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/03/160CrackMe-007/" target="_self">
+          160CrackMe-007
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/03/160CrackMe-007/" target="_self">
+          
+          
+            
+          
+          初探打开程序还是和上一个有很熟悉的画面，不愧是同一个作者做的。
+
+about按钮了解情况，还是需要让按钮消失然后露出logo就算成功了。
+分析无壳，是使用delphi编写的。
+
+还是直接使用DeDark查看，然后去下断
+
+断下来之后进行分析，可以看到一个较为关键的跳转，在此之前的函数比较重要，进去查看一下。
+
+进来之后果然看到了算法
+12345678910111213141516171819202
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-03 10:52" pubdate>
+              2021-08-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/02/160CrackMe-006/" target="_self">
+          160CrackMe-006
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/02/160CrackMe-006/" target="_self">
+          
+          
+            
+          
+          初探打开程序如下看到OK是不可点击的，是一个灰色按钮。
+
+点击about查看一下，可以看到我们需要让两个按钮都消失以便可以看到Ringzer0的logo
+
+那么先想办法让OK变得可以点击吧。
+分析查看壳，发现未加壳，是用Delphi写的
+
+使用API断点，给IsEnableWindow下断，但是发现怎么都无法断下来，说明肯定是有条件的，而当前还没有满足这个条件。
+使用dedark工具帮忙查看，直接
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-02 18:19" pubdate>
+              2021-08-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/29/160CrackMe-004/" target="_self">
+          160CrackMe-004
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/29/160CrackMe-004/" target="_self">
+          
+          
+            
+          
+          初探打开程序，看到需要输入用户名和注册码，提示如果正确下面会出现一张朱茵的照片。
+
+分析使用DIE查看一下，无壳，使用Delphi编写的。
+
+使用OD搜索一下字符串，可以看到几个字符串，其中有恭喜注册成功的字样，可以看到还有黑头这样的问题，但是点进去查看没有什么。
+
+下断点在恭喜这里，但是看不到什么有用的信息，在获取用户名的长度，然后加上循环次数这样，但是这并不是注册码，然后跳转的关键在esi+0
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-29 10:29" pubdate>
+              2021-07-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/28/HOOK-Inline%20Hook/" target="_self">
+          HOOK-Inline Hook
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/28/HOOK-Inline%20Hook/" target="_self">
+          
+          
+            
+          
+          Inline HookInline Hook是Hook技术的一种，它是通过修改机器码来实现HOOK。当我们正常调用一个API函数时，正常的流程是，call API，然后就会到函数内部执行。我们写下如下语句，在OD中打开就是如图的样子。可以看到先压入参数，然后调用MessageBoxA函数。
+1MessageBoxA(NULL, &quot;这是本来的窗口&quot;, &quot;未被HOOK&q
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-28 11:17" pubdate>
+              2021-07-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/Inline-Hook/">Inline Hook</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" target="_self">
+          隐藏技术-进程隐藏
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" target="_self">
+          
+          
+            
+          
+          进程隐藏在windows中，用户程序的所有操作都是基于WIN32API来实现的，例如使用任务管理器查看进程等操作，这就给了病毒木马操作的空间。它可以通过HOOK技术拦截API的调用，并对数据进行监控和修改，从而达到不可告人的目的。
+实现进程隐藏可以HOOK ZwQuerySystemInformain来实现进程的隐藏。遍历进程通常是调用EnumProcesses或者CreateToolhelp32
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-27 11:25" pubdate>
+              2021-07-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
+          shellcode学习
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
+          
+          
+            
+          
+          shellcode学习编译器的一些设置第一步修改入口点在编译器中修改程序的入口点，写代码时就可以使用新的入口点名
+
+修改过后，体积变得很小，使用IDA查看也可以看到左边函数只有两个。
+
+第二步关闭缓冲区安全检查
+然后查看IDA，左边函数只剩一个了
+
+第三步设置工程兼容XP
+修改运行库为MT
+
+第四步关闭生成清单
+使用loadpe查看看到只有两个区段
+
+第五步关闭调试信息
+shellcode编写原则
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-22 09:58" pubdate>
+              2021-07-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/ShellCode/">ShellCode</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/ShellCode/">ShellCode</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
 </div>
-
-
-</div>
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
-      <ul class="nav navbar-nav main-nav ">
-        
-        
-        <li class="menu-item menu-item-home">
-          <a href="/.">
-            
-            <i class="icon icon-home-fill"></i>
-            
-            <span class="menu-title">首页</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives">
-            
-            <i class="icon icon-archives-fill"></i>
-            
-            <span class="menu-title">归档</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories">
-            
-            <i class="icon icon-folder"></i>
-            
-            <span class="menu-title">分类</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags">
-            
-            <i class="icon icon-tags"></i>
-            
-            <span class="menu-title">标签</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">关于</span>
-          </a>
-        </li>
-        
-      </ul>
-      
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    </nav>
-  </div>
-</header>
-
-  
-    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
-  <div class="slimContent">
     
-      <div class="widget">
-    <h3 class="widget-title">公告</h3>
-    <div class="widget-body">
-        <div id="board">
-            <div class="content">
-                <p>嚯！</p>
-            </div>
-        </div>
-    </div>
-</div>
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
 
     
       
-  <div class="widget">
-    <h3 class="widget-title">分类</h3>
-    <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ShellCode/">ShellCode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">12</span></li></ul>
-    </div>
-  </div>
-
-
-    
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-  <div class="widget">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HOOK/" rel="tag">HOOK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PE/" rel="tag">PE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ShellCode/" rel="tag">ShellCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UAC/" rel="tag">UAC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">自启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">13</span></li></ul>
-    </div>
-  </div>
-
-
-    
       
-  <div class="widget">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget-body tagcloud">
-      <a href="/tags/CrackMe/" style="font-size: 13.5px;">CrackMe</a> <a href="/tags/HOOK/" style="font-size: 13px;">HOOK</a> <a href="/tags/Inline-Hook/" style="font-size: 13px;">Inline Hook</a> <a href="/tags/PE/" style="font-size: 13px;">PE</a> <a href="/tags/ShellCode/" style="font-size: 13px;">ShellCode</a> <a href="/tags/UAC/" style="font-size: 13px;">UAC</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">提权技术</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.33px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.17px;">病毒分析</a> <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">自启动技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.67px;">逆向工程</a> <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">隐藏技术</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 13.83px;">黑客编程</a>
-    </div>
-  </div>
-
-    
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
       
-  <div class="widget">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">21</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget-body">
-      <ul class="recent-post-list list-unstyled no-thumbnail">
-        
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/03/160CrackMe-007/" class="title">160CrackMe-007</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-03T02:52:32.000Z" itemprop="datePublished">2021-08-03</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/02/160CrackMe-006/" class="title">160CrackMe-006</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">2021-08-02</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/29/160CrackMe-004/" class="title">160CrackMe-004</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-29T02:29:39.000Z" itemprop="datePublished">2021-07-29</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/28/HOOK-Inline%20Hook/" class="title">HOOK-Inline Hook</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="title">隐藏技术-进程隐藏</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">2021-07-27</time>
-              </p>
-            </div>
-          </li>
-          
-      </ul>
-    </div>
-  </div>
-  
-
-    
-  </div>
-</aside>
-
-  
-  <main class="main" role="main">
-  
-  <div class="content article-list">
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/03/160CrackMe-007/">160CrackMe-007</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/08/03/160CrackMe-007/" class="article-date">
-	  <time datetime="2021-08-03T02:52:32.000Z" itemprop="datePublished">8月 3</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/03/160CrackMe-007/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.4k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/02/160CrackMe-006/">160CrackMe-006</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/08/02/160CrackMe-006/" class="article-date">
-	  <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">8月 2</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/02/160CrackMe-006/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.9k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 15(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/29/160CrackMe-004/">160CrackMe-004</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/29/160CrackMe-004/" class="article-date">
-	  <time datetime="2021-07-29T02:29:39.000Z" itemprop="datePublished">7月 29</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/29/160CrackMe-004/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.1k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/28/HOOK-Inline%20Hook/">HOOK-Inline Hook</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/28/HOOK-Inline%20Hook/" class="article-date">
-	  <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">7月 28</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a>, <a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/28/HOOK-Inline%20Hook/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.4k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/">隐藏技术-进程隐藏</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="article-date">
-	  <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">7月 27</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 383(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 1(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/">shellcode学习</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" class="article-date">
-	  <time datetime="2021-07-22T01:58:08.000Z" itemprop="datePublished">7月 22</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/ShellCode/">ShellCode</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/ShellCode/" rel="tag">ShellCode</a>, <a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.6k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 8(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/21/160CrackMe-003/">160CrackMe-003</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/21/160CrackMe-003/" class="article-date">
-	  <time datetime="2021-07-21T07:11:38.000Z" itemprop="datePublished">7月 21</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/21/160CrackMe-003/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 926(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/">隐藏技术-进程伪装</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" class="article-date">
-	  <time datetime="2021-07-21T06:02:59.000Z" itemprop="datePublished">7月 21</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 669(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 3(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/">提权技术-Bypass UAC</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/" class="article-date">
-	  <time datetime="2021-07-20T06:24:40.000Z" itemprop="datePublished">7月 20</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/UAC/" rel="tag">UAC</a>, <a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 621(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
-	
-
-  </p>
-</article>
-
-    
-      <article class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/07/20/160CrackMe-002/">160CrackMe--002</a>
-    </h1>
-  
-
-  </div>
-  
-  <p class="article-meta">
-    <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/20/160CrackMe-002/" class="article-date">
-	  <time datetime="2021-07-20T02:17:33.000Z" itemprop="datePublished">7月 20</time>
-	</a>
-</span>
-    
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/CrackMe/">CrackMe</a>
-  </span>
-
-    
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/CrackMe/" rel="tag">CrackMe</a>, <a class="article-tag-link-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a>
-  </span>
-
-
-    <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/20/160CrackMe-002/#comments" class="article-comment-link">评论</a></span>
-    
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 557(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
-	
-
-  </p>
-</article>
-
     
   </div>
 
+
   
-    
-    <nav class="bar bar-footer clearfix" data-stick-bottom>
-        <div class="bar-inner">
-        <ul class="pager pull-left">
-            
-            <li class="prev disabled">
-                <a href="javascript:;">
-                    <i class="icon icon-angle-left"></i>
-                    上一页
-                </a>
-            </li>
-            
-            
-            <li class="next">
-                <a href="/page/2/">
-                    下一页
-                    <i class="icon icon-angle-right"></i>
-                </a>
-            </li>
-            
-        </ul>
-        <div class="total-article bar-right">Page 1 of 3</div>
-        </div>
-    </nav>
-    
- 
-</main>
 
-  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
-	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    <div class="copyright">
-    	
-        <div class="publishby">
-        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
-        </div>
-    </div>
+  
 </footer>
-  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-<script>
-window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
-</script>
-
-<script src="/js/plugin.min.js"></script>
 
 
-<script src="/js/application.js"></script>
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
 
-    <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<script src="/js/insight.js"></script>
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
 
 
-
-
-
-   
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
 
 
 
@@ -848,6 +904,47 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 </body>

