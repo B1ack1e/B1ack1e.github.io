@@ -197,6 +197,61 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" target="_self">
+          隐藏技术-进程隐藏
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/" target="_self">
+          
+          
+            
+          
+          进程隐藏在windows中，用户程序的所有操作都是基于WIN32API来实现的，例如使用任务管理器查看进程等操作，这就给了病毒木马操作的空间。它可以通过HOOK技术拦截API的调用，并对数据进行监控和修改，从而达到不可告人的目的。
+实现进程隐藏可以HOOK ZwQuerySystemInformain来实现进程的隐藏。遍历进程通常是调用EnumProcesses或者CreateToolhelp32
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-27 11:25" pubdate>
+              2021-07-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
           shellcode学习
         </a>
@@ -712,67 +767,6 @@ lpCmdLine：要执
               <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
             
               <a href="/tags/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/">启动技术</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/14/160CrackMe-001/" target="_self">
-          160CrackMe-001
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/14/160CrackMe-001/" target="_self">
-          
-          
-            
-          
-          初探打开程序会弹出如下的窗口，根据标题可以看出，我们需要“杀死”这个弹窗。
-
-程序主题界面有两部分，第一部分是序列号加名字。
-
-第二部分是单纯的序列号，应该是比较简单。
-
-看完大体流程，开始分析。
-分析查询程序的基本信息，可以看到未加壳，是用Delphi语言编写的。
-
-先分析单纯的序列号。用OD打开程序，搜索字符串，搜索错误的提示，可以看到成功与错误的提示，还有一个JNZ，这里应该是关键的判断跳转
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-14 10:23" pubdate>
-              2021-07-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/CrackMe/">CrackMe</a>
             
           </div>
         
