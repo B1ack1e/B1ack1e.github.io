@@ -32,7 +32,7 @@
     
     
       
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
     
   
 
@@ -252,7 +252,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-07-30 晚上
+                  本文最后更新于：2021-08-09 晚上
                 
               </p>
             
@@ -266,7 +266,7 @@
 <p><a href="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/">HOOK-Inline Hook</a></p>
 <h4 id="函数介绍"><a href="#函数介绍" class="headerlink" title="函数介绍"></a>函数介绍</h4><p>ZwQuerySystemInformation</p>
 <p>获取指定的系统信息</p>
-<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sqf">NTSTATUS WINAPI ZwQuerySystemInformation(<br>  <span class="hljs-variable">_In_</span>      SYSTEM_INFORMATION_CLASS SystemInformationClass,<br>  <span class="hljs-variable">_Inout_</span>   PVOID                    SystemInformation,<br>  <span class="hljs-variable">_In_</span>      ULONG                    SystemInformationLength,<br>  <span class="hljs-variable">_Out_opt_</span> PULONG                   ReturnLength<br>);<br></code></pre></td></tr></table></figure>
+<figure class="highlight sqf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sqf">NTSTATUS WINAPI ZwQuerySystemInformation(<br>  <span class="hljs-variable">_In_</span>      SYSTEM_INFORMATION_CLASS SystemInformationClass,<br>  <span class="hljs-variable">_Inout_</span>   PVOID                    SystemInformation,<br>  <span class="hljs-variable">_In_</span>      ULONG                    SystemInformationLength,<br>  <span class="hljs-variable">_Out_opt_</span> PULONG                   ReturnLength<br>);<br></code></pre></div></td></tr></table></figure>
 
 <p>SystemInformationClass：要检索系统的信息类型。SystemProcessInformation(5)表示检索系统的进程信息。</p>
 <p>SystemInformation：指向缓冲区的指针，用于接受请求的信息。该信息的大小和结构取决于SystemInformationClass的值。如检索信息是SystemProcessInformation那么缓冲区为SYSTEM_PROCESS_INFORMATION结构数组。</p>
