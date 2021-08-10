@@ -200,7 +200,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.5k 字
     </span>
   
 
@@ -210,7 +210,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15
+      18
        分钟
     </span>
   
@@ -311,7 +311,16 @@
 <p>都不满足的话就打印字符串“Error 3.2: Not a valid command provided”</p>
 <h3 id="5-这个恶意代码中有什么本地特征吗？"><a href="#5-这个恶意代码中有什么本地特征吗？" class="headerlink" title="5.这个恶意代码中有什么本地特征吗？"></a>5.这个恶意代码中有什么本地特征吗？</h3><p>有，就是前面分析的注册表键值的修改，还有对于文件夹的创建和文件的复制。</p>
 <h3 id="6-这个恶意代码的目的是什么？-1"><a href="#6-这个恶意代码的目的是什么？-1" class="headerlink" title="6.这个恶意代码的目的是什么？"></a>6.这个恶意代码的目的是什么？</h3><p>判断网络是否连接，然后读取一个网页资源中的注释后的第一个字符，通过这个字符来判断进行何种操作。具体上面已经分析过了。</p>
-<h2 id="Lab-6-4"><a href="#Lab-6-4" class="headerlink" title="Lab 6-4"></a>Lab 6-4</h2><h3 id="1-在实验6-3和6-4的main函数中的调用之间的区别是什么？"><a href="#1-在实验6-3和6-4的main函数中的调用之间的区别是什么？" class="headerlink" title="1.在实验6-3和6-4的main函数中的调用之间的区别是什么？"></a>1.在实验6-3和6-4的main函数中的调用之间的区别是什么？</h3>
+<h2 id="Lab-6-4"><a href="#Lab-6-4" class="headerlink" title="Lab 6-4"></a>Lab 6-4</h2><h3 id="1-在实验6-3和6-4的main函数中的调用之间的区别是什么？"><a href="#1-在实验6-3和6-4的main函数中的调用之间的区别是什么？" class="headerlink" title="1.在实验6-3和6-4的main函数中的调用之间的区别是什么？"></a>1.在实验6-3和6-4的main函数中的调用之间的区别是什么？</h3><p>加了一个for循环，sub_401040加了一个参数i。</p>
+<p><img src="/2021/08/10/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C6/6-4-1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-什么新的代码结构已经被添加到main中"><a href="#2-什么新的代码结构已经被添加到main中" class="headerlink" title="2.什么新的代码结构已经被添加到main中"></a>2.什么新的代码结构已经被添加到main中</h3><p>for循环结构</p>
+<h3 id="3-这个实验的解析HTML的函数和前面实验中的那些有什么区别"><a href="#3-这个实验的解析HTML的函数和前面实验中的那些有什么区别" class="headerlink" title="3.这个实验的解析HTML的函数和前面实验中的那些有什么区别"></a>3.这个实验的解析HTML的函数和前面实验中的那些有什么区别</h3><p>主要是给InternetOpenA传入的szAgent参数不一样，这个参数先通过sprintf将“Internet Explorer 7.50/pma”与循环次数i拼接起来。第一次是Internet Explorer 7.50/pma0第二次是Internet Explorer 7.50/pma1…以此类推。</p>
+<p><img src="/2021/08/10/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C6/6-4-2.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-这个程序会运行多久？（假设它已经连接到互联网）"><a href="#4-这个程序会运行多久？（假设它已经连接到互联网）" class="headerlink" title="4.这个程序会运行多久？（假设它已经连接到互联网）"></a>4.这个程序会运行多久？（假设它已经连接到互联网）</h3><p>看这个for循环，每次都会sleep，其中参数是6000ms，是一分钟，也就是每循环一次沉睡一分钟，那么就是1440分钟。</p>
+<p><img src="/2021/08/10/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C6/6-4-3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-在这个恶意代码中有什么新的基于网络的迹象吗？"><a href="#5-在这个恶意代码中有什么新的基于网络的迹象吗？" class="headerlink" title="5.在这个恶意代码中有什么新的基于网络的迹象吗？"></a>5.在这个恶意代码中有什么新的基于网络的迹象吗？</h3><p>就是InternetOpenA传入的szAgent参数不同了，每次都会变。</p>
+<h3 id="6-这个恶意代码的目的是什么？-2"><a href="#6-这个恶意代码的目的是什么？-2" class="headerlink" title="6.这个恶意代码的目的是什么？"></a>6.这个恶意代码的目的是什么？</h3><p>跟之前的基本一样，只是运行的时间变得特别长。</p>
+
             </div>
             <hr>
             <div>
