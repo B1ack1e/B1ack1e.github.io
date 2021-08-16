@@ -197,6 +197,66 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/08/16/160CrackMe-011/" target="_self">
+          160CrackMe-011
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/16/160CrackMe-011/" target="_self">
+          
+          
+            
+          
+          初探打开程序看到主界面，不可以输入任何字符，只可以点击下面的这个小键盘来进行输入，右边提示一个状态上面写着未注册，猜测成功的话这里应该会发生变化，下面开始分析一下。
+
+分析无壳，使用VB语言编写
+
+使用OD，直接搜索字符串，就可以搜索到一大串类似注册码的字符串和REGISTRIERT。
+
+进入查看，可以看到在关键跳转前有一个比较，猜测应该是输入的内容经过一个计算之后与这个字符串进行比较。
+
+查看栈
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-16 14:06" pubdate>
+              2021-08-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/13/160CrackMe-010/" target="_self">
           160CrackMe-010
         </a>
@@ -720,69 +780,11 @@ about按钮了解情况，还是需要让按钮消失然后露出logo就算成�
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/29/160CrackMe-004/" target="_self">
-          160CrackMe-004
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/29/160CrackMe-004/" target="_self">
-          
-          
-            
-          
-          初探打开程序，看到需要输入用户名和注册码，提示如果正确下面会出现一张朱茵的照片。
-
-分析使用DIE查看一下，无壳，使用Delphi编写的。
-
-使用OD搜索一下字符串，可以看到几个字符串，其中有恭喜注册成功的字样，可以看到还有黑头这样的问题，但是点进去查看没有什么。
-
-下断点在恭喜这里，但是看不到什么有用的信息，在获取用户名的长度，然后加上循环次数这样，但是这并不是注册码，然后跳转的关键在esi+0
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-29 10:29" pubdate>
-              2021-07-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
