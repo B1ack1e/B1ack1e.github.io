@@ -197,6 +197,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" target="_self">
+          病毒分析-资源释放
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" target="_self">
+          
+          
+            
+          
+          本篇来分析一下自己写的资源释放的小demo。
+
+打开程序，发现没有任何改变，没有明显的行为。
+使用die工具查一下文件的基本信息
+
+查看一下导入表，可以看到FindResource等函数，这几个函数是用来操作资源的，猜测有可能是释放了一个资源节中的资源到电脑上。
+
+还可以看到fwrite，fopen这样的函数，那么应该就是把资源释放到了一个路径中去。
+
+可以使用resource hacker来查看
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-09 09:54" pubdate>
+              2021-07-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/07/08/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" target="_self">
           注入技术-全局钩子注入
         </a>

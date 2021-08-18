@@ -197,6 +197,65 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/08/03/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E5%82%80%E5%84%A1%E8%BF%9B%E7%A8%8B/" target="_self">
+          隐藏技术-傀儡进程
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/03/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E5%82%80%E5%84%A1%E8%BF%9B%E7%A8%8B/" target="_self">
+          
+          
+            
+          
+          傀儡进程借着正常的软件进程或者系统进程的外壳来进行恶意的操作。
+函数介绍GetThreadContext检索指定线程的上下文
+64位程序可以使用Wow64GetThreadContext检索WOW64线程的上下文。
+1234BOOL GetThreadContext(  HANDLE    hThread,  LPCONTEXT lpContext);
+
+hThread：要检索其上下文的线程的句柄
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-03 17:37" pubdate>
+              2021-08-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/03/160CrackMe-007/" target="_self">
           160CrackMe-007
         </a>
@@ -712,65 +771,6 @@ shellcode编写原则
               <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/">提权技术</a>
             
               <a href="/tags/UAC/">UAC</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/20/160CrackMe-002/" target="_self">
-          160CrackMe-002
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/20/160CrackMe-002/" target="_self">
-          
-          
-            
-          
-          初探打开程序，看到提示输入name和serial，输入后，提示错误。
-
-分析查壳，看到程序没有加壳，是用VB语言写的。
-
-使用OD进行分析，搜索错误提示的字符串，可以直接定位到关键的跳转
-
-开始分析生成serial的过程，首先是获取了name的长度然后将其乘以17CFB再加上name的第一个ASCII码，最后转为十进制字符串。
-1234567891011121314151600402412   .
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-20 10:17" pubdate>
-              2021-07-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/CrackMe/">CrackMe</a>
             
           </div>
         
