@@ -197,6 +197,61 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" target="_self">
+          病毒分析-资源释放+钩子注入
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/12/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE+%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" target="_self">
+          
+          
+            
+          
+          把上次写的资源释放和全局钩子注入结合起来，做了一个小demo，实现功能就是把自己的写的DLL作为资源加入，然后自释放出来，再调用这个DLL进行钩子注入。
+使用dir工具先查看一下基本信息，可以看到当前程序未加壳。
+
+再查看一下导入表的相关信息，看看都使用了哪些API。可以看到一些资源相关API，还有Loadlibrary和getprocaddress，这两个API，写过shellcode都知道使用
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-12 10:15" pubdate>
+              2021-07-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" target="_self">
           病毒分析-资源释放
         </a>
