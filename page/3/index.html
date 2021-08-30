@@ -197,6 +197,64 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" target="_self">
+          隐藏技术-进程伪装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          进程伪装进程伪装就是修改任意进程的信息，在系统中显示的是另一个进程的信息，但是实际上还是它还是在执行原来的操作。
+实现原理实现起来原理并不复杂，就是修改指定进程的进程环境块PEB中的进程路径以及命令行信息即可。下面使用Windbg来查看一下notepad的相关信息。
+查看PEB的相关信息，可以看到ProcessParameters，这里有进程的路径和命令行相关信息。
+
+继续查看这个结构，可以看到I
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-21 14:02" pubdate>
+              2021-07-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/" target="_self">
           提权技术-Bypass UAC
         </a>
@@ -683,64 +741,6 @@ lpCmdLine：要执
             <i class="iconfont icon-date"></i>
             <time datetime="2021-07-13 10:02" pubdate>
               2021-07-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E6%B3%A8%E5%85%A5/">注入</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/12/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" target="_self">
-          注入技术-远程线程注入
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/12/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" target="_self">
-          
-          
-            
-          
-          远程线程注入远程线程注入是指一个进程在另一个进程中创建线程的技术。
-函数介绍OpenProcess打开现有的本地进程对象
-12345HANDLE OpenProcess(  DWORD dwDesiredAccess,  BOOL  bInheritHandle,  DWORD dwProcessId);
-
-dwDesiredAccess：访问进程对象。此访问权限为针对进程的安全描述符进行检查，此
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-12 11:56" pubdate>
-              2021-07-12
             </time>
           </div>
         
