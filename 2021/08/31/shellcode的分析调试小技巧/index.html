@@ -20,9 +20,25 @@
   <meta name="author" content="b1ackie">
   <meta name="keywords" content="">
   
-  <title>归档 - b1ackie&#39;blog</title>
+  <title>shellcode的分析调试小技巧 - b1ackie&#39;blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -51,7 +67,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -157,14 +173,59 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/%E5%BD%92%E6%A1%A3%E9%A1%B5%E8%83%8C%E6%99%AF%E5%9B%BE.jfif') no-repeat center center;
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.jfif') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="shellcode的分析调试小技巧">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-31 18:37" pubdate>
+        2021-08-31 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      293 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      3
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
 
             
           </div>
@@ -177,100 +238,110 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 37 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2021</p>
-    
-    <a href="/2021/07/21/160CrackMe-003/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">160CrackMe-003</span>
-      <time style="float: right;">07-21</time>
-    </a>
-  
-    
-    <a href="/2021/07/21/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E4%BC%AA%E8%A3%85/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">隐藏技术-进程伪装</span>
-      <time style="float: right;">07-21</time>
-    </a>
-  
-    
-    <a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">提权技术-Bypass UAC</span>
-      <time style="float: right;">07-20</time>
-    </a>
-  
-    
-    <a href="/2021/07/20/160CrackMe-002/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">160CrackMe-002</span>
-      <time style="float: right;">07-20</time>
-    </a>
-  
-    
-    <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E7%9B%AE%E5%BD%95/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">自启动技术-快速启动目录</span>
-      <time style="float: right;">07-19</time>
-    </a>
-  
-    
-    <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E6%B3%A8%E5%86%8C%E8%A1%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">自启动技术-注册表</span>
-      <time style="float: right;">07-19</time>
-    </a>
-  
-    
-    <a href="/2021/07/15/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%86%85%E5%AD%98%E7%9B%B4%E6%8E%A5%E5%8A%A0%E8%BD%BD%E8%BF%90%E8%A1%8C/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">启动技术-内存直接加载运行</span>
-      <time style="float: right;">07-15</time>
-    </a>
-  
-    
-    <a href="/2021/07/14/%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8BAPI/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">启动技术-创建进程API</span>
-      <time style="float: right;">07-14</time>
-    </a>
-  
-    
-    <a href="/2021/07/14/160CrackMe-001/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">160CrackMe-001</span>
-      <time style="float: right;">07-14</time>
-    </a>
-  
-    
-    <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">注入技术-APC注入</span>
-      <time style="float: right;">07-13</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">shellcode的分析调试小技巧</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-08-31 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h3 id="分析shellcode"><a href="#分析shellcode" class="headerlink" title="分析shellcode"></a>分析shellcode</h3><p>OD有一种简单的分析shellcode的方法。</p>
+<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>首先是复制shellcode</p>
+<p>这里我用自己写的弹窗小程序，并且使用十六进制编辑器WINHEX进行复制。</p>
+<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>然后是打开OD，附加任意一个程序，打开内存映射窗口，快捷操作就是上面的M，然后寻找类型为Priv的内存区域（这是分配给进程的私有内存，与只读的可执行镜像不同，这些内存被多个进程共享），选择它。</p>
+<p><img src="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>选中一大片区域，然后将复制的数据粘贴进去<br><img src="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以右键选择反汇编，这样就会显示汇编代码，而不是十六进制数据，复制后如图所示。<br><img src="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h3><p>在反汇编窗口中跳到地址，可以在上面图中看到首地址是12D000，那么在反汇编窗口中跳到此地址，然后选择设置为新的EIP，这样就就可以开始调试shellcode了。</p>
+<p><img src="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>调试到弹窗的地方<br><img src="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>这样可以方便调试shellcode，感觉还是很方便的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《恶意代码分析实战》</p>
 
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/archives/page/2/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/#board">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/page/4/#board">4</a><a class="extend next" rel="next" href="/archives/page/4/#board"><i class="iconfont icon-arrowright"></i></a>
-    </span>
-  </nav>
-
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                      <a class="hover-with-bg" href="/tags/shellcode/">shellcode</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/30/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%BF%9C%E7%A8%8BCMD/">
+                        <span class="hidden-mobile">功能技术远程CMD</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -374,9 +445,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 
