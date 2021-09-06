@@ -200,7 +200,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      179 字
+      635 字
     </span>
   
 
@@ -210,7 +210,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      6
        分钟
     </span>
   
@@ -252,7 +252,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-09-02 上午
+                  本文最后更新于：2021-09-06 下午
                 
               </p>
             
@@ -262,13 +262,57 @@
 <p>之后会进行判断，首先判断当前输入的最后一个参数是否等于abcd。</p>
 <p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.2.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后就是判断输入的第一个参数是什么，-in,-re,-c,-cc。</p>
-<p>-in参数，首先创建了一个系统服务</p>
+<h4 id="in"><a href="#in" class="headerlink" title="-in"></a>-in</h4><p>-in参数，首先创建了一个系统服务</p>
 <p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.3.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后将自身复制到system32下</p>
 <p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.4.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后创建注册表表项，并且设置键值</p>
 <p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.5.png" srcset="/img/loading.gif" lazyload></p>
 <p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.6.png" srcset="/img/loading.gif" lazyload></p>
+<p>恶意代码安装的服务</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.8.png" srcset="/img/loading.gif" lazyload></p>
+<p>设置的键值</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.12.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="re"><a href="#re" class="headerlink" title="-re"></a>-re</h4><p>-re参数是删除配置信息，将服务删除，复制的文件删除，注册表信息也清空。</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.9.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.10.png" srcset="/img/loading.gif" lazyload></p>
+<p>刚才创建的键值已经被删除</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.11.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h4><p>-c参数是设置自己的配置信息，根据-c后面的四个参数进行设置</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.13.png" srcset="/img/loading.gif" lazyload></p>
+<p>输入1 2 3 4</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.14.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="cc"><a href="#cc" class="headerlink" title="-cc"></a>-cc</h4><p>-cc 是打印当前的配置信息</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.15.png" srcset="/img/loading.gif" lazyload></p>
+<p>打印出来的信息</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.16.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果参数不符合要求都会进行自删除</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.17.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.18.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="后门"><a href="#后门" class="headerlink" title="后门"></a>后门</h4><p>不带任何参数，且有配置信息的情况下，会执行连接服务器，并且根据服务器指令执行操作。</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.19.png" srcset="/img/loading.gif" lazyload></p>
+<p>获取注册表中的配置信息</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.20.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.21.png" srcset="/img/loading.gif" lazyload></p>
+<p>指令共有五种，分别是sleep，upload，download，CMD，nothing</p>
+<h5 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h5><p>会执行sleep函数</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.22.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="upload"><a href="#upload" class="headerlink" title="upload"></a>upload</h5><p>是下载一个文件</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.23.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="download"><a href="#download" class="headerlink" title="download"></a>download</h5><p>发送内容</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.24.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h5><p>会执行一个命令</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.25.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="nothing"><a href="#nothing" class="headerlink" title="nothing"></a>nothing</h5><p>什么都不做</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.26.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-如何让这个恶意代码安装自身？"><a href="#1-如何让这个恶意代码安装自身？" class="headerlink" title="1.如何让这个恶意代码安装自身？"></a>1.如何让这个恶意代码安装自身？</h3><p>从上数分析可以知道，需要使用-in选项。</p>
+<h3 id="2-这个恶意代码的命令行选项是什么？它要求的密码是什么？"><a href="#2-这个恶意代码的命令行选项是什么？它要求的密码是什么？" class="headerlink" title="2.这个恶意代码的命令行选项是什么？它要求的密码是什么？"></a>2.这个恶意代码的命令行选项是什么？它要求的密码是什么？</h3><p>命令行选项有四种,-in,-re,-c,-cc密码是abcd</p>
+<h3 id="3-如何利用OD永久修补这个恶意代码，使其不需要指定的命令行密码"><a href="#3-如何利用OD永久修补这个恶意代码，使其不需要指定的命令行密码" class="headerlink" title="3.如何利用OD永久修补这个恶意代码，使其不需要指定的命令行密码"></a>3.如何利用OD永久修补这个恶意代码，使其不需要指定的命令行密码</h3><p>修改跳转条件即可，这只是其中的一种方法，将JNZ修改为JMP。</p>
+<p><img src="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/lab9-1.27.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-这个恶意代码基于系统的特征是什么？"><a href="#4-这个恶意代码基于系统的特征是什么？" class="headerlink" title="4.这个恶意代码基于系统的特征是什么？"></a>4.这个恶意代码基于系统的特征是什么？</h3><p>本地创建的名为Lab9-01的服务，还创建了一个XPS表项，其中的键值是连接所需的参数。</p>
+<h3 id="5-这个恶意代码通过网络命令执行了哪些不同操作？"><a href="#5-这个恶意代码通过网络命令执行了哪些不同操作？" class="headerlink" title="5.这个恶意代码通过网络命令执行了哪些不同操作？"></a>5.这个恶意代码通过网络命令执行了哪些不同操作？</h3><p>上述分析已经分析清楚。</p>
+<h3 id="6-这个恶意代码是否有网络特征？"><a href="#6-这个恶意代码是否有网络特征？" class="headerlink" title="6.这个恶意代码是否有网络特征？"></a>6.这个恶意代码是否有网络特征？</h3><p>有网络的连接，域名是<a target="_blank" rel="noopener" href="http://www.practicalmalwareanalysis.com/">http://www.practicalmalwareanalysis.com</a></p>
 
             </div>
             <hr>
