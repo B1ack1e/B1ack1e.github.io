@@ -197,6 +197,63 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/08/09/160CrackMe-009/" target="_self">
+          160CrackMe-009
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/09/160CrackMe-009/" target="_self">
+          
+          
+            
+          
+          前言这个VB的程序，调用的时候都是传入一个地址，然后地址直接查看是什么也看不到，没有什么有用的，分析起来看得人一头雾水。查了资料之后才知道，VB的变量特征是前两个4字节都是一些数据类型，第三个四字节才是变量，相当于是首地址+0x8的地方。
+比如此时寄存器中值是18F3F4，它实际存储的值是18F3FC处的数据。
+
+初探打开程序，看到需要输入name和key输入后弹出错误的提示框。
+
+分析查壳，无壳
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-09 18:00" pubdate>
+              2021-08-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/06/%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF-SOCKET%E9%80%9A%E4%BF%A1/" target="_self">
           传输技术-SOCKET通信
         </a>
@@ -708,72 +765,6 @@ about按钮了解情况，还是需要让按钮消失然后露出logo就算成�
               <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
             
               <a href="/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/">隐藏技术</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
-          shellcode学习
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
-          
-          
-            
-          
-          shellcode学习编译器的一些设置第一步修改入口点在编译器中修改程序的入口点，写代码时就可以使用新的入口点名
-
-修改过后，体积变得很小，使用IDA查看也可以看到左边函数只有两个。
-
-第二步关闭缓冲区安全检查
-然后查看IDA，左边函数只剩一个了
-
-第三步设置工程兼容XP
-修改运行库为MT
-
-第四步关闭生成清单
-使用loadpe查看看到只有两个区段
-
-第五步关闭调试信息
-shellcode编写原则
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-22 09:58" pubdate>
-              2021-07-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/ShellCode/">ShellCode</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/ShellCode/">ShellCode</a>
             
           </div>
         

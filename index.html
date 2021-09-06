@@ -197,6 +197,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/" target="_self">
+          恶意代码分析实战-实验9
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/" target="_self">
+          
+          
+            
+          
+          Lab 9-1详细分析打开程序，首先看到判断当前程序是否带了参数，如果带了参数，就进行后面的操作，如果没有带参数，会尝试打开一个键值，如果不存在此键值，则程序自删除，如果存在就会开始和服务器端通信，这些后面再说。
+
+之后会进行判断，首先判断当前输入的最后一个参数是否等于abcd。
+
+然后就是判断输入的第一个参数是什么，-in,-re,-c,-cc。
+-in参数，首先创建了一个系统服务
+
+然后将自身
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-01 16:22" pubdate>
+              2021-09-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
           shellcode的分析调试小技巧
         </a>
@@ -704,63 +765,6 @@
               <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
             
               <a href="/tags/Lab/">Lab</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/09/160CrackMe-009/" target="_self">
-          160CrackMe-009
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/09/160CrackMe-009/" target="_self">
-          
-          
-            
-          
-          前言这个VB的程序，调用的时候都是传入一个地址，然后地址直接查看是什么也看不到，没有什么有用的，分析起来看得人一头雾水。查了资料之后才知道，VB的变量特征是前两个4字节都是一些数据类型，第三个四字节才是变量，相当于是首地址+0x8的地方。
-比如此时寄存器中值是18F3F4，它实际存储的值是18F3FC处的数据。
-
-初探打开程序，看到需要输入name和key输入后弹出错误的提示框。
-
-分析查壳，无壳
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-09 18:00" pubdate>
-              2021-08-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/CrackMe/">CrackMe</a>
             
           </div>
         
