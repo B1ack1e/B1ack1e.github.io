@@ -197,6 +197,69 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/" target="_self">
+          恶意代码分析实战-实验11
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/" target="_self">
+          
+          
+            
+          
+          Lab 11-1详细分析使用火绒剑监控行为，可以看到其向当前的目录下释放了一个Dll文件。
+
+IDA查看，可以看到很明显的从资源节中释放文件
+
+之后会进行注册表的相关操作。
+
+可以看到在HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon下创建了一个键值GinaDLL，值是释放的DLL的路径。
+
+
+打开DL
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-07 15:59" pubdate>
+              2021-09-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/09/01/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C9/" target="_self">
           恶意代码分析实战-实验9
         </a>
@@ -708,63 +771,6 @@
               <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
             
               <a href="/tags/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/10/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C6/" target="_self">
-          恶意代码分析实战-实验6
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/10/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C6/" target="_self">
-          
-          
-            
-          
-          Lab 6-11.由main函数调用的唯一子过程中发现的主要代码结构是什么？使用IDA找到main函数看到调用了一个子函数sub_401000，F5即可看到伪代码。
-
-可以看到调用了InternetGetConnectedState这个API，这个函数是用来检测是否联网的，判断本地网络状态。
-1234BOOL InternetGetConnectedState(  LPDWORD lpdwFlag
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-10 15:52" pubdate>
-              2021-08-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-              <a href="/tags/Lab/">Lab</a>
             
           </div>
         

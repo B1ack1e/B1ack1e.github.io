@@ -6,7 +6,7 @@
   <link href="https://b1ackie.cn/atom.xml" rel="self"/>
   
   <link href="https://b1ackie.cn/"/>
-  <updated>2021-09-07T03:31:58.052Z</updated>
+  <updated>2021-09-08T01:49:40.743Z</updated>
   <id>https://b1ackie.cn/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>恶意代码分析实战-实验11</title>
+    <link href="https://b1ackie.cn/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/"/>
+    <id>https://b1ackie.cn/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/</id>
+    <published>2021-09-07T07:59:01.000Z</published>
+    <updated>2021-09-08T01:49:40.743Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Lab-11-1"><a href="#Lab-11-1" class="headerlink" title="Lab 11-1"></a>Lab 11-1</h2><h3 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h3><p>使用火绒剑监控行为，可以看到其向当前的目录下释放了一个Dll文件。</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-1.png"></p><p>IDA查看，可以看到很明显的从资源节中释放文件</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-2.png"></p><p>之后会进行注册表的相关操作。</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-3.png"></p><p>可以看到在HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon下创建了一个键值GinaDLL，值是释放的DLL的路径。</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-4.png"></p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-5.png"></p><p>打开DLL文件，查看其导出表，可以看到大量的Wlx开头的函数，由此可以判断出这是一个GINA拦截，窃取用户登录凭证。</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-6.png"></p><p>通过查看字符串可以看到一个msutil32.sys，仔细查看发现，是创建此文件，然后向其中写一些数据，写入的数据是什么需要继续往外分析，查看传入的参数。</p><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-7.png"></p><p>可以看到写入的数据，是一个结构体的相关信息。而这就是登录账户的信息。</p><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">typedef struct _WLX_MPR_NOTIFY_INFO &#123;<br>  PWSTR pszUserName;<span class="hljs-regexp">//</span>登录账户名称<br>  PWSTR pszDomain;<span class="hljs-regexp">//</span>登录域名称<br>  PWSTR pszPassword;<span class="hljs-regexp">//</span>密码<br>  PWSTR pszOldPassword;<span class="hljs-regexp">//</span>旧密码<br>&#125; WLX_MPR_NOTIFY_INFO, *PWLX_MPR_NOTIFY_INFO;<br></code></pre></div></td></tr></table></figure><p><img src="/2021/09/07/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C11/1-8.png"></p><h3 id="1-这个恶意代码向磁盘释放了什么？"><a href="#1-这个恶意代码向磁盘释放了什么？" class="headerlink" title="1.这个恶意代码向磁盘释放了什么？"></a>1.这个恶意代码向磁盘释放了什么？</h3><p>释放了一个msgina32.dll文件。</p><h3 id="2-这个恶意代码如何进行驻留？"><a href="#2-这个恶意代码如何进行驻留？" class="headerlink" title="2.这个恶意代码如何进行驻留？"></a>2.这个恶意代码如何进行驻留？</h3><p>设置注册表，成为winlogon的一员。</p><h3 id="3-这个恶意代码如何窃取用户登录凭证？"><a href="#3-这个恶意代码如何窃取用户登录凭证？" class="headerlink" title="3.这个恶意代码如何窃取用户登录凭证？"></a>3.这个恶意代码如何窃取用户登录凭证？</h3><p>GINA拦截用户登录信息</p><h3 id="4-这个恶意代码对窃取的证书做了什么处理？"><a href="#4-这个恶意代码对窃取的证书做了什么处理？" class="headerlink" title="4.这个恶意代码对窃取的证书做了什么处理？"></a>4.这个恶意代码对窃取的证书做了什么处理？</h3><p>将其保存到msutil32.sys文件中。</p><h3 id="5-如何在你的测试环境下让这个恶意代码获得用户凭证？"><a href="#5-如何在你的测试环境下让这个恶意代码获得用户凭证？" class="headerlink" title="5.如何在你的测试环境下让这个恶意代码获得用户凭证？"></a>5.如何在你的测试环境下让这个恶意代码获得用户凭证？</h3><p>需要先重启，启动拦截，然后注销系统，再次登录时，信息就会被记录。</p><h2 id="Lab-11-2"><a href="#Lab-11-2" class="headerlink" title="Lab 11-2"></a>Lab 11-2</h2><h3 id="详细分析-1"><a href="#详细分析-1" class="headerlink" title="详细分析"></a>详细分析</h3><h3 id="1-这个恶意DLL导出了什么？"><a href="#1-这个恶意DLL导出了什么？" class="headerlink" title="1.这个恶意DLL导出了什么？"></a>1.这个恶意DLL导出了什么？</h3><h3 id="2-使用rundll32-exe安装这个恶意代码后，发生了什么？"><a href="#2-使用rundll32-exe安装这个恶意代码后，发生了什么？" class="headerlink" title="2.使用rundll32.exe安装这个恶意代码后，发生了什么？"></a>2.使用rundll32.exe安装这个恶意代码后，发生了什么？</h3><h3 id="3-为了使这个恶意代码正确安装，Lab11-02-ini必须放置在何处？"><a href="#3-为了使这个恶意代码正确安装，Lab11-02-ini必须放置在何处？" class="headerlink" title="3.为了使这个恶意代码正确安装，Lab11-02.ini必须放置在何处？"></a>3.为了使这个恶意代码正确安装，Lab11-02.ini必须放置在何处？</h3><h3 id="4-这个安装的恶意代码如何驻留？"><a href="#4-这个安装的恶意代码如何驻留？" class="headerlink" title="4.这个安装的恶意代码如何驻留？"></a>4.这个安装的恶意代码如何驻留？</h3><h3 id="5-这个恶意代码采用的用户态Rootkit技术是什么？"><a href="#5-这个恶意代码采用的用户态Rootkit技术是什么？" class="headerlink" title="5.这个恶意代码采用的用户态Rootkit技术是什么？"></a>5.这个恶意代码采用的用户态Rootkit技术是什么？</h3><h3 id="6-挂钩代码做了什么？"><a href="#6-挂钩代码做了什么？" class="headerlink" title="6.挂钩代码做了什么？"></a>6.挂钩代码做了什么？</h3><h3 id="7-哪个或者哪些进程执行了这个恶意攻击，为什么？"><a href="#7-哪个或者哪些进程执行了这个恶意攻击，为什么？" class="headerlink" title="7.哪个或者哪些进程执行了这个恶意攻击，为什么？"></a>7.哪个或者哪些进程执行了这个恶意攻击，为什么？</h3><h3 id="8-ini文件的意义是什么？"><a href="#8-ini文件的意义是什么？" class="headerlink" title="8..ini文件的意义是什么？"></a>8..ini文件的意义是什么？</h3><h3 id="9-你怎样用wireshark动态抓取这个恶意代码的行为？"><a href="#9-你怎样用wireshark动态抓取这个恶意代码的行为？" class="headerlink" title="9.你怎样用wireshark动态抓取这个恶意代码的行为？"></a>9.你怎样用wireshark动态抓取这个恶意代码的行为？</h3>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Lab-11-1&quot;&gt;&lt;a href=&quot;#Lab-11-1&quot; class=&quot;headerlink&quot; title=&quot;Lab 11-1&quot;&gt;&lt;/a&gt;Lab 11-1&lt;/h2&gt;&lt;h3 id=&quot;详细分析&quot;&gt;&lt;a href=&quot;#详细分析&quot; class=&quot;headerlink&quot; </summary>
+      
+    
+    
+    
+    <category term="恶意代码分析实战" scheme="https://b1ackie.cn/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/"/>
+    
+    
+    <category term="逆向工程" scheme="https://b1ackie.cn/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+    <category term="病毒分析" scheme="https://b1ackie.cn/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/"/>
+    
+    <category term="Lab" scheme="https://b1ackie.cn/tags/Lab/"/>
+    
+  </entry>
   
   <entry>
     <title>恶意代码分析实战-实验9</title>
@@ -540,34 +568,6 @@
     <category term="黑客编程" scheme="https://b1ackie.cn/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/"/>
     
     <category term="Inline Hook" scheme="https://b1ackie.cn/tags/Inline-Hook/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>隐藏技术-进程隐藏</title>
-    <link href="https://b1ackie.cn/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/"/>
-    <id>https://b1ackie.cn/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/</id>
-    <published>2021-07-27T03:25:51.000Z</published>
-    <updated>2021-08-09T10:52:38.617Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="进程隐藏"><a href="#进程隐藏" class="headerlink" title="进程隐藏"></a>进程隐藏</h4><p>在windows中，用户程序的所有操作都是基于WIN32API来实现的，例如使用任务管理器查看进程等操作，这就给了病毒木马操作的空间。它可以通过HOOK技术拦截API的调用，并对数据进行监控和修改，从而达到不可告人的目的。</p><p>实现进程隐藏可以HOOK ZwQuerySystemInformain来实现进程的隐藏。遍历进程通常是调用EnumProcesses或者CreateToolhelp32Snapshot等来实现。跟踪这些函数可以发现，他们内部都调用了ZwQuerySystemInformain函数。</p><p>可以用调试器跟踪一下CreateToolhelp32Snapshot函数，可以看到在内部调用了ZwQuerySystemInformain函数</p><p><img src="/2021/07/27/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF-%E8%BF%9B%E7%A8%8B%E9%9A%90%E8%97%8F/1.png"></p><p>在ZwQuerySystemInformain函数的内部判断检索的信息是否是进程信息，若是，则对返回的进程信息进行修改，将隐藏的进程信息从中去掉再返回。</p><p>这需要用到Inline Hook，关于Inline Hook看这里</p><p><a href="https://b1ack1e.github.io/2021/07/28/HOOK-Inline%20Hook/">HOOK-Inline Hook</a></p><h4 id="函数介绍"><a href="#函数介绍" class="headerlink" title="函数介绍"></a>函数介绍</h4><p>ZwQuerySystemInformation</p><p>获取指定的系统信息</p><figure class="highlight sqf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sqf">NTSTATUS WINAPI ZwQuerySystemInformation(<br>  <span class="hljs-variable">_In_</span>      SYSTEM_INFORMATION_CLASS SystemInformationClass,<br>  <span class="hljs-variable">_Inout_</span>   PVOID                    SystemInformation,<br>  <span class="hljs-variable">_In_</span>      ULONG                    SystemInformationLength,<br>  <span class="hljs-variable">_Out_opt_</span> PULONG                   ReturnLength<br>);<br></code></pre></div></td></tr></table></figure><p>SystemInformationClass：要检索系统的信息类型。SystemProcessInformation(5)表示检索系统的进程信息。</p><p>SystemInformation：指向缓冲区的指针，用于接受请求的信息。该信息的大小和结构取决于SystemInformationClass的值。如检索信息是SystemProcessInformation那么缓冲区为SYSTEM_PROCESS_INFORMATION结构数组。</p><p>SystemInformationLength：SystemInformation指向缓冲区的大小。</p><p>ReturnLength：指向函数写入请求信息的实际大小的位置。</p><p>返回值：返回NTSTATUS成功或错误代码。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h4 id=&quot;进程隐藏&quot;&gt;&lt;a href=&quot;#进程隐藏&quot; class=&quot;headerlink&quot; title=&quot;进程隐藏&quot;&gt;&lt;/a&gt;进程隐藏&lt;/h4&gt;&lt;p&gt;在windows中，用户程序的所有操作都是基于WIN32API来实现的，例如使用任务管理器查看进程等操作，这就给了病毒木马操</summary>
-      
-    
-    
-    
-    <category term="黑客编程" scheme="https://b1ackie.cn/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/"/>
-    
-    
-    <category term="恶意代码" scheme="https://b1ackie.cn/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/"/>
-    
-    <category term="黑客编程" scheme="https://b1ackie.cn/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/"/>
-    
-    <category term="隐藏技术" scheme="https://b1ackie.cn/tags/%E9%9A%90%E8%97%8F%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
