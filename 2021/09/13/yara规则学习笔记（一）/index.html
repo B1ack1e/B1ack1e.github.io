@@ -252,7 +252,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-09-15 下午
+                  本文最后更新于：2021-09-23 上午
                 
               </p>
             
@@ -273,7 +273,7 @@
 <figure class="highlight smalltalk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs smalltalk">rule silent_banker : banker<br>&#123;<br>    meta:<br>        description = <span class="hljs-comment">&quot;This is just an example&quot;</span><br>        thread_level = <span class="hljs-number">3</span><br>        in_the_wild = <span class="hljs-keyword">true</span><br>    strings:<br>        <span class="hljs-string">$a</span> = &#123;<span class="hljs-number">6</span>A <span class="hljs-number">40</span> <span class="hljs-number">68</span> <span class="hljs-number">00</span> <span class="hljs-number">30</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">6</span>A <span class="hljs-number">14</span> <span class="hljs-number">8</span>D <span class="hljs-number">91</span>&#125;<br>        <span class="hljs-string">$b</span> = &#123;<span class="hljs-number">8</span>D <span class="hljs-number">4</span>D <span class="hljs-type">B0</span> <span class="hljs-number">2</span>B <span class="hljs-type">C1</span> <span class="hljs-number">83</span> <span class="hljs-type">C0</span> <span class="hljs-number">27</span> <span class="hljs-number">99</span> <span class="hljs-number">6</span>A <span class="hljs-number">4</span>E <span class="hljs-number">59</span> <span class="hljs-type">F7</span> <span class="hljs-type">F9</span>&#125;<br>        <span class="hljs-string">$c</span> = <span class="hljs-comment">&quot;UVODFRYSIHLNWPEJXQZAKCBGMT&quot;</span><br>    condition:<br>        <span class="hljs-string">$a</span> or <span class="hljs-string">$b</span> or <span class="hljs-string">$c</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p>meta是一些描述信息，</p>
-<p>trings定义了一些十六进制值和一个字符串</p>
+<p>strings定义了一些十六进制值和一个字符串</p>
 <p>condition定义了匹配的条件，a,b,c三个条件任意一个都会被认定为是silent_banker : banker</p>
 <p>下面来进行一下简单的测试。</p>
 <p>创建一个文件写入字符串，再创建一个文件写入$a的十六进制值。</p>

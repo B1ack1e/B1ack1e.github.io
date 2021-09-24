@@ -200,7 +200,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.3k 字
+      2.6k 字
     </span>
   
 
@@ -210,7 +210,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      33
        分钟
     </span>
   
@@ -367,10 +367,40 @@
 <h3 id="元数据"><a href="#元数据" class="headerlink" title="元数据"></a>元数据</h3><p>除去字符串定义和条件部分，规则还可以有一个元数据部分，可以在其中放置有关规则的其他信息。元数据部分使用关键字<code>meta</code>。</p>
 <figure class="highlight puppet"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs puppet">rule test1 : <span class="hljs-keyword">test</span><br>&#123;<br>	strings:<br>		<span class="hljs-variable">$a</span> = <span class="hljs-string">&quot;test1&quot;</span><br>	condition:<br>		<span class="hljs-variable">$a</span><br>&#125;<br><br><span class="hljs-keyword">rule</span> <span class="hljs-keyword">test2</span> : <span class="hljs-keyword">b1ackie</span><br>&#123;<br>	strings:<br>		<span class="hljs-variable">$a</span> = <span class="hljs-string">&quot;test2&quot;</span><br>	condition:<br>		<span class="hljs-variable">$a</span> <span class="hljs-keyword">and</span> test1<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="模块的使用"><a href="#模块的使用" class="headerlink" title="模块的使用"></a>模块的使用</h3><p>模块是yara核心功能的扩展，一些模块，比如PE，Cuckoo是由yara官方发布的，其他模块可以由第三方创建。使用模块的第一步是使用<code>import</code>导入它。</p>
+<blockquote>
+<p>import “pe”</p>
+</blockquote>
+<p>搭配如模块后，可以使用其功能，用法是<code>modulename.func</code>比如</p>
+<blockquote>
+<p>pe.entry_point</p>
+<p>pe.sections</p>
+</blockquote>
+<h3 id="外部变量"><a href="#外部变量" class="headerlink" title="外部变量"></a>外部变量</h3><p>外部变量允许定义依赖于外部提供的值得规则。</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">rule <span class="hljs-class">ExternalVariableExample1</span><br><span class="hljs-class"></span>&#123;<br><span class="hljs-symbol">    condition:</span><br>        ext_var == <span class="hljs-number">10</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
 
+<p>这种情况下ext_var是一个外部变量，通过-d参数来指定。</p>
+<p>外部变量可以是这些类型：整数、字符串或布尔值。它们的类型取决于分配给它们的值。整数变量可以替代条件中的任何整数常量，布尔常量可以占据布尔表达式的位置。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs mipsasm">rule <span class="hljs-keyword">ExternalVariableExample2</span><br><span class="hljs-keyword"></span>&#123;<br><span class="hljs-symbol">    condition:</span><br>        <span class="hljs-keyword">bool_ext_var </span><span class="hljs-keyword">or </span>filesize &lt; int_ext_var<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
+<p>字符串常量可以与这些运算符一起使用，</p>
+<p><code>contains</code>：如果字符串包含指定的子字符串，返回true</p>
+<p><code>matches</code>：如果字符串匹配给定的正则表达式时，返回true</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">rule <span class="hljs-class">ContainsExample</span><br><span class="hljs-class"></span>&#123;<br><span class="hljs-symbol">    condition:</span><br>        string_ext_var contains <span class="hljs-string">&quot;text&quot;</span><br>&#125;<br>rule <span class="hljs-class">MatchesExample</span><br><span class="hljs-class"></span>&#123;<br><span class="hljs-symbol">    condition:</span><br>        string_ext_var matches /[a-z]+/<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
-
+<h3 id="包含文件"><a href="#包含文件" class="headerlink" title="包含文件"></a>包含文件</h3><p>yara提供了<code>include</code>指令，它可以将其他规则文件包含到当前文件中。</p>
+<blockquote>
+<p>include “other.yar”</p>
+</blockquote>
+<p>相对路径</p>
+<blockquote>
+<p>include “./test/other.yar”</p>
+<p>include “../test/other.yar”</p>
+</blockquote>
+<p>绝对路径</p>
+<blockquote>
+<p>include “C:/test/other.yar”</p>
+</blockquote>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://yara.readthedocs.io/en/v4.1.2/index.html">https://yara.readthedocs.io/en/v4.1.2/index.html</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/SunsetR/p/12650325.html#autoid-3-2-0">https://www.cnblogs.com/SunsetR/p/12650325.html#autoid-3-2-0</a></p>
 

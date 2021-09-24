@@ -1,0 +1,561 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  
+  <title>恶意代码分析实战-实验12 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.jfif') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="恶意代码分析实战-实验12">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-09-23 14:12" pubdate>
+        2021-09-23 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">恶意代码分析实战-实验12</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-09-24 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="Lab-12-1"><a href="#Lab-12-1" class="headerlink" title="Lab 12-1"></a>Lab 12-1</h2><h3 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h3><p>打开程序后，每隔一段时间都会弹出一个窗口</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用火绒剑监控行为，发现其有注入的行为。可以看到注入的进程是Explorer.exe</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看出来它获取了explorer的PID然后进行了DLL注入，注入的DLL为Lab12-01.dll。它获得进程PID的方式是通过EnumProcesses、EnumProcessModules、GetModuleBaseNameA这三个函数实现的。首先通过EnumProcesses获得所有进程的PID，然后打开每个进程，再通过EnumProcessModules、GetModuleBaseNameA获取进程名字，再和explorer.exe进行比较判断。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在来分析一下注入的DLL文件，DLLMAIN中创建了一个新的线程。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>新的线程，会拼接一个字符串，也就是前面弹出窗口的标题的次数，会无限制的增长，那么创建的这个新线程应该就是弹窗函数了，进去看果然如此，最后调用sleep函数。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-在你运行恶意代码可执行文件时，会发生什么？"><a href="#1-在你运行恶意代码可执行文件时，会发生什么？" class="headerlink" title="1.在你运行恶意代码可执行文件时，会发生什么？"></a>1.在你运行恶意代码可执行文件时，会发生什么？</h3><p>会将Lab12-01.dll注入到explorer.exe中，然后每隔一分钟弹出一个窗口。</p>
+<h3 id="2-哪个进程会被注入"><a href="#2-哪个进程会被注入" class="headerlink" title="2.哪个进程会被注入"></a>2.哪个进程会被注入</h3><p>explorer.exe</p>
+<h3 id="3-你如何能够让恶意代码停止弹出窗口"><a href="#3-你如何能够让恶意代码停止弹出窗口" class="headerlink" title="3.你如何能够让恶意代码停止弹出窗口"></a>3.你如何能够让恶意代码停止弹出窗口</h3><p>重新启动explorer.exe</p>
+<h3 id="4-这个恶意代码样本是如何工作的？"><a href="#4-这个恶意代码样本是如何工作的？" class="headerlink" title="4.这个恶意代码样本是如何工作的？"></a>4.这个恶意代码样本是如何工作的？</h3><p>它会进行远程线程注入将Lab12-01.dll注入到explorer.exe中，然后每分钟都会弹出一个窗口。</p>
+<h2 id="Lab-12-2"><a href="#Lab-12-2" class="headerlink" title="Lab 12-2"></a>Lab 12-2</h2><h3 id="详细分析-1"><a href="#详细分析-1" class="headerlink" title="详细分析"></a>详细分析</h3><p>看到Main函数流程较短</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先获得了svchost.exe的路径</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后是从资源节读取了数据，然后有判断，如果开头不是MZ的话，会调用<code>401000</code>函数。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>进入查看，可以看到是一个异或解密，那么这个资源节中的数据是异或0x41进行加密。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>之后就是一个傀儡进程的创建，将shellcode注入到svchost.exe中</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>把shellcodedump出来分析一下，发现是一个键盘记录的程序</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-7.png" srcset="/img/loading.gif" lazyload></p>
+<p>查看挂钩函数fn</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-8.png" srcset="/img/loading.gif" lazyload></p>
+<p>记录键盘输入内容</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-9.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-这个程序的目的是什么？"><a href="#1-这个程序的目的是什么？" class="headerlink" title="1.这个程序的目的是什么？"></a>1.这个程序的目的是什么？</h3><p>注入shellcode到svchost.exe，实现键盘钩子</p>
+<h3 id="2-启动器恶意代码是如何隐蔽执行的？"><a href="#2-启动器恶意代码是如何隐蔽执行的？" class="headerlink" title="2.启动器恶意代码是如何隐蔽执行的？"></a>2.启动器恶意代码是如何隐蔽执行的？</h3><p>将shellcode注入到svchost.exe，实现了一个傀儡进程。</p>
+<h3 id="3-恶意代码的负载存储在哪里？"><a href="#3-恶意代码的负载存储在哪里？" class="headerlink" title="3.恶意代码的负载存储在哪里？"></a>3.恶意代码的负载存储在哪里？</h3><p>存储在资源节之中</p>
+<h3 id="4-恶意负载是如何被保护的？"><a href="#4-恶意负载是如何被保护的？" class="headerlink" title="4.恶意负载是如何被保护的？"></a>4.恶意负载是如何被保护的？</h3><p>与0x41异或加密了</p>
+<h3 id="5-字符串列表是如何被保护的？"><a href="#5-字符串列表是如何被保护的？" class="headerlink" title="5.字符串列表是如何被保护的？"></a>5.字符串列表是如何被保护的？</h3><p>这个问题我没看懂，看了书上的答案，书上说是<code>401000</code>处函数，进行XOR编码。那个函数实际上就是解密shellcode的函数。所以它的意思应该是，shellcode中的字符串是如何被保护的。</p>
+<h2 id="Lab-12-3"><a href="#Lab-12-3" class="headerlink" title="Lab 12-3"></a>Lab 12-3</h2><p>这就是Lab 12-2中的shellcode，刚才已经详细分析过了，就不再进行分析了。</p>
+<h3 id="1-这个恶意负载的目的是什么？"><a href="#1-这个恶意负载的目的是什么？" class="headerlink" title="1.这个恶意负载的目的是什么？"></a>1.这个恶意负载的目的是什么？</h3><p>键盘记录</p>
+<h3 id="2-恶意负载是如何注入自身的？"><a href="#2-恶意负载是如何注入自身的？" class="headerlink" title="2.恶意负载是如何注入自身的？"></a>2.恶意负载是如何注入自身的？</h3><p>这个我也没看懂，没明白什么叫注入自身，因为没看到注入行为，看了书上的答案，意思是</p>
+<blockquote>
+<p>挂钩注入，来偷取击键记录</p>
+</blockquote>
+<p>原来是这样，好吧…</p>
+<h3 id="3-这个恶意程序还创建了哪些其他文件？"><a href="#3-这个恶意程序还创建了哪些其他文件？" class="headerlink" title="3.这个恶意程序还创建了哪些其他文件？"></a>3.这个恶意程序还创建了哪些其他文件？</h3><p>创建了practicalmalwareanalysis.log文件，来记录。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/3-1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Lab-12-4"><a href="#Lab-12-4" class="headerlink" title="Lab 12-4"></a>Lab 12-4</h2><h3 id="详细分析-2"><a href="#详细分析-2" class="headerlink" title="详细分析"></a>详细分析</h3><p>打开发现其前部分与Lab12-1是一致的，就不再进行分析饿了，只是在<code>401000</code>中是winlogon.exe，也就是前面这部分是获取winlogon.exe的PID</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在来分析一下后面的部分</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先是进行了提权，判断是否有SeDebugPrivilege权限，如果没有的话会进行提权。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会进行远程线程注入，注入函数是sfc_os.dll中的序号为2的函数，</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会移动文件</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后是一个资源释放，释放到C:\Windows\system32\wupdmgr.exe，并且隐藏窗口启动它。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-7.png" srcset="/img/loading.gif" lazyload></p>
+<p>把资源节中的程序dump下来分析，首先看到启动了winup.exe也就是原始的wupdmgr.exe，然后会访问<a target="_blank" rel="noopener" href="http://www.practicalmalwareanalysis.com/updater.exe">http://www.practicalmalwareanalysis.com/updater.exe</a> ，进行下载更新恶意代码。</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-位置0x401000的代码完成了什么功能"><a href="#1-位置0x401000的代码完成了什么功能" class="headerlink" title="1.位置0x401000的代码完成了什么功能"></a>1.位置0x401000的代码完成了什么功能</h3><p>判断当前进程的PID是否是winlogon.exe</p>
+<p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-2.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-代码注入了哪些进程？"><a href="#2-代码注入了哪些进程？" class="headerlink" title="2.代码注入了哪些进程？"></a>2.代码注入了哪些进程？</h3><p>winlogon.exe</p>
+<h3 id="3-使用LoadLibraryA装载了哪个DLL程序？"><a href="#3-使用LoadLibraryA装载了哪个DLL程序？" class="headerlink" title="3.使用LoadLibraryA装载了哪个DLL程序？"></a>3.使用LoadLibraryA装载了哪个DLL程序？</h3><p>sfc_os.dll</p>
+<h3 id="4-传递给CreateRemoteThread调用的第四个参数是什么？"><a href="#4-传递给CreateRemoteThread调用的第四个参数是什么？" class="headerlink" title="4.传递给CreateRemoteThread调用的第四个参数是什么？"></a>4.传递给CreateRemoteThread调用的第四个参数是什么？</h3><p>sfc_os.dll中的序号为2的函数，是一个名为SfcTerminateWatcherThread的函数，用来关闭windows的文件保护。</p>
+<h3 id="5-二进制主程序释放出了哪个恶意代码？"><a href="#5-二进制主程序释放出了哪个恶意代码？" class="headerlink" title="5.二进制主程序释放出了哪个恶意代码？"></a>5.二进制主程序释放出了哪个恶意代码？</h3><p>wupdmgr.exe，原始的wupdmgr.exe被放到了temp目录下，重命名为了winup.exe</p>
+<h3 id="6-释放出恶意代码的目的是什么？"><a href="#6-释放出恶意代码的目的是什么？" class="headerlink" title="6.释放出恶意代码的目的是什么？"></a>6.释放出恶意代码的目的是什么？</h3><p>会从指定的域名中下载一些资源，来进行更新，而windows本身的wupdmgr.exe被转移到temp目录下，在持久化驻留的同时，也不影响原程序的运行。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Lab/">Lab</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/09/22/yara%E8%A7%84%E5%88%99%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/">
+                        <span class="hidden-mobile">yara规则学习笔记（三）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

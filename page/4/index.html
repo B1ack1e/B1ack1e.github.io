@@ -197,6 +197,123 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/07/20/160CrackMe-002/" target="_self">
+          160CrackMe-002
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/20/160CrackMe-002/" target="_self">
+          
+          
+            
+          
+          初探打开程序，看到提示输入name和serial，输入后，提示错误。
+
+分析查壳，看到程序没有加壳，是用VB语言写的。
+
+使用OD进行分析，搜索错误提示的字符串，可以直接定位到关键的跳转
+
+开始分析生成serial的过程，首先是获取了name的长度然后将其乘以17CFB再加上name的第一个ASCII码，最后转为十进制字符串。
+1234567891011121314151600402412   .
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-20 10:17" pubdate>
+              2021-07-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E7%9B%AE%E5%BD%95/" target="_self">
+          自启动技术-快速启动目录
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E7%9B%AE%E5%BD%95/" target="_self">
+          
+          
+            
+          
+          快速启动目录Windows带有快速启动目录，将需要自启的程序放入其中，就可以实现开机自启。
+函数说明SHGetSpecialFolderPath获取指定的系统路径
+123456BOOL SHGetSpecialFolderPath(  HWND  hwndOwner,  LPSTR lpszPath,  int   nFolder,  BOOL  fCreate);
+
+hwndOwner：窗口所有
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-19 17:11" pubdate>
+              2021-07-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
+            
+              <a href="/tags/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF/">自启动技术</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/07/19/%E8%87%AA%E5%90%AF%E5%8A%A8%E6%8A%80%E6%9C%AF-%E6%B3%A8%E5%86%8C%E8%A1%A8/" target="_self">
           自启动技术-注册表
         </a>
@@ -642,125 +759,6 @@ dwDesiredAccess：访问进程对象。此访问权限为针对进程的安全�
               <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
             
               <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" target="_self">
-          病毒分析-资源释放
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/09/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90-%E8%B5%84%E6%BA%90%E9%87%8A%E6%94%BE/" target="_self">
-          
-          
-            
-          
-          本篇来分析一下自己写的资源释放的小demo。
-
-打开程序，发现没有任何改变，没有明显的行为。
-使用die工具查一下文件的基本信息
-
-查看一下导入表，可以看到FindResource等函数，这几个函数是用来操作资源的，猜测有可能是释放了一个资源节中的资源到电脑上。
-
-还可以看到fwrite，fopen这样的函数，那么应该就是把资源释放到了一个路径中去。
-
-可以使用resource hacker来查看
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-09 09:54" pubdate>
-              2021-07-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/08/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" target="_self">
-          注入技术-全局钩子注入
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/08/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90%E6%B3%A8%E5%85%A5/" target="_self">
-          
-          
-            
-          
-          全局钩子注入windows中大部分应用程序都是基于消息机制的，每个进程都有自己的消息队列。
-局部钩子是针对某个线程的，全局钩子是作用于整个系统的基于消息的应用。全局钩子需要使用DLL文件，在DLL文件中实现相应的钩子函数。
-函数介绍SetWindowsHookEx函数将程序定义的钩子函数安装到挂钩链中，安装钩子程序可以监视系统是否存在某些类型的事件，这些事件与特定线程或调用线程所在桌面中的所有线程
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-08 17:52" pubdate>
-              2021-07-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E6%B3%A8%E5%85%A5/">注入</a>
-            
-              <a href="/tags/HOOK/">HOOK</a>
             
           </div>
         
