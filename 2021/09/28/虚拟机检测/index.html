@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="前言现在虚拟机的应用是越来越广泛了，不论是现在流行的网游还是一些病毒都会有自己的反虚拟机机制，判断其是否是运行在虚拟机之中。我现在也学习并记录一下一些虚拟机检测的手段，因为我只使用过VMware，所以我这里只记录自己对于VMware的检测，其他类型的虚拟机暂时没有用过，所以先暂且不提。 我个人对于虚拟机检测的理解，就是检测其中的各种特征，因为虚拟机运行和真实环境是有差距的，比如一些特定的服务，硬件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟机检测">
+<meta property="og:url" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="前言现在虚拟机的应用是越来越广泛了，不论是现在流行的网游还是一些病毒都会有自己的反虚拟机机制，判断其是否是运行在虚拟机之中。我现在也学习并记录一下一些虚拟机检测的手段，因为我只使用过VMware，所以我这里只记录自己对于VMware的检测，其他类型的虚拟机暂时没有用过，所以先暂且不提。 我个人对于虚拟机检测的理解，就是检测其中的各种特征，因为虚拟机运行和真实环境是有差距的，比如一些特定的服务，硬件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/10.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/15.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/14.png">
+<meta property="article:published_time" content="2021-09-28T02:14:54.000Z">
+<meta property="article:modified_time" content="2021-09-28T09:30:20.128Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="虚拟机检测">
+<meta property="article:tag" content="编程">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/1.png">
+  
+  <title>虚拟机检测 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.jfif') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="虚拟机检测">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-09-28 10:14" pubdate>
+        2021-09-28 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">虚拟机检测</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-09-28 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在虚拟机的应用是越来越广泛了，不论是现在流行的网游还是一些病毒都会有自己的反虚拟机机制，判断其是否是运行在虚拟机之中。我现在也学习并记录一下一些虚拟机检测的手段，因为我只使用过VMware，所以我这里只记录自己对于VMware的检测，其他类型的虚拟机暂时没有用过，所以先暂且不提。</p>
+<p>我个人对于虚拟机检测的理解，就是检测其中的各种特征，因为虚拟机运行和真实环境是有差距的，比如一些特定的服务，硬件名称等。</p>
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>在虚拟机中运行的时候，是有特定的进程的，比如图中两个进程</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>这时就可以编写代码去检测是否存在指定的进程。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">IfProcExist</span><span class="hljs-params">(WCHAR* Procname)</span></span><br><span class="hljs-function"></span>&#123;<br>	PROCESSENTRY32 pe32 = &#123; <span class="hljs-number">0</span> &#125;;<br>	pe32.dwSize = <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(PROCESSENTRY32);<br>	HANDLE hSnap = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-number">0</span>);<span class="hljs-comment">//拍摄快照</span><br>	BOOL flag = <span class="hljs-built_in">Process32First</span>(hSnap, &amp;pe32);<br>	<span class="hljs-keyword">while</span> (flag)<br>	&#123;<br>		<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">wcscmp</span>(Procname, pe32.szExeFile))<span class="hljs-comment">//判断是否是指定进程</span><br>		&#123;<br>			<span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//找到返回TRUE</span><br>		&#125;<br>		<span class="hljs-keyword">else</span><br>		&#123;<br>			flag = <span class="hljs-built_in">Process32Next</span>(hSnap, &amp;pe32);<span class="hljs-comment">//没有找到搜索下一个</span><br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> FALSE;<span class="hljs-comment">//没有找到，不存在指定进程，返回FALSE</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>当在虚拟机运行时，检测到存在指定的进程</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>不过这两个进程都是vmtool的进程，当我把vmtool卸载之后，就没有这两个进程了。所以如果在一个没有vmtool的环境中，可能还需要去寻找其他的一些特征来进行检测。</p>
+<h2 id="注册表"><a href="#注册表" class="headerlink" title="注册表"></a>注册表</h2><p>虚拟机环境中也有许多的标志是虚拟机的注册表，可以通过查询这些注册表来判断是否处在虚拟环境之中。</p>
+<p>比如HKEY_LOCAL_MACHINE\SOFTWARE\VMware, Inc.\VMware Drivers这个表项</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以通过尝试打开此表项，判断是否存在来作为判断依据。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">OpenReg</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HKEY hKey;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">RegOpenKeyEx</span>(HKEY_LOCAL_MACHINE, <span class="hljs-string">L&quot;SOFTWARE\\VMware, Inc.\\VMware Drivers&quot;</span>, <span class="hljs-number">0</span>, KEY_ALL_ACCESS, &amp;hKey) != ERROR_SUCCESS)<span class="hljs-comment">//是否能打开此表项</span><br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<span class="hljs-comment">//打开返回false</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//打不开返回TRUE</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>同时经过我测试发现，此表项也是vmtool的表项，如果卸载掉vmtool的话，此表项就不存在了。不过可用于判断的注册表项有许多，可以自己进行搜索并且实验来进行判断。我这里找到了如图的这个表项，应该是bios信息。那么可以根据这个来进行判断，比如查询SystemManufacturer中的值是否是<code>VMware, Inc.</code>来判断是否是虚拟机。</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/5.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CheckRegValue</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HKEY hKey;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">RegOpenKeyEx</span>(HKEY_LOCAL_MACHINE, <span class="hljs-string">L&quot;HARDWARE\\DESCRIPTION\\System\\BIOS&quot;</span>, <span class="hljs-number">0</span>, KEY_ALL_ACCESS, &amp;hKey) != ERROR_SUCCESS)<span class="hljs-comment">//打开注册表</span><br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	DWORD dwType;<br>	WCHAR data[<span class="hljs-number">100</span>];<br>	DWORD len = <span class="hljs-number">100</span>;<br>	<span class="hljs-built_in">RegQueryValueEx</span>(hKey, <span class="hljs-string">L&quot;SystemManufacturer&quot;</span>, <span class="hljs-literal">NULL</span>, &amp;dwType, (BYTE*)data, &amp;len);<span class="hljs-comment">//查询键值</span><br>	<span class="hljs-built_in">RegCloseKey</span>(hKey);<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">wcscmp</span>(data, <span class="hljs-string">L&quot;VMware, Inc.&quot;</span>) == <span class="hljs-number">0</span>)<span class="hljs-comment">//判断键值是否相等</span><br>	&#123;<br>		<span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//相等返回TRUE，虚拟机环境</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> FALSE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/6.png" srcset="/img/loading.gif" lazyload></p>
+<p>注册表里的信息非常的多，比如这里还有显卡的相对应信息，显卡名称，这也可以用来检测。具体的话，可以自己在虚拟机中的注册表内查找可以用于检测的特征。</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/7.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h2><p>虚拟机的MAC地址是有特定的特征的，比如它们都是固定的开头</p>
+<blockquote>
+<p>00:50:56:XX:XX:XX<br>00:1C:14:XX:XX:XX<br>00:0C:29:XX:XX:XX<br>00:05:69:XX:XX:XX</p>
+</blockquote>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/8.png" srcset="/img/loading.gif" lazyload></p>
+<p>那么就可以通过判断当前系统的MAC地址的开头地址来判断是否处于虚拟机之中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CheckMacAddr</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    ULONG ulSize = <span class="hljs-number">0</span>;<br>    PIP_ADAPTER_INFO pInfo = <span class="hljs-literal">NULL</span>;<br>    <span class="hljs-built_in">GetAdaptersInfo</span>(pInfo, &amp;ulSize);<span class="hljs-comment">//获取缓冲区大小</span><br>    pInfo = (PIP_ADAPTER_INFO)<span class="hljs-built_in">malloc</span>(ulSize);<br>    <span class="hljs-built_in">GetAdaptersInfo</span>(pInfo, &amp;ulSize);<span class="hljs-comment">//获取适配器信息</span><br>    <span class="hljs-keyword">if</span> ((pInfo-&gt;Address[<span class="hljs-number">0</span>] == <span class="hljs-number">0x00</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">1</span>] == <span class="hljs-number">0x50</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">2</span>] == <span class="hljs-number">0x56</span>) ||<br>        (pInfo-&gt;Address[<span class="hljs-number">0</span>] == <span class="hljs-number">0x00</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">1</span>] == <span class="hljs-number">0x1C</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">2</span>] == <span class="hljs-number">0x14</span>) ||<br>        (pInfo-&gt;Address[<span class="hljs-number">0</span>] == <span class="hljs-number">0x00</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">1</span>] == <span class="hljs-number">0x0C</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">2</span>] == <span class="hljs-number">0x29</span>) ||<br>        (pInfo-&gt;Address[<span class="hljs-number">0</span>] == <span class="hljs-number">0x00</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">1</span>] == <span class="hljs-number">0x05</span> &amp;&amp; pInfo-&gt;Address[<span class="hljs-number">2</span>] == <span class="hljs-number">0x69</span>))<span class="hljs-comment">//判断MAC地址前几位是否相同</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//相同返回TRUE</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> FALSE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="特定的文件"><a href="#特定的文件" class="headerlink" title="特定的文件"></a>特定的文件</h2><p>在虚拟机中有一些驱动文件，可以通过查询这些文件是否存在来判断。</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/9.png" srcset="/img/loading.gif" lazyload></p>
+<p>也不仅仅是这些驱动的文件，可以通过自己的查找，用其他的一些文件来做特征。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">IfFileExist</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* FilePath)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">if</span> (_access(FilePath, <span class="hljs-number">0</span>) == <span class="hljs-number">0</span>)<span class="hljs-comment">//判断文件是否存在,0代表仅检查是否存在</span><br>	&#123;<br>		<span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//存在返回TRUE</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> FALSE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/10.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="网关检测"><a href="#网关检测" class="headerlink" title="网关检测"></a>网关检测</h2><p>一般虚拟机中的网关地址如果不进行修改的话，最后一位都是2，那么可以通过检测网关地址的最后一位是否是2，来进行判断当前运行的环境。</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/11.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CheckGateway</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    ULONG ulSize = <span class="hljs-number">0</span>;<br>    PIP_ADAPTER_INFO pInfo = <span class="hljs-literal">NULL</span>;<br>    <span class="hljs-built_in">GetAdaptersInfo</span>(pInfo, &amp;ulSize);<span class="hljs-comment">//获取缓冲区大小</span><br>    pInfo = (PIP_ADAPTER_INFO)<span class="hljs-built_in">malloc</span>(ulSize);<br>    <span class="hljs-built_in">GetAdaptersInfo</span>(pInfo, &amp;ulSize);<span class="hljs-comment">//获取适配器信息</span><br>    <span class="hljs-keyword">char</span> IP[<span class="hljs-number">100</span>];<br>    <span class="hljs-built_in">sprintf</span>(IP, <span class="hljs-string">&quot;%s&quot;</span>, pInfo-&gt;GatewayList.IpAddress.String);<span class="hljs-comment">//网关的信息</span><br>    <span class="hljs-keyword">int</span> len = <span class="hljs-built_in">strlen</span>(IP);<br>    <span class="hljs-keyword">char</span>* a = &amp;IP[len - <span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(<span class="hljs-string">&quot;2&quot;</span>, a) == <span class="hljs-number">0</span>)<span class="hljs-comment">//判断最后一位是否等于2</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> TRUE;<span class="hljs-comment">//相等返回TRUE</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> FALSE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/12.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="特权指令"><a href="#特权指令" class="headerlink" title="特权指令"></a>特权指令</h2><p>Vmware为主机与虚拟机之间提供了相互沟通的通讯机制，它使用“IN”指令来读取特定端口的数据以进行两机通讯，但由于IN指令属于特权指令，在处于保护模式下的真机上执行此指令时，除非权限允许，否则将会触发类型为“EXCEPTION_PRIV_INSTRUCTION”的异常，而在虚拟机中并不会发生异常，在指定功能号0A（获取VMware版本）的情况下，它会在EBX中返回其版本号“VMXH”，可以通过此返回值判断是否处于虚拟机中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CheckIN</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL flag = FALSE;<br>	__try<br>	&#123;<br>		__asm <br>		&#123;<br>			pushad<br>			mov eax,<span class="hljs-string">&#x27;VMXh&#x27;</span><br>			<span class="hljs-keyword">xor</span> ebx,ebx<br>			mov ecx,<span class="hljs-number">0x0A</span>	<span class="hljs-comment">//功能号0x0A</span><br>			mov edx,<span class="hljs-string">&#x27;VX&#x27;</span><br>			in eax,dx<br>			cmp ebx,<span class="hljs-string">&#x27;VMXh&#x27;</span>	<span class="hljs-comment">//判断返回值是否是VMXh</span><br>			je _vm			<span class="hljs-comment">//是的话返回TRUE</span><br>			jmp _exit<br>		_vm:<br>			mov eax,TRUE<br>			mov flag,eax<br>		_exit:<br>			popad<br>		&#125;<br>	&#125;<br>	__except (EXCEPTION_EXECUTE_HANDLER)<br>	&#123;<br>		flag = FALSE;<br>	&#125;<br>	<span class="hljs-keyword">return</span> flag;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/13.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="CPUID"><a href="#CPUID" class="headerlink" title="CPUID"></a>CPUID</h2><p>当eax=1时，运行CPUID之后，ecx中的值（转为二进制）如果最高位为1，那么就是在虚拟环境，否则不是。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">BOOL <span class="hljs-title">CPUID</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL flag;<br>	__asm<br>	&#123;<br>		pushad<br>		pushfd<br>		mov eax,<span class="hljs-number">1</span>			<br>		cpuid<br>		<span class="hljs-keyword">and</span> ecx,<span class="hljs-number">0x80000000</span>	<span class="hljs-comment">//只留最高位进行判断</span><br>		test ecx,ecx		<span class="hljs-comment">//判断ecx寄存器是否为空，为空代表非虚拟机环境返回FALSE，否则返回TRUE</span><br>		jz _Not<br>		mov flag,TRUE<br>		jmp _end<br>	_Not:<br>		mov flag,FALSE<br>	_end:<br>		popfd<br>		popad<br>	&#125;<br>	<span class="hljs-keyword">return</span> flag;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/15.png" srcset="/img/loading.gif" lazyload></p>
+<p>当eax中的值是0x40000000时，ebx、ecx、edx三个寄存器中的返回值加起来正好是“VMWareVMWare”，可以把这个程序拖入OD，直接进行修改来查看。</p>
+<p><img src="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/14.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结了一些可以使用的虚拟机检测的方式，但是感觉还是比较片面的，其中一些检测的特征也可以通过手动的方式来进行修改。</p>
+<p>感觉反虚拟机还是游戏方面做的更好一些，如果能把网游反虚拟机的机制学习清楚的话应该还能学到更多的东西。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="http://blog.nsfocus.net/malicious-sample-analysis-manual-virtual-machine-test-bottom/">http://blog.nsfocus.net/malicious-sample-analysis-manual-virtual-machine-test-bottom/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/system/202717.html">https://www.freebuf.com/articles/system/202717.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.write-bug.com/article/1822.html">https://www.write-bug.com/article/1822.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-219955.htm">https://bbs.pediy.com/thread-219955.htm</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/">虚拟机检测</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/">虚拟机检测</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BC%96%E7%A8%8B/">编程</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/">
+                        <span class="hidden-mobile">恶意代码分析实战-实验12</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

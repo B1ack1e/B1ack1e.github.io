@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
@@ -9,8 +9,7 @@
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
   <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -19,6 +18,13 @@
   <meta name="description" content="">
   <meta name="author" content="b1ackie">
   <meta name="keywords" content="">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="b1ackie&#39;blog">
+<meta property="og:url" content="https://b1ackie.cn/page/3/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="b1ackie">
+<meta name="twitter:card" content="summary_large_image">
   
   <title>b1ackie&#39;blog</title>
 
@@ -42,7 +48,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -54,8 +60,9 @@
   <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>b1ackie's blog</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -141,13 +148,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
           </li>
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self">&nbsp;<i
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
                 class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
@@ -162,7 +170,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="b1ackie's blog">
+            <span class="h2" id="subtitle" title="b1ackie&#39;s blog">
               
             </span>
 
@@ -190,6 +198,69 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/04/160CrackMe-008/" target="_self">
+          160CrackMe-008
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/04/160CrackMe-008/" target="_self">
+          
+          
+            
+          
+          初探打开程序直接输入一个注册码，输入错误弹出错误提示窗口。
+
+分析无壳，是使用VB编写的的
+
+使用OD直接搜索错误弹窗的提示，可以直接定位一个关键跳转。
+
+开始分析一下，就在上面不远处，是明文比较输入与SynTaX 2oo1
+
+输入SynTaX 2oo1即可成功
+
+总结有点简单了。。。
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-04 17:38" pubdate>
+              2021-08-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CrackMe/">CrackMe</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
 
   <div class="row mx-auto index-card">
     
@@ -721,63 +792,6 @@ shellcode编写原则
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/" target="_self">
-          提权技术-Bypass UAC
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/20/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF-Bypass%20UAC/" target="_self">
-          
-          
-            
-          
-          Bypass UACUAC（UserAccount Control，用户账户控制）是微软在VISTA之后的版本中引入的一种安全机制，通过UAC，应用程序和任务可以始终在非管理员账户的安全上下文中运行，除非特别授予管理员级别的系统访问权限。UAC可以阻止未经授权的应用程序自动进行安装，并防止无意地更改系统设置。
-正常UAC是有一个弹窗提示，而病毒木马为了隐藏自己，就需要不通知用户的情况下“偷偷“将自
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-20 14:24" pubdate>
-              2021-07-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E6%8F%90%E6%9D%83%E6%8A%80%E6%9C%AF/">提权技术</a>
-            
-              <a href="/tags/UAC/">UAC</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -796,7 +810,7 @@ shellcode编写原则
     
 
     
-      <a id="scroll-top-button" href="#" role="button">
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
@@ -886,6 +900,10 @@ shellcode编写原则
 <!-- Plugins -->
 
 
+  <script  src="/js/local-search.js" ></script>
+
+
+
   
     <script  src="/js/img-lazyload.js" ></script>
   
@@ -895,18 +913,6 @@ shellcode编写原则
   
 
 
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
 
 
 
