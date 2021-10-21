@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="前言正好拿到了一个X绒的面试题，来分析一下看看。 样本的信息 名称：c7d46a908d692a89f2e8e1303137f8d7a8d7e7ac MD5：2f02e4a81dd4ff32270ed31429fd88d1 SHA256：b7e98515a01b4c77a5ae97742338a51b325e7362e3f2976f252afb126ad6d3fa 样本大小：122880字节  详">
+<meta property="og:type" content="article">
+<meta property="og:title" content="X绒面试题">
+<meta property="og:url" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="前言正好拿到了一个X绒的面试题，来分析一下看看。 样本的信息 名称：c7d46a908d692a89f2e8e1303137f8d7a8d7e7ac MD5：2f02e4a81dd4ff32270ed31429fd88d1 SHA256：b7e98515a01b4c77a5ae97742338a51b325e7362e3f2976f252afb126ad6d3fa 样本大小：122880字节  详">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/10.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/14.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/15.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/16.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/17.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/18.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/19.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/20.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/21.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/22.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/23.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/24.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/25.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/26.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/27.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/29.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/28.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/31.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/32.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/33.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/34.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/35.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/36.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/37.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/42.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/38.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/39.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/40.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/41.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/43.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/50.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/85.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/86.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/51.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/52.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/53.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/54.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/55.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/56.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/57.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/58.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/59.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/60.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/61.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/62.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/63.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/64.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/65.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/66.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/67.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/68.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/69.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/70.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/71.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/72.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/73.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/74.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/75.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/76.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/77.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/78.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/79.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/80.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/81.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/82.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/83.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/84.png">
+<meta property="article:published_time" content="2021-10-21T01:51:05.000Z">
+<meta property="article:modified_time" content="2021-10-21T02:10:20.930Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="病毒分析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/1.png">
+  
+  <title>X绒面试题 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="X绒面试题">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-21 09:51" pubdate>
+        2021-10-21 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">X绒面试题</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-10-21 上午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>正好拿到了一个X绒的面试题，来分析一下看看。</p>
+<h2 id="样本的信息"><a href="#样本的信息" class="headerlink" title="样本的信息"></a>样本的信息</h2><ul>
+<li>名称：c7d46a908d692a89f2e8e1303137f8d7a8d7e7ac</li>
+<li>MD5：2f02e4a81dd4ff32270ed31429fd88d1</li>
+<li>SHA256：b7e98515a01b4c77a5ae97742338a51b325e7362e3f2976f252afb126ad6d3fa</li>
+<li>样本大小：122880字节</li>
+</ul>
+<h2 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h2><h3 id="火绒剑行为分析"><a href="#火绒剑行为分析" class="headerlink" title="火绒剑行为分析"></a>火绒剑行为分析</h3><p>使用火绒剑监控行为，过滤行为，只看文件创建和写入，可以看到首先创建了在C:\Program Files下创建了一个Windows Cyguof文件夹，然后在其中创建一个svchost.exe。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>再过滤注册表的set value，可以看到创建了几个键值，这几个是与windows服务有关的，那么应该是创建了一个服务来实现持久化驻留。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>注册表相关信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建的服务</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>伪装成svchost的样本</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/5.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="IDA-OD"><a href="#IDA-OD" class="headerlink" title="IDA+OD"></a>IDA+OD</h3><p>样本全程使用LoadLibrary+GetProcAddress的方式，动态加载。</p>
+<p>获取一些API地址</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/6.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先，会解密一些内容</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/7.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中部分密文</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/8.png" srcset="/img/loading.gif" lazyload></p>
+<p>解密算法</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/9.png" srcset="/img/loading.gif" lazyload></p>
+<p>解密出来的结果</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/10.png" srcset="/img/loading.gif" lazyload></p>
+<p>第一个是C2的域名，第二个是注册表的表项名。</p>
+<p>拼接完成一个路径C:\ProgramFiles\Windows Cyguof\svchost.exe</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/11.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会尝试打开注册表并且查询其中键值的值</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/12.png" srcset="/img/loading.gif" lazyload></p>
+<p>获取当前程序的运行路径，比较其是否为C:\ProgramFiles\Windows Cyguof\svchost.exe</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果是非C:\ProgramFiles\Windows Cyguof\svchost.exe这个路径，那么就会执行下面这些操作。</p>
+<p>会根据一个算法来生成三个值在注册表中要用到的值</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/14.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过GetTickCount和一些运算生成值</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/15.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/16.png" srcset="/img/loading.gif" lazyload></p>
+<p>进行注册表的设置，创建HKLM\SYSTEM\CurrentControlSet\Services\Wsviss uasouavk\ReleiceName，设置值为刚才生成的那个数。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/17.png" srcset="/img/loading.gif" lazyload></p>
+<p>注册表相关操作</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/18.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后是设置具体的服务</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/19.png" srcset="/img/loading.gif" lazyload></p>
+<p>判断C:\Program Files\Windows Cyguof是否存在，不存在创建且使用CopyFileA复制自身到此文件夹下面，命名为svchost。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/20.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用_access判断文件夹是否存在，如果不存在会调用CreateDirectoryA创建。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/21.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用CreateServiceA创建服务</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/22.png" srcset="/img/loading.gif" lazyload></p>
+<p>参数服务的参数</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/23.png" srcset="/img/loading.gif" lazyload></p>
+<p>StartServiceA会启动服务</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/24.png" srcset="/img/loading.gif" lazyload></p>
+<p>遍历进程，查找是否存在svchost进程</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/25.png" srcset="/img/loading.gif" lazyload></p>
+<p>之后就ExitProcess</p>
+<p>然后来看看如果是svchost.exe的时候</p>
+<p>主要执行这部分操作，可以看到关键的函数主要是<code>sub_40C920</code>，主要就是执行了它</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/26.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先，是提权，查看是否当前进程是否具有SeDebugPrivilege权限，如果没有，就会调用AdjustTokenPrivileges提权。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/27.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建一个事件，通过getlasterror返回值来判断是否已经在运行，防止重复运行。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/29.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建的事件，名为Imdgss czsyi</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/28.png" srcset="/img/loading.gif" lazyload></p>
+<p>之后会进行网络连接，连接到C2</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/31.png" srcset="/img/loading.gif" lazyload></p>
+<p>socket连接，域名为hask.f3322.org</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/32.png" srcset="/img/loading.gif" lazyload></p>
+<p>上面<code>40E990</code>是一个创建线程的函数，也就是CreateThread，远控部分在创建的新线程<code>4021B0</code>中，关于远控部分最后再说。</p>
+<p>在<code>sub_408ED0</code>中会获取一些信息并发送，CPU的信息</p>
+<p>经过查询，注册表HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\CentralProcessor\0，里面包含的主要是CPU相关信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/33.png" srcset="/img/loading.gif" lazyload></p>
+<p>getsockname获取socket信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/34.png" srcset="/img/loading.gif" lazyload></p>
+<p>GetVersionExA获取操作系统版本信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/35.png" srcset="/img/loading.gif" lazyload></p>
+<p>GetSystemInfo获得操作系统信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/36.png" srcset="/img/loading.gif" lazyload></p>
+<p>GetDiskFreeSpaceExA获得磁盘容量信息</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/37.png" srcset="/img/loading.gif" lazyload></p>
+<p>capGetDriverDescriptionA函数，查询了此函数后，好像是与摄像头有关的API，猜测可能是操控被控端的摄像头的。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/42.png" srcset="/img/loading.gif" lazyload></p>
+<p>GetTickCount获得开机到现在时间</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/38.png" srcset="/img/loading.gif" lazyload></p>
+<p>还有一些注册表中的信息</p>
+<p>获得的所有信息在内存中</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/39.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会经过两次加密，再在头部加上一些东西后就会发送到服务端。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/40.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过send函数发送内容。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/41.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过fakenet模拟网络生成的PCAP包，可以看到具体发送的内容</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/43.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="远控部分"><a href="#远控部分" class="headerlink" title="远控部分"></a>远控部分</h3><p>远控部分是在这个创建的线程之中</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/50.png" srcset="/img/loading.gif" lazyload></p>
+<p>在这里可以看到当<code>recv</code>函数收到数据的时候，会调用<code>sub_4022B0</code>，而这个函数中是一些解密函数以及具体的远控部分，所以接收到的信息是加密的，经过解密后进入远控函数。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/85.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/86.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_405060</code>函数是接收指令，且执行操作的地方，执行的操作大概有28种</p>
+<p>通过switch语句进行判断，并且执行相应的操作</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/51.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里的命令应该是数字。按照顺序来看，从数字1开始看</p>
+<h4 id="1"><a href="#1" class="headerlink" title="1"></a>1</h4><p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/52.png" srcset="/img/loading.gif" lazyload></p>
+<p>它会尝试访问C:\Windows\system\Consys02.dll这个文件，然后执行操作，但是这个文件现在不存在，所以这个DLL做了什么不知道，只能根据名字来进行猜测DLLFILE应该是文件相关操作。所有读取了DLL的功能，全部都是需要比较指定位置的字符串是否等于<code>SSSSSS</code>和<code>VID:2013-SV1</code>，并且内存加载执行的，所以没有DLL的情况下，这些功能只能通过名字来进行猜测。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/53.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>DLLScreen应该是屏幕截图</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/54.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>DllVideo与视频相关，可能是摄像头操作，或是桌面录制</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/55.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="4"><a href="#4" class="headerlink" title="4"></a>4</h4><p>DllKeybo应该是键盘的记录</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/56.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="5"><a href="#5" class="headerlink" title="5"></a>5</h4><p>DllAudio与音频有关，可能是录音</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/57.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="6"><a href="#6" class="headerlink" title="6"></a>6</h4><p>DllSyste应该与系统有关</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/58.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="7"><a href="#7" class="headerlink" title="7"></a>7</h4><p>DllShell可能会执行一些shell命令</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/59.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="8"><a href="#8" class="headerlink" title="8"></a>8</h4><p>提升SeShutdownPrivilege权限，调用ExitWindowsEx注销系统</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/60.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="9"><a href="#9" class="headerlink" title="9"></a>9</h4><p>首先删除C:\Windows\system32\ourlog.dat</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/61.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建VBS文件且执行，名字是根据GetTickCount生成的。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/62.png" srcset="/img/loading.gif" lazyload></p>
+<p>VBS脚本的内容，可以看到应该是删除了原文件</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/63.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="10"><a href="#10" class="headerlink" title="10"></a>10</h4><p>会尝试下载一个文件</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/64.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/65.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会尝试执行</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/66.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="11"><a href="#11" class="headerlink" title="11"></a>11</h4><p>会访问HKEY_CLASSES_ROOT\Applications\iexplore.exe\shell\open\command中的值</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/67.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后会执行程序</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/68.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="12"><a href="#12" class="headerlink" title="12"></a>12</h4><p>与上面相同</p>
+<h4 id="13"><a href="#13" class="headerlink" title="13"></a>13</h4><p>设置注册表</p>
+<p>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\生成的那个服务名字</p>
+<p>设置其中的HOST值</p>
+<h4 id="14"><a href="#14" class="headerlink" title="14"></a>14</h4><p>设置HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\生成的那个服务名字中的ConnectGroup值</p>
+<h4 id="15"><a href="#15" class="headerlink" title="15"></a>15</h4><p>创建一个EXE，接受的数据写入其中，然后执行它，exe名字也是根据GetTickCount生成</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/69.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="16"><a href="#16" class="headerlink" title="16"></a>16</h4><p>与上面一样</p>
+<h4 id="17"><a href="#17" class="headerlink" title="17"></a>17</h4><p>与上面一样，但是只会创建，不会执行，这里第三个参数是2</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/70.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里不等于2才执行</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/71.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="18"><a href="#18" class="headerlink" title="18"></a>18</h4><p>会实现一个弹窗，窗口内容和标题都是接收到的数据</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/72.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="19"><a href="#19" class="headerlink" title="19"></a>19</h4><p>会下载DLL</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/73.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="20"><a href="#20" class="headerlink" title="20"></a>20</h4><p>DLLSerSt，根据名字不好猜测具体作用</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/74.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="21"><a href="#21" class="headerlink" title="21"></a>21</h4><p>DLLSerMa</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/75.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="22"><a href="#22" class="headerlink" title="22"></a>22</h4><p>DllReg应该是注册表相关</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/76.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="23"><a href="#23" class="headerlink" title="23"></a>23</h4><p>DllDdosOpen应该是打开DDOS功能</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/77.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="24"><a href="#24" class="headerlink" title="24"></a>24</h4><p>关闭DDOS功能</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/78.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="25"><a href="#25" class="headerlink" title="25"></a>25</h4><p>开启代理，应该会拦截获取所有的上网数据</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/79.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="26"><a href="#26" class="headerlink" title="26"></a>26</h4><p>关闭代理</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/80.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="27"><a href="#27" class="headerlink" title="27"></a>27</h4><p>查找指定的进程，找到后会加密发送一些信息给服务器。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/81.png" srcset="/img/loading.gif" lazyload></p>
+<p>进程遍历查找</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/82.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="28"><a href="#28" class="headerlink" title="28"></a>28</h4><p>查找指定窗口标题的程序，找到后会加密发送一些信息给服务器。</p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/83.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/21/X%E7%BB%92%E9%9D%A2%E8%AF%95%E9%A2%98/84.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="IOCS"><a href="#IOCS" class="headerlink" title="IOCS"></a>IOCS</h2><h3 id="MD5："><a href="#MD5：" class="headerlink" title="MD5："></a>MD5：</h3><ul>
+<li>2f02e4a81dd4ff32270ed31429fd88d1（exe）</li>
+<li>31802b90fe67a46bed5f3eb0ad6bb8c7（C2地址）</li>
+</ul>
+<h3 id="URL："><a href="#URL：" class="headerlink" title="URL："></a>URL：</h3><ul>
+<li>hask.f3322.org</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/20/0day%E5%AE%89%E5%85%A8%EF%BC%9A%E8%BD%AF%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E6%8A%80%E6%9C%AF-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+                        <span class="hidden-mobile">0day安全：软件漏洞分析技术-读书笔记（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
