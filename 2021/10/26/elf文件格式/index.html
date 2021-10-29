@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="ELF文件格式elf文件，Executable and Linking Format，“可执行可连接格式”，具有这种格式的文件称为elf文件。 在elf规范中，把elf文件宽泛的称为“目标文件（Object File）”，这与我们通常理解的“.o”文件不同，elf文件仅指连接好的可执行文件。对于“.o”文件，可以直接称为可重定位文件。 elf文件主要分为三种类型：  可重定位文件（relocata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elf文件格式">
+<meta property="og:url" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="ELF文件格式elf文件，Executable and Linking Format，“可执行可连接格式”，具有这种格式的文件称为elf文件。 在elf规范中，把elf文件宽泛的称为“目标文件（Object File）”，这与我们通常理解的“.o”文件不同，elf文件仅指连接好的可执行文件。对于“.o”文件，可以直接称为可重定位文件。 elf文件主要分为三种类型：  可重定位文件（relocata">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/10.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/14.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/15.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/16.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/17.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/18.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/19.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/20.png">
+<meta property="article:published_time" content="2021-10-26T09:49:49.000Z">
+<meta property="article:modified_time" content="2021-10-29T07:37:35.591Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="PWN">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="ELF">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/1.png">
+  
+  <title>elf文件格式 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="elf文件格式">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-26 17:49" pubdate>
+        2021-10-26 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">elf文件格式</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-10-29 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="ELF文件格式"><a href="#ELF文件格式" class="headerlink" title="ELF文件格式"></a>ELF文件格式</h2><p>elf文件，Executable and Linking Format，“可执行可连接格式”，具有这种格式的文件称为elf文件。</p>
+<p>在elf规范中，把elf文件宽泛的称为“目标文件（Object File）”，这与我们通常理解的“.o”文件不同，elf文件仅指连接好的可执行文件。对于“.o”文件，可以直接称为可重定位文件。</p>
+<p>elf文件主要分为三种类型：</p>
+<ul>
+<li>可重定位文件（relocatable file）：由源文件编译而成且尚未链接的目标文件，通常以“.o”作为扩展名，用于与其他目标文件进行连接以构建可执行文件或动态链接库，通常是一段位置独立的代码。</li>
+<li>共享目标文件（shared object file）：动态链接库文件。用于在链接过程中与其他动态链接库或可重定位文件一起构建新的目标文件，或者在可执行文件加载时，链接到进程中作为运行代码的一部分。</li>
+<li>可执行文件（executable file）：经过链接的、可执行的目标文件，通常也被称为程序。</li>
+</ul>
+<p>目标文件的作用有两个，一是用于构建程序，构建动态链接库或可执行程序；二是用于运行程序。所以有两种视角来看待一个程序，链接视角，通过节来进行划分，另一种是运行视角，通过段来进行划分。</p>
+<table>
+<thead>
+<tr>
+<th>链接视角</th>
+<th>运行视角</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ELF文件头</td>
+<td>ELF文件头</td>
+</tr>
+<tr>
+<td>程序头表（可选）</td>
+<td>程序头表</td>
+</tr>
+<tr>
+<td>第一节</td>
+<td></td>
+</tr>
+<tr>
+<td>第二节</td>
+<td>第一段</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>第N节</td>
+<td>第N段</td>
+</tr>
+<tr>
+<td>节头表</td>
+<td>段头表（可选）</td>
+</tr>
+</tbody></table>
+<p>这里使用的示例程序</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-keyword">int</span> global_init_var = <span class="hljs-number">10</span>;<br><span class="hljs-keyword">int</span> global_uninit_var;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> sum)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>,sum);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> local_static_init_var = <span class="hljs-number">20</span>;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> local_static_uninit_var;<br><br>    <span class="hljs-keyword">int</span> local_init_var = <span class="hljs-number">30</span>;<br>    <span class="hljs-keyword">int</span> local_uninit_var ;<br><br>    func(global_init_var + local_init_var + local_static_init_var);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>执行下面四个命令，可以分别生成前面说过的几种文件</p>
+<blockquote>
+<p>gcc elfDemo.c -o elfDemo.exec<br>gcc -static elfDemo.c -o elfDemo_static.exec<br>gcc -c elfDemo.c -o elfDemo.rel<br>gcc -c -fPIC elfDemo.c -o elfDemo_pic.rel &amp;&amp; gcc -shared elfDemo_pic.rel -o elfDemo.dyn</p>
+</blockquote>
+<p>使用file命令查看，可以看到它们的类型</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="elf文件头"><a href="#elf文件头" class="headerlink" title="elf文件头"></a>elf文件头</h3><p>elf文件头位于目标文件最开始的位置，包含描述整个文件的一些基本信息，比如elf文件类型、版本、目标机器、程序入口等。</p>
+<p>如图可以看到elfDemo.rel文件头的一些信息。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>Elf64_Ehdr结构体如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> </span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> e_ident[EI_NIDENT];   <span class="hljs-comment">//elf标志</span><br>    Elf64_Half      e_type;             <span class="hljs-comment">//文件类型</span><br>    Elf64_Half      e_machine;          <span class="hljs-comment">//该文件适用的处理器体系结构</span><br>    Elf64_Word      e_version;          <span class="hljs-comment">//目标文件版本</span><br>    Elf64_Addr      e_entry;            <span class="hljs-comment">//程序入口的虚拟地址</span><br>    Elf64_Off       e_phoff;            <span class="hljs-comment">//程序头表开始处在文件中的偏移</span><br>    Elf64_Off       e_shoff;            <span class="hljs-comment">//节头表开始处在文件中的偏移</span><br>    Elf64_Word      e_flags;            <span class="hljs-comment">//处理器特定的标志位</span><br>    Elf64_Half      e_ehsize;           <span class="hljs-comment">//elf文件头的大小</span><br>    Elf64_Half      e_phentsize;        <span class="hljs-comment">//程序头表中表项大小</span><br>    Elf64_Half      e_phnum;            <span class="hljs-comment">//程序头表中表项数</span><br>    Elf64_Half      e_shentsize;        <span class="hljs-comment">//节头表中表项大小</span><br>    Elf64_Half      e_shnum;            <span class="hljs-comment">//节头表表项数</span><br>    Elf64_Half      e_shstrndx          <span class="hljs-comment">//节头表与节名字表对应的表项索引</span><br>&#125;Elf64_Ehdr;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="节"><a href="#节" class="headerlink" title="节"></a>节</h3><p>一个目标文件包含许多节，这些节的信息保存在节头表中，表的每一项都是Elf64_Shdr结构体，记录了节的名字、长度、偏移等信息。节头表的位置记录在文件头的e_shoff域中。节头表对于程序运行不是必须的，</p>
+<p>elfDemo.rel的节头表如下所示：</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>Elf64_Shdr结构体如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>    Elf64_Word      sh_name;        <span class="hljs-comment">//节的名字，只是一个索引号</span><br>    Elf64_Word      sh_type;        <span class="hljs-comment">//节类型</span><br>    Elf64_Xword     sh_flags;       <span class="hljs-comment">//节属性</span><br>    Elf64_Addr      sh_addr;        <span class="hljs-comment">//映射的起始地址</span><br>    Elf64_Off       sh_offset;      <span class="hljs-comment">//相对于文件开头的偏移量</span><br>    Elf64_Xword     sh_size;        <span class="hljs-comment">//节的大小，单位是字节</span><br>    Elf64_Word      sh_link;        <span class="hljs-comment">//索引值，指向节头表中本节所对应的位置</span><br>    Elf64_Word      sh_info;        <span class="hljs-comment">//节的附加信息</span><br>    Elf64_Xword     sh_addralign;   <span class="hljs-comment">//节的对齐信息</span><br>    Elf64_Xword     sh_entsize;     <span class="hljs-comment">//指定每一个表项的大小</span><br>&#125;Elf64_Shdr;<br></code></pre></div></td></tr></table></figure>
+
+<p>下面来分别看看示例程序elfDemo.rel的.text节.data节和.bss节。</p>
+<p>首先是.text节，Contents of section中从左到右依次是偏移，数据，以及十六进制形式。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>Disassembly of section则是反汇编的结果</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>接下来看数据节和只读数据节。可以看到在.data中保存着0a000000和14000000而它们分别是int global_init_var和static int local_static_init_var（0xa=10，0x14=20）。</p>
+<p>.rodata保存只读数据，包括只读变量和字符串常量。源码中调用printf用了“%d\n”，这是一种只读数据，保存在.rodata中。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/6.png" srcset="/img/loading.gif" lazyload></p>
+<p>BSS节用于保存未初始化的全局变量和局部静态变量。可以看到它并没有CONTENTS属性，表示该节在文件中实际上不存在，只是为了变量预留位置。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/7.png" srcset="/img/loading.gif" lazyload></p>
+<p>其他一些常见的节</p>
+<table>
+<thead>
+<tr>
+<th>节名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.comment</td>
+<td>版本控制信息，如编译器版本</td>
+</tr>
+<tr>
+<td>.debug_XXX</td>
+<td>DWARF格式的调试信息</td>
+</tr>
+<tr>
+<td>.strtab</td>
+<td>字符串表</td>
+</tr>
+<tr>
+<td>.shstrtab</td>
+<td>节名的字符串表</td>
+</tr>
+<tr>
+<td>.symtab</td>
+<td>符号表</td>
+</tr>
+<tr>
+<td>.dynamic</td>
+<td>ld.so使用的动态链接信息</td>
+</tr>
+<tr>
+<td>.dynstr</td>
+<td>动态链接的字符串表</td>
+</tr>
+<tr>
+<td>.dynsym</td>
+<td>动态链接的符号表</td>
+</tr>
+<tr>
+<td>.got</td>
+<td>全局偏移量表，用于保存全局变量引用的地址</td>
+</tr>
+<tr>
+<td>.got.plt</td>
+<td>全局偏移量表，用于保存函数引用的地址</td>
+</tr>
+<tr>
+<td>.plt</td>
+<td>过程链接表，用于延迟绑定</td>
+</tr>
+<tr>
+<td>.hash</td>
+<td>符号哈希表</td>
+</tr>
+<tr>
+<td>.rela.dyn</td>
+<td>变量的动态重定位表</td>
+</tr>
+<tr>
+<td>.rela.plt</td>
+<td>函数的动态重定位表</td>
+</tr>
+<tr>
+<td>.rel.text/rela.text</td>
+<td>静态重定位表</td>
+</tr>
+<tr>
+<td>.rel.XXX/rela.XXX</td>
+<td>其他节的静态重定位表</td>
+</tr>
+<tr>
+<td>.note.XXX</td>
+<td>额外的编译信息</td>
+</tr>
+<tr>
+<td>.eh_frame</td>
+<td>用于操作异常的frame unwind信息</td>
+</tr>
+<tr>
+<td>.init/.fini</td>
+<td>程序初始化和终止的代码</td>
+</tr>
+</tbody></table>
+<h4 id="字符串表"><a href="#字符串表" class="headerlink" title="字符串表"></a>字符串表</h4><p>字符串表包含了以NULL结尾的字符序列，用来表示符号名和节名，引用字符串时只需要给出字符序列在表中的偏移即可。字符串表的第一个字符和最后一个字符都是NULL字符，确保所有字符串的开始和终止。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/8.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h4><p>符号表记录了目标文件中所用到的所有符号信息，通常分为.dynsym和.symtab。.dynsym保存了引用自外部文件的符号，只能在运行时被解析，而.symtab还保存了本地符号，用于调试和链接。目标文件通过一个符号在表中的索引值来使用该符号。索引值从0开始计数，但值为0的表项不具有实际的意义，它表示未定义的符号。每个符号都有一个符号值，对于变量和函数，该值就是符号的地址。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/9.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight arduino"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arduino"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>    Elf64_Word      st_name;        <span class="hljs-comment">//符号名字</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>   st_info;        <span class="hljs-comment">//符号类型和属性</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>   st_other;       <span class="hljs-comment">//暂未使用</span><br>    Elf64_Section   st_shndx;       <span class="hljs-comment">//节索引</span><br>    Elf64_Addr      st_value;       <span class="hljs-comment">//符号值</span><br>    Elf64_Xword     st_size;        <span class="hljs-comment">//符号大小</span><br>&#125;Elf64_Sym;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="重定位表"><a href="#重定位表" class="headerlink" title="重定位表"></a>重定位表</h4><p>重定位是把符号引用与符号定义连接在一起的过程。我们在编写程序的过程中，我们只需要写入要调用的函数名（即符号引用），在重定位的过程中，函数名会与实际的函数所在地址联系起来，让程序知道应该跳转到哪里去。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/10.png" srcset="/img/loading.gif" lazyload></p>
+<p>Elf64_Rel和Elf64_Rela的结构体如下所示。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>    Elf64_Addr      r_offset;       <span class="hljs-comment">//重定位时需要被修改的符号的偏移</span><br>    Elf64_Xword     r_info;         <span class="hljs-comment">//重定位类型和符号索引</span><br>&#125;Elf64_Rel;<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>    Elf64_Addr      r_offset;       <span class="hljs-comment">//重定位时需要被修改的符号的偏移</span><br>    Elf64_Xword     r_info;         <span class="hljs-comment">//重定位类型和符号索引</span><br>    Elf64_Sword     r_addend;       <span class="hljs-comment">//做偏移调整</span><br>&#125;Elf64_Rela;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="可执行文件的装载"><a href="#可执行文件的装载" class="headerlink" title="可执行文件的装载"></a>可执行文件的装载</h3><p>刚才了解了目标文件的链接视角，下面将从运行视角来看一下。当运行一个程序的时候，首先要将该文件和动态链接库装载到进程空间中，形成一个进程镜像。每一个进程都拥有独立的虚拟地址空间，这个空间的布局是由记录在段头表中的程序头决定的。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/11.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到每个段都包含了一个或者多个节，相当于是对这些节进行了分组，段的出现也正是出于此目的。随着节的数量增多，在进行内存映射的时候就产生了空间和资源浪费的问题。实际上，系统并不关心每个节的实际内容，而是关心这些节的权限，通过将不同权限的节分组，即可同时装载多个节，从而节省资源。</p>
+<p>下面简要的讲解几个段。</p>
+<p>通常一个可执行文件至少要有一个PT_LOAD类型的段，用于描述可装载的节，而动态链接的可执行文件则包含两个，将.data和.text分开存放。动态段PT_DYNAMIC包含了一些动态链接所必须的信息，如共享库列表、GOT表等。PT_NOTE类型的段保存了系统相关的附加信息。PT_INTERP段将位置和大小信息存放在一个字符串中，是对程序解释器位置的描述。PT_PHDR段保存了程序头表本身的位置和大小。</p>
+<p>Elf64_Phdr结构如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>    Elf64_Word      p_type;     <span class="hljs-comment">//段类型</span><br>    Elf64_Word      p_flags;    <span class="hljs-comment">//段属性</span><br>    Elf64_Off       p_offset;   <span class="hljs-comment">//段开头偏移量</span><br>    Elf64_Addr      p_vaddr;    <span class="hljs-comment">//段开始位置的虚拟地址</span><br>    Elf64_Addr      p_paddr;    <span class="hljs-comment">//段开始的物理空间</span><br>    Elf64_Xword     p_filesz;   <span class="hljs-comment">//段在文件中的大小</span><br>    Elf64_Xword     p_memsz;    <span class="hljs-comment">//段在内容镜像中的大小</span><br>    Elf64_Xword     p_align;    <span class="hljs-comment">//段对齐</span><br>&#125;Elf64_Phdr;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h3><h4 id="地址空间的分配"><a href="#地址空间的分配" class="headerlink" title="地址空间的分配"></a>地址空间的分配</h4><p>链接由链接器完成，根据发生的时间不同，可以分为编译时链接、加载时链接和运行时链接。</p>
+<p>重新写两个示例文件,main.c和func.c.</p>
+<p><code>main.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> shared;<br><span class="hljs-function"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a,<span class="hljs-keyword">int</span> *b)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">100</span>;<br>    func(&amp;a,&amp;shared);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p><code>func.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-keyword">int</span> shared = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">int</span> tmp=<span class="hljs-number">0</span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a,<span class="hljs-keyword">int</span> *b)</span></span><br><span class="hljs-function"></span>&#123;<br>    tmp = *a;<br>    *a = *b;<br>    *b = tmp;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>使用如下命令进行编译</p>
+<figure class="highlight autoit"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs autoit">gcc -<span class="hljs-keyword">static</span> -fno-stack-protector main.c <span class="hljs-keyword">func</span>.c -save-temps --verbose -o <span class="hljs-keyword">func</span>.ELF<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/12.png" srcset="/img/loading.gif" lazyload></p>
+<p>在将main.o和func.o两个目标文件链接成一个可执行文件时，最简单的方法是按照顺序叠加。</p>
+<p>这里就直接用了书上的图</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>这种方法的弊端就是，如果参与链接文件很多的话，那么输出的可执行文件就会非常的零散。从对齐的角度来讲，越多的代码节和数据节也会造成内存空间的浪费。</p>
+<p>另一种方案就是将相似的节进行合并，将不同目标文件相同属性的节合并为一个节，比如将两个文件中的.text节合并为新的.text节。这种方案被当前的链接器所采用，首先对各个节的长度、属性和偏移进行分析，然后将输入目标文件中符号表的符号定义与符号引用统一生成全局符号表，最后读取输入文件的各类信息对符号进行解析、重定位等操作。相似节的合并就发生在重定位时。完成之后，程序中的每个指令和全局变量就有唯一的运行时内存地址了。</p>
+<p>此图也直接用了书上的图。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/14.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="静态链接的详细过程"><a href="#静态链接的详细过程" class="headerlink" title="静态链接的详细过程"></a>静态链接的详细过程</h4><p>为了构造可执行文件，链接器必须完成两个重要的工作：符号解析和重定位。符号解析是将每个符号（函数、全局变量、静态变量）的引用与其定义进行关联。重定位则是将每个符号的定义与一个内存地址进行关联，然后修改这些符号的引用，使其指向这个内存地址。</p>
+<p>可以比较一下静态链接可执行文件func.ELF和中间产物main.o的区别。重点关注下.text、.data和.bss节。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/15.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/16.png" srcset="/img/loading.gif" lazyload></p>
+<p>VMA是虚拟地址，LMA是加载地址，一般情况下，两者是相同的。可以看到main.o的VMA和LMA都是0而链接完成后的func.ELF中，相似节被合并，完成了虚拟地址的分配。</p>
+<p>查看main.o的反汇编代码，看到在1D处，进行了call指令，这就是对于func的调用，此时符号还没有重定位，看到相对的偏移是0。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/17.png" srcset="/img/loading.gif" lazyload></p>
+<p>再看链接完成后的func.ELF，可以看到<code>400b8a</code>处的call func，其中机器码是e8 07，而下一条指令偏移7处就是400b96，func的地址。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/18.png" srcset="/img/loading.gif" lazyload></p>
+<p>可重定位文件中最重要的就是要包含重定位表，用于告诉链接器如何修改节的内容。每个重定位表对应一个需要被重定位的节，例如名为.rel.text的节用于保存.text的重定位表。</p>
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/19.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h3><h4 id="关于动态链接"><a href="#关于动态链接" class="headerlink" title="关于动态链接"></a>关于动态链接</h4><p>随着系统中可执行文件的增加，静态链接带来的磁盘和内存空间浪费问题愈发严重。比如，大部分可执行文件都需要glibc，那么在静态链接时就要把libc.a和编写的代码链接进去，单个libc.a文件大小为5M左右，如果有1000个的话就是5G。这就会造成内存空间的浪费。还有一个明显的缺点就是，如果对标准函数做一些改动，都需要重新编译整个源文件，使得开发和维护很困难。</p>
+<p>如果把系统可和编写的代码分成两个独立的模块，等到程序运行的时候，再把两个模块进行链接，就可以节省硬盘空间，并且内存中的一个系统库还可以被多个程序共同使用，还节省了物理内存空间。这种在加载或运行时，在内存中完成链接的过程就是动态链接，这些用于动态链接的系统库称为共享库，整个过程由动态链接器完成。</p>
+<p>GCC默认使用的是动态链接编译，通过下面的命令可以将func.c编译为共享库，然后使用这个库编译main.c。参数<code>-shared</code>表示生成共享库，<code>-fpic</code>表示生成与位置无关的代码。这样可执行文件func.ELF2就会在加载时与func.so进行动态链接。</p>
+<figure class="highlight nim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nim">gcc -<span class="hljs-literal">shared</span> -fpic -o <span class="hljs-keyword">func</span>.so <span class="hljs-keyword">func</span>.c<br>gcc -fno-stack-protector -o <span class="hljs-keyword">func</span>.<span class="hljs-type">ELF2</span> main.c ./<span class="hljs-keyword">func</span>.so<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/20.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="位置无关代码"><a href="#位置无关代码" class="headerlink" title="位置无关代码"></a>位置无关代码</h4><p>可以加载而无需重定位的代码称为位置无关代码（PIC），它是共享库必须具有的属性，通过PIC，一个共享库的代码可以被无限多个进程所共享，从而节约内存资源。</p>
+<p>由于一个程序的数据段和代码段的相对距离总是保持不变的，因此，指令和变量之间的距离是一个运行时常量，与绝对内存地址无关。于是就有了全局偏移量表（GOT），它位于数据段的开头，用于保存全局变量和库函数的引用，每个条目占8个字节，在加载时会进行重定位并填入符号的绝对地址。</p>
+<p>实际上，为了引入RELRO保护机制，GOT被拆分为.got节和.got.plt节两部分，不需要延迟绑定的前者用于保存全局变量引用，加载到内存后被标记为只读；需要延迟绑定的后者则用于保存函数引用，具有读写权限。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>主要是看了些书上的内容记录了一下，有的地方还是不是很理解，最后关于有的动态链接的地方也没有写，就先不记录这些内容，就先记录这些，感觉要慢慢在实践中去理解了，向当初学习PE一样，最早看也觉得不是很明白，但是后来慢慢实际的东西中去学习，理解就越来越深了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《CTF竞赛权威指南（PWN篇）》</p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/papers/Archive/refs/elf/Understanding_ELF.pdf">https://paper.seebug.org/papers/Archive/refs/elf/Understanding_ELF.pdf</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CTF%E7%AB%9E%E8%B5%9B%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%EF%BC%88PWN%E7%AF%87%EF%BC%89/">CTF竞赛权威指南（PWN篇）</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/PWN/">PWN</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>
+                    
+                      <a class="hover-with-bg" href="/tags/ELF/">ELF</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/26/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/">
+                        <span class="hidden-mobile">从源码到可执行文件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
