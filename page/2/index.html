@@ -203,6 +203,71 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验12">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
+          恶意代码分析实战-实验12
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
+          
+          
+            
+          
+          Lab 12-1详细分析打开程序后，每隔一段时间都会弹出一个窗口
+
+使用火绒剑监控行为，发现其有注入的行为。可以看到注入的进程是Explorer.exe
+
+
+可以看出来它获取了explorer的PID然后进行了DLL注入，注入的DLL为Lab12-01.dll。它获得进程PID的方式是通过EnumProcesses、EnumProcessModules、GetModuleBaseNameA这三个函
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-23 14:12" pubdate>
+              2021-09-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/09/22/yara%E8%A7%84%E5%88%99%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="yara规则学习笔记（三）">
         </a>
@@ -771,69 +836,6 @@ IDA查看，可以看到很明显的从资源节中释放文件
               <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
             
               <a href="/tags/%E7%86%8A%E7%8C%AB%E7%83%A7%E9%A6%99/">熊猫烧香</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/08/17/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF-%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="功能技术-文件遍历">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/17/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF-%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86/" target="_self">
-          功能技术-文件遍历
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/17/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF-%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86/" target="_self">
-          
-          
-            
-          
-          文件遍历文件搜索功能是应用程序中最常见的功能之一，同时对于恶意代码来说也是常见的功能，比如勒索病毒就会有大量的文件操作，遍历文件来对文件进行加密。
-实现文件遍历的方法有很多，最常见的便是通过API实现，这里主要涉及的是FindFirstFile,FindNextFile以及FindClose等。
-函数介绍FindFirstFile在目录中搜索名称与特定名称匹配的文件或者子目录。
-1234HANDL
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-17 17:58" pubdate>
-              2021-08-17
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF/">功能技术</a>
             
           </div>
         
