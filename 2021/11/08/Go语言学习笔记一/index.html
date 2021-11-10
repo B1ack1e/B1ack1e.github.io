@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="Go语言的结构Go语言的基础组成有以下几部分  包声明 引入包 函数 变量 语句&amp;表达式 注释  写一个简单的代码，来看下大致的组成 12345678package main&#x2F;&#x2F;定义了包名，每个程序都包含一个名为main的包import &quot;fmt&quot;&#x2F;&#x2F;告诉GO编译器，这个程序使用了fmt的包func main() &amp;#123;&#x2F;&#x2F;程序开始执行的函数	fmt.Printf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言学习笔记一">
+<meta property="og:url" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="Go语言的结构Go语言的基础组成有以下几部分  包声明 引入包 函数 变量 语句&amp;表达式 注释  写一个简单的代码，来看下大致的组成 12345678package main&#x2F;&#x2F;定义了包名，每个程序都包含一个名为main的包import &quot;fmt&quot;&#x2F;&#x2F;告诉GO编译器，这个程序使用了fmt的包func main() &amp;#123;&#x2F;&#x2F;程序开始执行的函数	fmt.Printf">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/9.png">
+<meta property="article:published_time" content="2021-11-08T08:29:05.000Z">
+<meta property="article:modified_time" content="2021-11-10T09:58:53.794Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/1.png">
+  
+  <title>Go语言学习笔记一 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Go语言学习笔记一">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-11-08 16:29" pubdate>
+        2021-11-08 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Go语言学习笔记一</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-11-10 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="Go语言的结构"><a href="#Go语言的结构" class="headerlink" title="Go语言的结构"></a>Go语言的结构</h2><p>Go语言的基础组成有以下几部分</p>
+<ul>
+<li>包声明</li>
+<li>引入包</li>
+<li>函数</li>
+<li>变量</li>
+<li>语句&amp;表达式</li>
+<li>注释</li>
+</ul>
+<p>写一个简单的代码，来看下大致的组成</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><span class="hljs-comment">//定义了包名，每个程序都包含一个名为main的包</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><span class="hljs-comment">//告诉GO编译器，这个程序使用了fmt的包</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<span class="hljs-comment">//程序开始执行的函数</span><br>	fmt.Printf(<span class="hljs-string">&quot;hello world !!!&quot;</span>)<br>    <span class="hljs-comment">//将字符串输出到控制台</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="执行Go程序"><a href="#执行Go程序" class="headerlink" title="执行Go程序"></a>执行Go程序</h2><p>打开编辑器，将上述代码写进去，保存为<code>.go</code>结尾的文件。</p>
+<p>然后使用命令行，输入命令</p>
+<blockquote>
+<p>go run hello.go    </p>
+</blockquote>
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>也可以将其编译成为可执行文件，使用命令</p>
+<blockquote>
+<p>go build hello.go</p>
+</blockquote>
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/2.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Go基础语法"><a href="#Go基础语法" class="headerlink" title="Go基础语法"></a>Go基础语法</h2><h3 id="Go标记"><a href="#Go标记" class="headerlink" title="Go标记"></a>Go标记</h3><p>Go程序可以由多个标记组成，可以是关键字、标识符、常量、字符串、符号。</p>
+<h3 id="行分隔符"><a href="#行分隔符" class="headerlink" title="行分隔符"></a>行分隔符</h3><p>在Go程序中，一行代表一个语句结束。每个语句不用像C那样以分号结尾，但是如果要将多个语句写在同一行，则必须使用分号，实际开发中，并不建议使用这种方法。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arduino">fmt.<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;hello world\n&quot;</span>)<br>fmt.<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;i am b1ackie&quot;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>注释是不会被编译的，可以使用单行注释和多行注释</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-comment">//这是单行注释</span><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">多行注释</span><br><span class="hljs-comment">*/</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h3><p>标识符用来命名变量、类型等程序实体。一个标识符可以是一个或多个字母，数字，下划线组成的序列，但是第一个字符必须是字母或者下划线而不可以是数字。</p>
+<p>以下这些是有效的标识符：</p>
+<blockquote>
+<p>bLackie    B1_ackie    _b1ackie</p>
+</blockquote>
+<p>这些是无效的标识符：</p>
+<ul>
+<li>1b1ackie（以数字开头）</li>
+<li>case（GO语言的关键字）</li>
+<li>a+b（运算符不允许）</li>
+</ul>
+<h3 id="字符串连接"><a href="#字符串连接" class="headerlink" title="字符串连接"></a>字符串连接</h3><p>Go语言的字符串可以通过<code>+</code>来实现</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;hello&quot;</span> + <span class="hljs-string">&quot;golang&quot;</span>)<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><p>声明变量必须使用空格隔开</p>
+<blockquote>
+<p>var age int </p>
+</blockquote>
+<p>在变量与运算之间也加入空格，使得程序看起来更加的美观</p>
+<blockquote>
+<p>x = a + b</p>
+</blockquote>
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>go字符串格式化符号</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%v</td>
+<td>按值的本来值输出</td>
+</tr>
+<tr>
+<td>%+v</td>
+<td>在%v的基础上，对结构体字段名和值进行展开</td>
+</tr>
+<tr>
+<td>%#v</td>
+<td>输出go语言语法格式的值</td>
+</tr>
+<tr>
+<td>%T</td>
+<td>输出go语言语法格式的类型和值</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>输出%本体</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>整型以二进制方式显示</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>整型以八进制方式显示</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>整型以十进制方式显示</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>整型以十六进制方式显示</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>整型以十六进制、字母大写方式显示</td>
+</tr>
+<tr>
+<td>%U</td>
+<td>Unicode字符</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>指针、十六进制方式显示</td>
+</tr>
+</tbody></table>
+<figure class="highlight swift"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs swift">package main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br>type point <span class="hljs-class"><span class="hljs-keyword">struct</span> </span>&#123;<br>	x, y int<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>	p :<span class="hljs-operator">=</span> point&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;<br><br>	<span class="hljs-comment">//输出结构体的对象值</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%v<span class="hljs-subst">\n</span>&quot;</span>, p)<br><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%+v<span class="hljs-subst">\n</span>&quot;</span>, p)<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%#v<span class="hljs-subst">\n</span>&quot;</span>, p)<br><br>	<span class="hljs-comment">//输出一个值得数据类型</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%T<span class="hljs-subst">\n</span>&quot;</span>, p)<br><br>	<span class="hljs-comment">//输出布尔类型</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%t<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-literal">false</span>)<br><br>	<span class="hljs-comment">//格式化整型，十进制来输出，%ld,%Ld长整型数据；%hd输出短整型</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%d<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">10</span>)<br><br>	<span class="hljs-comment">//二进制方式输出</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%b<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">10</span>)<br><br>	<span class="hljs-comment">//输出数值所对应的ascii字符</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%c<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">0x39</span>)<br><br>	<span class="hljs-comment">//十六进制方式输出</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%x<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">10</span>)<br><br>	<span class="hljs-comment">//输出浮点型数值</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%f<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">10.123</span>)<br><br>	<span class="hljs-comment">//科学计数法</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%e<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">123400000.0</span>)<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%E<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">123400000.0</span>)<br><br>	<span class="hljs-comment">//输出基本的字符串</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%s<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-string">&quot;<span class="hljs-subst">\&quot;</span>string<span class="hljs-subst">\&quot;</span>&quot;</span>)<br><br>	<span class="hljs-comment">//输出带双引号的字符串</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%q<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-string">&quot;<span class="hljs-subst">\&quot;</span>string<span class="hljs-subst">\&quot;</span>&quot;</span>)<br><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%x<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-string">&quot;b1ackie&quot;</span>)<br><br>	<span class="hljs-comment">//输出一个指针的值</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%p<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-operator">&amp;</span>p)<br><br>	<span class="hljs-comment">//使用%后面的数字来控制输出的宽度，默认输出是右对齐，左边加上空格</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;|%6d|%6d|<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">123</span>, <span class="hljs-number">456789</span>)<br><br>	<span class="hljs-comment">//输出宽度，同时指定浮点数</span><br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;|%5.2f|%5.2f|<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">3.456</span>)<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;|%4s|%4s|<span class="hljs-subst">\n</span>&quot;</span>, <span class="hljs-string">&quot;go&quot;</span>, <span class="hljs-string">&quot;good&quot;</span>)<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/4.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>在go中不允许这样写</p>
+<blockquote>
+<p>func main</p>
+<p>{</p>
+<p>}</p>
+</blockquote>
+<p>只可以这样写</p>
+<blockquote>
+<p>func main{</p>
+<p>}</p>
+</blockquote>
+<h2 id="Go数据类型"><a href="#Go数据类型" class="headerlink" title="Go数据类型"></a>Go数据类型</h2><p>Go语言按照类别有以下几种数据类型：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>布尔型</td>
+<td>布尔型的值只可以是常量true或者false。var b bool = true</td>
+</tr>
+<tr>
+<td>数字类型</td>
+<td>整型int和浮点型float32、float64，go支持整型和浮点型数字，并且支持复数，其中位的运算采用补码</td>
+</tr>
+<tr>
+<td>字符串类型</td>
+<td>字符串是一串固定长度的字符连接起来的字符序列。Go的字符串是由单个字节连接起来的。Go语言的字符串的字节使用UTF-8编码标识Unicode文本</td>
+</tr>
+<tr>
+<td>派生类型</td>
+<td>指针类型<br>数组类型<br>结构化类型<br>Channel类型<br>函数类型<br>切片类型<br>接口类型<br>Map类型</td>
+</tr>
+</tbody></table>
+<h3 id="数字类型"><a href="#数字类型" class="headerlink" title="数字类型"></a>数字类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>uint8</td>
+<td>无符号8位整型（0到255）</td>
+</tr>
+<tr>
+<td>uint16</td>
+<td>无符号16位整型（0到65535）</td>
+</tr>
+<tr>
+<td>uint32</td>
+<td>无符号32位整型（0到4294967295）</td>
+</tr>
+<tr>
+<td>uint64</td>
+<td>无符号 64 位整型 (0 到 18446744073709551615)</td>
+</tr>
+<tr>
+<td>int8</td>
+<td>有符号 8 位整型 (-128 到 127)</td>
+</tr>
+<tr>
+<td>int16</td>
+<td>有符号 16 位整型 (-32768 到 32767)</td>
+</tr>
+<tr>
+<td>int32</td>
+<td>有符号 32 位整型 (-2147483648 到 2147483647)</td>
+</tr>
+<tr>
+<td>int64</td>
+<td>有符号 64 位整型 (-9223372036854775808 到 9223372036854775807)</td>
+</tr>
+</tbody></table>
+<h3 id="浮点型"><a href="#浮点型" class="headerlink" title="浮点型"></a>浮点型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>float32</td>
+<td>IEEE-754 32位浮点型数</td>
+</tr>
+<tr>
+<td>float64</td>
+<td>IEEE-754 64位浮点型数</td>
+</tr>
+<tr>
+<td>complex64</td>
+<td>32 位实数和虚数</td>
+</tr>
+<tr>
+<td>complex128</td>
+<td>64 位实数和虚数</td>
+</tr>
+</tbody></table>
+<h3 id="其他数字类型"><a href="#其他数字类型" class="headerlink" title="其他数字类型"></a>其他数字类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>类似uint8</td>
+</tr>
+<tr>
+<td>rune</td>
+<td>类似int32</td>
+</tr>
+<tr>
+<td>uint</td>
+<td>32或64位</td>
+</tr>
+<tr>
+<td>int</td>
+<td>与int一样大小</td>
+</tr>
+<tr>
+<td>uintptr</td>
+<td>无符号整型，用于存放一个指针</td>
+</tr>
+</tbody></table>
+<h2 id="Go语言变量"><a href="#Go语言变量" class="headerlink" title="Go语言变量"></a>Go语言变量</h2><p>Go变量名由字母、数字、下划线组成，其中首个字符不能是数字</p>
+<p>声明变量是使用var关键字：</p>
+<blockquote>
+<p>var identifier type</p>
+</blockquote>
+<p>可以一次性声明多个变量：</p>
+<blockquote>
+<p>var identifier1, identifier2 type</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">string</span> = <span class="hljs-string">&quot;b1ackie&quot;</span><br>	fmt.Println(a)<br>	<span class="hljs-keyword">var</span> b, c <span class="hljs-keyword">int</span> = <span class="hljs-number">1</span>, <span class="hljs-number">2</span><br>	fmt.Println(b, c)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/5.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h3><p>声明变量有几种方式</p>
+<h4 id="1"><a href="#1" class="headerlink" title="1"></a>1</h4><p>第一种，指定变量类型，如果没有初始化，则变量默认为零值。</p>
+<blockquote>
+<p>var v_name v_type</p>
+<p>v_name = value</p>
+</blockquote>
+<p>零值就是变量没有做初始化时系统默认设置的值</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">//声明一个变量并初始化</span><br>	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">string</span> = <span class="hljs-string">&quot;b1ackie&quot;</span><br>	fmt.Println(a)<br><br>	<span class="hljs-comment">//声明一个变量，没有初始化，为0值</span><br>	<span class="hljs-keyword">var</span> b <span class="hljs-keyword">int</span><br>	fmt.Println(b)<br><br>	<span class="hljs-comment">//bool 的0值为false</span><br>	<span class="hljs-keyword">var</span> c <span class="hljs-keyword">bool</span><br>	fmt.Println(c)<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/6.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>数值类型是0</li>
+<li>布尔类型为false</li>
+<li>字符串为空</li>
+</ul>
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>第二种，根据值自行判断变量类型</p>
+<blockquote>
+<p>var v_name = value</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> str = <span class="hljs-string">&quot;string&quot;</span><br>	fmt.Println(str)<br><br>	<span class="hljs-keyword">var</span> num = <span class="hljs-number">1</span><br>	fmt.Println(num)<br><br>	<span class="hljs-keyword">var</span> flag = <span class="hljs-literal">true</span><br>	fmt.Println(flag)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/7.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>第三种，使用<code>:=</code>声明变量</p>
+<blockquote>
+<p>v_name := value</p>
+</blockquote>
+<p><code>intValue := 1</code>相当于</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">var</span> intValue <span class="hljs-keyword">int</span><br>intValue = <span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+
+<p><code>var str string = &quot;b1ackie&quot;</code>可以简写为<code>str := &quot;b1ackie&quot;</code></p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	str := <span class="hljs-string">&quot;b1ackie&quot;</span><br>	fmt.Println(str)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="多变量声明"><a href="#多变量声明" class="headerlink" title="多变量声明"></a>多变量声明</h3><figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-comment">//这种方式写法一般用于声明全局变量</span><br><span class="hljs-keyword">var</span> (<br>	a <span class="hljs-keyword">float32</span><br>	b <span class="hljs-keyword">bool</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">//类型相同多个变量，非全局变量</span><br>	<span class="hljs-keyword">var</span> num1, num2, num3 <span class="hljs-keyword">int</span><br><br>	<span class="hljs-comment">//自动判断变量类型</span><br>	<span class="hljs-keyword">var</span> int1, int2, int3 = <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span><br>	<span class="hljs-comment">//这种不带声明格式的只能在函数中出现</span><br>	c, d := <span class="hljs-number">123</span>, <span class="hljs-string">&quot;hello&quot;</span><br>	fmt.Println(a, b, c, d)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="Go语言常量"><a href="#Go语言常量" class="headerlink" title="Go语言常量"></a>Go语言常量</h2><p>常量是一个简单值的标识符，在程序运行时，不会被修改的量。</p>
+<p>常量中的数据类型只可以是布尔型、数字型（整数型、浮点型和复数）和字符串型。</p>
+<p>常量的定义格式：</p>
+<blockquote>
+<p>const identifier [type] = value</p>
+</blockquote>
+<p>也可以省略type，编译器可以根据变量的值来推断其类型</p>
+<ul>
+<li>显示类型定义：const a string = “b1ackie”</li>
+<li>隐式类型定义：const a = “b1ackie”</li>
+</ul>
+<p>多个相同类型声明可以简写为：</p>
+<blockquote>
+<p>const num1, num2 = value1, value2</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">const</span> length <span class="hljs-keyword">int</span> = <span class="hljs-number">10</span><br>	<span class="hljs-keyword">const</span> width <span class="hljs-keyword">int</span> = <span class="hljs-number">20</span><br>	<span class="hljs-keyword">var</span> area <span class="hljs-keyword">int</span><br>	area = length * width<br>	fmt.Printf(<span class="hljs-string">&quot;the area is %d\n&quot;</span>, area)<br>	<span class="hljs-keyword">const</span> a, b, c = <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-string">&quot;b1ackie&quot;</span><br>	fmt.Println(a, b, c)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="iota"><a href="#iota" class="headerlink" title="iota"></a>iota</h3><p>iota，特殊常量，可以认为是一个可以被编译器修改的常量。</p>
+<p>iota在const关键字出现时将被重置为0，const中每新增一行常量声明将使iota计数一次。</p>
+<p>iota可以被用作枚举值：</p>
+<blockquote>
+<p>const(</p>
+<p>​    a = iota</p>
+<p>​    b = iota</p>
+<p>​    c = iota</p>
+<p>)</p>
+</blockquote>
+<p>第一个iota等于0，每当iota在新的一行被使用时，它的值都会自动加1，所以a=0,b=1,c=2。</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">const</span> (<br>		a = <span class="hljs-literal">iota</span>		<br>		b<br>		c<br>		d = <span class="hljs-string">&quot;b1ackie&quot;</span>	<br>		e<br>		f = <span class="hljs-number">10</span><br>		g<br>		h = <span class="hljs-literal">iota</span><br>		i<br>	)<br>	<span class="hljs-built_in">println</span>(a, b, c, d, e, f, g, h, i)<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/08/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B8%80/9.png" srcset="/img/loading.gif" lazyload></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">Go语言学习</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Go%E8%AF%AD%E8%A8%80/">Go语言</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/03/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CRE-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/">
+                        <span class="hidden-mobile">攻防世界RE-新手练习区</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
