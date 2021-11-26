@@ -203,6 +203,72 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="“白加黑”DLL劫持">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/" target="_self">
+          “白加黑”DLL劫持
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/11/%E2%80%9C%E7%99%BD%E5%8A%A0%E9%BB%91%E2%80%9DDLL%E5%8A%AB%E6%8C%81/" target="_self">
+          
+          
+            
+          
+          前言DLL劫持就是劫持或者替换掉正常的DLL，欺骗正常程序加载预先准备好的恶意DLL。其中有一种手法叫“白加黑”，就是一个“白”的EXE加载“黑“的DLL。
+原理DLL劫持的原理主要就是windows下加载DLL的顺序。在加载DLL的时候，系统会依次从以下六个位置去查找所需要的DLL文件
+
+程序所在目录
+系统目录
+16位系统目录
+Windows目录
+当前目录
+PATH环境变量中的各个目录
+
+只要可
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-11 16:50" pubdate>
+              2021-10-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/DLL%E5%8A%AB%E6%8C%81/">DLL劫持</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/DLL%E5%8A%AB%E6%8C%81/">DLL劫持</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/10/08/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C13/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验13">
         </a>
@@ -770,71 +836,6 @@ IDA查看，可以看到很明显的从资源节中释放文件
               <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
             
               <a href="/tags/Lab/">Lab</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="shellcode的分析调试小技巧">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
-          shellcode的分析调试小技巧
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/31/shellcode%E7%9A%84%E5%88%86%E6%9E%90%E8%B0%83%E8%AF%95%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
-          
-          
-            
-          
-          分析shellcodeOD有一种简单的分析shellcode的方法。
-第一步首先是复制shellcode
-这里我用自己写的弹窗小程序，并且使用十六进制编辑器WINHEX进行复制。
-第二步然后是打开OD，附加任意一个程序，打开内存映射窗口，快捷操作就是上面的M，然后寻找类型为Priv的内存区域（这是分配给进程的私有内存，与只读的可执行镜像不同，这些内存被多个进程共享），选择它。
-
-第三步选中一大片区
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-31 18:37" pubdate>
-              2021-08-31
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-              <a href="/tags/shellcode/">shellcode</a>
             
           </div>
         
