@@ -203,6 +203,78 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="shellcode学习">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
+          shellcode学习
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/22/shellcode%E5%AD%A6%E4%B9%A0/" target="_self">
+          
+          
+            
+          
+          shellcode学习编译器的一些设置第一步修改入口点在编译器中修改程序的入口点，写代码时就可以使用新的入口点名
+
+修改过后，体积变得很小，使用IDA查看也可以看到左边函数只有两个。
+
+第二步关闭缓冲区安全检查
+然后查看IDA，左边函数只剩一个了
+
+第三步设置工程兼容XP
+修改运行库为MT
+
+第四步关闭生成清单
+使用loadpe查看看到只有两个区段
+
+第五步关闭调试信息
+shellcode编写原则
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-22 09:58" pubdate>
+              2021-07-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/ShellCode/">ShellCode</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
+            
+              <a href="/tags/ShellCode/">ShellCode</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/07/21/160CrackMe-003/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="160CrackMe-003">
         </a>
@@ -769,68 +841,6 @@ lpCmdLine：要执
               <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
             
               <a href="/tags/CrackMe/">CrackMe</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="注入技术-APC注入">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" target="_self">
-          注入技术-APC注入
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/13/%E6%B3%A8%E5%85%A5%E6%8A%80%E6%9C%AF-APC%E6%B3%A8%E5%85%A5/" target="_self">
-          
-          
-            
-          
-          APC注入APC为异步过程调用，是指函数在特定线程中被异步执行。每一个线程都有自己的APC队列，使用QueueUserAPC函数可以把一个APC函数压入APC队列中，插入LoadLibrary就可以执行DLL。该线程并不会直接调用APC函数，除非该线程处于一个可通知的状态。
-函数介绍QueueUserAPC将用户模式中的异步过程调用（APC）对象添加到指定线程的APC队列中。
-12345DWORD
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-13 15:25" pubdate>
-              2021-07-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E6%B3%A8%E5%85%A5/">注入</a>
             
           </div>
         
