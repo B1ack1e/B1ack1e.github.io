@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://b1ackie.cn/2021/11/15/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CPWN-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/23.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/11/17/ROP%E5%AD%A6%E4%B9%A0/5.png">
 <meta property="article:published_time" content="2021-11-17T07:18:13.000Z">
-<meta property="article:modified_time" content="2021-12-01T10:37:25.676Z">
+<meta property="article:modified_time" content="2021-12-01T12:12:10.528Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="ROP">
 <meta name="twitter:card" content="summary_large_image">
@@ -363,6 +363,35 @@
               
             </div>
 
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.16.2/dist/Waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://blog-api-brown.vercel.app/","path":"window.location.pathname","placeholder":"说点什么","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","avatar":123,"avatarCDN":"","avatarForce":false,"wordLimit":0,"pageSize":10,"highlight":true,"requiredFields":[],"emojiCDN":null,"emojiMaps":null,"anonymous":null},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        new Waline(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          Fluid.plugins.initFancyBox('#waline .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
             
           </article>
         </div>
