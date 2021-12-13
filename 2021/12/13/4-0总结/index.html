@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="前言上周碰到了一个Excel 宏4.0的xlsb样本，也算是分析的第一个宏病毒，起初对于宏的提取完全没有用，用了很长时间才成功提取并且看到宏代码，所以来稍微的总结一下关于宏4.0的东西。 宏4.0最早在1992年在Excel 4.0版本中引入，是Visual Basic for Applications (VBA) 的前身，和现在的VBA宏不一样，宏4.0可以直接写在表格里。而现在这种老技术又重新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Macro 4.0总结">
+<meta property="og:url" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="前言上周碰到了一个Excel 宏4.0的xlsb样本，也算是分析的第一个宏病毒，起初对于宏的提取完全没有用，用了很长时间才成功提取并且看到宏代码，所以来稍微的总结一下关于宏4.0的东西。 宏4.0最早在1992年在Excel 4.0版本中引入，是Visual Basic for Applications (VBA) 的前身，和现在的VBA宏不一样，宏4.0可以直接写在表格里。而现在这种老技术又重新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/14.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/15.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/18.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/16.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/17.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/19.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/20.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/21.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/22.png">
+<meta property="article:published_time" content="2021-12-13T06:24:23.000Z">
+<meta property="article:modified_time" content="2021-12-13T09:56:49.462Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="宏病毒">
+<meta property="article:tag" content="Macro 4.0">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/1.png">
+  
+  <title>Macro 4.0总结 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Macro 4.0总结">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-13 14:24" pubdate>
+        2021-12-13 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Macro 4.0总结</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021-12-13 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周碰到了一个Excel 宏4.0的<code>xlsb</code>样本，也算是分析的第一个宏病毒，起初对于宏的提取完全没有用，用了很长时间才成功提取并且看到宏代码，所以来稍微的总结一下关于宏4.0的东西。</p>
+<p>宏4.0最早在1992年在Excel 4.0版本中引入，是Visual Basic for Applications (VBA) 的前身，和现在的VBA宏不一样，宏4.0可以直接写在表格里。而现在这种老技术又重新流行了起来，主要是这种宏比VBA宏有更好的免杀性。它不依赖于错误，也不是漏洞利用，只是滥用合法的excel功能。一些样本受密码保护，代码混淆，工作表隐藏，以及一些检测机制，使得对于它的分析难度会提高。还有将其保存为<code>xlsb</code>文件，而不是<code>xlsm</code>文件时，一些检测的手段会直接失效，现在来尝试总结分析一下Excel 4.0的手段。</p>
+<h2 id="宏4-0-利用"><a href="#宏4-0-利用" class="headerlink" title="宏4.0 利用"></a>宏4.0 利用</h2><p>现在来演示一下如何利用宏4.0</p>
+<h3 id="宏的利用"><a href="#宏的利用" class="headerlink" title="宏的利用"></a>宏的利用</h3><p>在某个工作表上右键，选择插入</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>在弹框中选择MS Excel4.0</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>在新创建的工作表中，在框中输入宏指令，然后右键选择执行。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="自动加载方式"><a href="#自动加载方式" class="headerlink" title="自动加载方式"></a>自动加载方式</h3><p>现在主流的自动加载的方式分别是<code>Auto_Open</code>和<code>Auto_Close</code></p>
+<ul>
+<li><code>Auto_Open</code>会在用户打开文档的时候自动运行</li>
+<li><code>Auto_Close</code>会在用户关闭文档的时候自动运行</li>
+</ul>
+<p>上述两种方式自动运行都需要用户允许执行宏代码。</p>
+<p>将单元格名称改为<code>Auto_Open</code>，就实现了宏的自动加载。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>保存之后，再别的机器打开，看到宏的警告</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击允许，就会弹窗</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/6.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="查看宏代码"><a href="#查看宏代码" class="headerlink" title="查看宏代码"></a>查看宏代码</h3><p>当我们按下<code>alt+F11</code>查看宏代码的时候，发现这样是不能够查看到宏代码</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/7.png" srcset="/img/loading.gif" lazyload></p>
+<p>默认情况下，XLM宏代码存储在xl\Macrosheets\下的Sheet1.xml中，解压此xlsm文件，然后打开位于目录中的Sheet1.xml，可以看到刚才写入的宏代码。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/8.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是这种查看方式，只适用于<code>xlsm</code>格式的文件，如果是<code>xlsb</code>的文件，就没办法看了。可以看到里面都是<code>bin</code>文件，查看不了里面的具体内容。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/9.png" srcset="/img/loading.gif" lazyload></p>
+<p>对于<code>xlsm</code>来说，里面的内容都是基于XML的，可以直接打开进行阅读，而<code>xlsb</code>的文件内容则是二进制文件，是没办法直接阅读的。</p>
+<h2 id="查看Macro-4-0的宏代码"><a href="#查看Macro-4-0的宏代码" class="headerlink" title="查看Macro 4.0的宏代码"></a>查看Macro 4.0的宏代码</h2><p>使用工具可以快速的帮助我们进行宏代码的查看</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/decalage2/oletools">oletools</a>用于帮助分析ole文件，使用它可以帮助我们分析ole文件中是否存在宏代码。</p>
+<p>安装好工具后可以开始测试，将刚才的文件保存为test.xlsm来进行测试。</p>
+<p><code>oleid</code>可以查看文件是否存在宏代码，查看test.xlsm文件，看到提示存在<code>XLM Macros</code></p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/11.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用<code>olevba</code>可以从MS Office 文档（OLE 和 OpenXML）中提取和分析 VBA 宏源代码，查看test.xlsm，看到成功提取出宏代码</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/12.png" srcset="/img/loading.gif" lazyload></p>
+<p>一切保持不变，现在只是将文件保存为<code>xlsb</code>类型的文件，测试看看。</p>
+<p>可以看到没有做任何其他的处理，仅仅只是保存为<code>xlsb</code>文件，其中包含的宏 4.0代码就可以没有办法被检测出来。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>如何提取出来<code>xlsb</code>文件的宏 4.0，我们从一个真实的样本入手。</p>
+<h2 id="真实样本分析"><a href="#真实样本分析" class="headerlink" title="真实样本分析"></a>真实样本分析</h2><p>样本MD5：cf508cefa3b3f03c1d8300f5f57b9af6</p>
+<p><a target="_blank" rel="noopener" href="https://app.any.run/tasks/ca651eb1-bf93-4ded-a592-74e502ab444d/">样本下载地址</a></p>
+<p>此文件是一个XLSB文件</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/14.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开会提示其中还有宏</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/15.png" srcset="/img/loading.gif" lazyload></p>
+<p>按下<code>alt+F11</code>看不到任何VBA宏的存在，使用oletools工具同样也无法检测到宏。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/18.png" srcset="/img/loading.gif" lazyload></p>
+<p>看到其存在两个隐藏的工作表</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/16.png" srcset="/img/loading.gif" lazyload></p>
+<p>显示隐藏的工作表，看到上面的单元格直接从C到了H，中间被隐藏起来了，另一个工作表也是如此，那么宏代码应该就是在其中了，但是因为工作表被保护起来了，我们没有密码，所以我们无法移动单元格。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/17.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在来尝试获取<code>xlsb</code>中的宏 4.0代码</p>
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p><a target="_blank" rel="noopener" href="https://malware.news/t/xlsb-analyzing-a-microsoft-excel-binary-spreadsheet/46442">https://malware.news/t/xlsb-analyzing-a-microsoft-excel-binary-spreadsheet/46442</a></p>
+<p>按照上述这篇帖子的方法，可以成功绕过密码保护，我们修改单元格长度之后，再修改一下字体颜色（原始字体颜色为白色，隐藏了起来）就可以看到宏代码。</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/19.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/20.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>使用工具Cerbero Suite</p>
+<p><a target="_blank" rel="noopener" href="https://cerbero.io/">Cerbero Suite</a></p>
+<p>使用此工具，可以不像刚才那样那么麻烦，可以直接看到工作表中的宏代码</p>
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/21.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h3><p>使用XLMMacroDeobfuscator</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/DissectMalware/XLMMacroDeobfuscator">XLMMacroDeobfuscator</a></p>
+<p>这个工具可以非常快速查看宏代码，使用也非常简单，它会自动帮助我们分析其中的宏，并且可以去混淆</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">xlmdeobfuscator -f [指定要检测的文件]<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/22.png" srcset="/img/loading.gif" lazyload></p>
+<p>由上图可以清晰的看到其中存在的去混淆后的宏代码</p>
+<p>看到它主要是下载了6个文件存在存在指定的位置，并且调用<code>regsvr32</code>来启动下载的文件。</p>
+<p>对于下载的文件，只分析出了一小部分的行为，很多关键的地方都没有看懂，所以暂时不放出来，等以后分析明白再放出来。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://www.yuque.com/p1ut0/qtmgyx/rqank4">https://www.yuque.com/p1ut0/qtmgyx/rqank4</a></p>
+<p><a target="_blank" rel="noopener" href="https://zvelo.com/excel-4-0-macros-another-old-school-attack-method/">https://zvelo.com/excel-4-0-macros-another-old-school-attack-method/</a></p>
+<p><a target="_blank" rel="noopener" href="https://madlabs.dsu.edu/madrid/blog/2021/05/17/analyzing-document-with-malicious-excel-4-0-macros/">https://madlabs.dsu.edu/madrid/blog/2021/05/17/analyzing-document-with-malicious-excel-4-0-macros/</a></p>
+<p><a target="_blank" rel="noopener" href="https://malware.news/t/xlsb-analyzing-a-microsoft-excel-binary-spreadsheet/46442">https://malware.news/t/xlsb-analyzing-a-microsoft-excel-binary-spreadsheet/46442</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AE%8F%E7%97%85%E6%AF%92/">宏病毒</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Macro-4-0/">Macro 4.0</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/02/Go%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/">
+                        <span class="hidden-mobile">Go语言学习笔记二</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.16.2/dist/Waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://blog-api-brown.vercel.app/","path":"window.location.pathname","placeholder":"说点什么","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","avatar":123,"avatarCDN":"","avatarForce":false,"wordLimit":0,"pageSize":10,"highlight":true,"requiredFields":[],"emojiCDN":null,"emojiMaps":null,"anonymous":null},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        new Waline(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          Fluid.plugins.initFancyBox('#waline .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
