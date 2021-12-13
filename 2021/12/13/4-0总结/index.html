@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/21.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/12/13/4-0%E6%80%BB%E7%BB%93/22.png">
 <meta property="article:published_time" content="2021-12-13T06:24:23.000Z">
-<meta property="article:modified_time" content="2021-12-13T09:56:49.462Z">
+<meta property="article:modified_time" content="2021-12-13T10:55:43.700Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="宏病毒">
 <meta property="article:tag" content="Macro 4.0">
@@ -284,7 +284,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-12-13 下午
+                  本文最后更新于：2021-12-13 晚上
                 
               </p>
             
@@ -306,7 +306,7 @@
 <p>上述两种方式自动运行都需要用户允许执行宏代码。</p>
 <p>将单元格名称改为<code>Auto_Open</code>，就实现了宏的自动加载。</p>
 <p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/4.png" srcset="/img/loading.gif" lazyload></p>
-<p>保存之后，再别的机器打开，看到宏的警告</p>
+<p>保存之后，再打开，会看到宏的警告</p>
 <p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>点击允许，就会弹窗</p>
 <p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/6.png" srcset="/img/loading.gif" lazyload></p>
@@ -317,7 +317,7 @@
 <p>但是这种查看方式，只适用于<code>xlsm</code>格式的文件，如果是<code>xlsb</code>的文件，就没办法看了。可以看到里面都是<code>bin</code>文件，查看不了里面的具体内容。</p>
 <p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/9.png" srcset="/img/loading.gif" lazyload></p>
 <p>对于<code>xlsm</code>来说，里面的内容都是基于XML的，可以直接打开进行阅读，而<code>xlsb</code>的文件内容则是二进制文件，是没办法直接阅读的。</p>
-<h2 id="查看Macro-4-0的宏代码"><a href="#查看Macro-4-0的宏代码" class="headerlink" title="查看Macro 4.0的宏代码"></a>查看Macro 4.0的宏代码</h2><p>使用工具可以快速的帮助我们进行宏代码的查看</p>
+<h2 id="oletools使用"><a href="#oletools使用" class="headerlink" title="oletools使用"></a>oletools使用</h2><p>使用工具可以快速的帮助我们进行宏代码的查看</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/decalage2/oletools">oletools</a>用于帮助分析ole文件，使用它可以帮助我们分析ole文件中是否存在宏代码。</p>
 <p>安装好工具后可以开始测试，将刚才的文件保存为test.xlsm来进行测试。</p>
 <p><code>oleid</code>可以查看文件是否存在宏代码，查看test.xlsm文件，看到提示存在<code>XLM Macros</code></p>
@@ -327,6 +327,7 @@
 <p>一切保持不变，现在只是将文件保存为<code>xlsb</code>类型的文件，测试看看。</p>
 <p>可以看到没有做任何其他的处理，仅仅只是保存为<code>xlsb</code>文件，其中包含的宏 4.0代码就可以没有办法被检测出来。</p>
 <p><img src="/2021/12/13/4-0%E6%80%BB%E7%BB%93/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>针对存在宏 4.0的<code>xlsb</code>文件，如何提取其中的宏，我们从一个真实的样本入手</p>
 <p>如何提取出来<code>xlsb</code>文件的宏 4.0，我们从一个真实的样本入手。</p>
 <h2 id="真实样本分析"><a href="#真实样本分析" class="headerlink" title="真实样本分析"></a>真实样本分析</h2><p>样本MD5：cf508cefa3b3f03c1d8300f5f57b9af6</p>
 <p><a target="_blank" rel="noopener" href="https://app.any.run/tasks/ca651eb1-bf93-4ded-a592-74e502ab444d/">样本下载地址</a></p>
