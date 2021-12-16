@@ -18,19 +18,54 @@
   <meta name="description" content="">
   <meta name="author" content="b1ackie">
   <meta name="keywords" content="">
-  <meta name="description" content="Lab 14-1使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。  拼接后的字符串  然后会将此字符串进行base64编码，，分析可知sub_4010BB是一个base64编码的函数，且此base64进行了魔改，用于补位的不是“&#x3D;”而是字符“a”。  然后会进入sub_4011A3函数，">
+  <meta name="description" content="Lab 14-1分析使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。  拼接后的字符串  然后会将此字符串进行base64编码，，分析可知sub_4010BB是一个base64编码的函数，且此base64进行了魔改，用于补位的不是“&#x3D;”而是字符“a”。  然后会进入sub_4011A3函">
 <meta property="og:type" content="article">
 <meta property="og:title" content="恶意代码分析实战-实验14">
 <meta property="og:url" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/index.html">
 <meta property="og:site_name" content="b1ackie&#39;blog">
-<meta property="og:description" content="Lab 14-1使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。  拼接后的字符串  然后会将此字符串进行base64编码，，分析可知sub_4010BB是一个base64编码的函数，且此base64进行了魔改，用于补位的不是“&#x3D;”而是字符“a”。  然后会进入sub_4011A3函数，">
+<meta property="og:description" content="Lab 14-1分析使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。  拼接后的字符串  然后会将此字符串进行base64编码，，分析可知sub_4010BB是一个base64编码的函数，且此base64进行了魔改，用于补位的不是“&#x3D;”而是字符“a”。  然后会进入sub_4011A3函">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-1.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-2.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-3.png">
 <meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-10.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-14.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-15.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-16.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-17.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-18.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-1.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-2.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-3.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-7.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-8.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-9.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-10.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-11.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-12.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-13.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-14.png">
+<meta property="og:image" content="https://b1ackie.cn/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-15.png">
 <meta property="article:published_time" content="2021-10-13T08:29:13.000Z">
-<meta property="article:modified_time" content="2021-10-14T02:10:18.362Z">
+<meta property="article:modified_time" content="2021-12-16T09:08:15.422Z">
 <meta property="article:author" content="b1ackie">
 <meta property="article:tag" content="逆向工程">
 <meta property="article:tag" content="病毒分析">
@@ -218,7 +253,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      524 字
+      3k 字
     </span>
   
 
@@ -227,7 +262,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2 分钟
+      9 分钟
     </span>
   
 
@@ -268,20 +303,104 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021-10-14 上午
+                  本文最后更新于：2021-12-16 下午
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="Lab-14-1"><a href="#Lab-14-1" class="headerlink" title="Lab 14-1"></a>Lab 14-1</h2><p>使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。</p>
+              <h2 id="Lab-14-1"><a href="#Lab-14-1" class="headerlink" title="Lab 14-1"></a>Lab 14-1</h2><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA打开程序，首先会获取当前计算机的GUID，然后将后12位给拼接成XX:XX:XX:XX:XX:XX的形式。再获取用户名，再将用户名与刚才的字符串拼接。</p>
 <p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-1.png" srcset="/img/loading.gif" lazyload></p>
 <p>拼接后的字符串</p>
 <p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-2.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后会将此字符串进行base64编码，，分析可知<code>sub_4010BB</code>是一个base64编码的函数，且此base64进行了魔改，用于补位的不是“=”而是字符“a”。</p>
 <p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-3.png" srcset="/img/loading.gif" lazyload></p>
-<p>然后会进入<code>sub_4011A3</code>函数，此函数中包含网络行为。会尝试访问一个URL，并且通过URLDownloadToCacheFileA下载资源，此URL的形成是字符串和域名拼接起来，%c.png则是字符串的最后一位，如果最后一位是a，就是a.png，</p>
+<p>然后会进入<code>sub_4011A3</code>函数，此函数中包含网络行为。会尝试访问一个URL，并且通过<code>URLDownloadToCacheFileA</code>下载资源，此URL的形成是字符串和域名拼接起来，%c.png则是字符串的最后一位，如果最后一位是a，就是a.png，然后保存在<code>ApplicationName</code>，如果下载成功的话，会使用<code>CreateProcessA</code>启动下载的程序。</p>
 <p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-4.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="1-恶意代码使用了哪些网络库？它们的优势是什么？"><a href="#1-恶意代码使用了哪些网络库？它们的优势是什么？" class="headerlink" title="1.恶意代码使用了哪些网络库？它们的优势是什么？"></a>1.恶意代码使用了哪些网络库？它们的优势是什么？</h3><h3 id="2-用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？"><a href="#2-用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？" class="headerlink" title="2.用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？"></a>2.用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？</h3><h3 id="3-为什么攻击者可能对嵌入在网络信令中的信息感兴趣？"><a href="#3-为什么攻击者可能对嵌入在网络信令中的信息感兴趣？" class="headerlink" title="3.为什么攻击者可能对嵌入在网络信令中的信息感兴趣？"></a>3.为什么攻击者可能对嵌入在网络信令中的信息感兴趣？</h3><h3 id="4-恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？"><a href="#4-恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？" class="headerlink" title="4.恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？"></a>4.恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？</h3><h3 id="5-恶意代码的主要目的是什么？"><a href="#5-恶意代码的主要目的是什么？" class="headerlink" title="5.恶意代码的主要目的是什么？"></a>5.恶意代码的主要目的是什么？</h3><h3 id="6-使用网络特征可能有效探测到恶意代码通信中的什么元素？"><a href="#6-使用网络特征可能有效探测到恶意代码通信中的什么元素？" class="headerlink" title="6.使用网络特征可能有效探测到恶意代码通信中的什么元素？"></a>6.使用网络特征可能有效探测到恶意代码通信中的什么元素？</h3><h3 id="7-分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？"><a href="#7-分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？" class="headerlink" title="7.分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？"></a>7.分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？</h3><h3 id="8-哪些特征集可能检测到这个恶意代码（以及新的变种）？"><a href="#8-哪些特征集可能检测到这个恶意代码（以及新的变种）？" class="headerlink" title="8.哪些特征集可能检测到这个恶意代码（以及新的变种）？"></a>8.哪些特征集可能检测到这个恶意代码（以及新的变种）？</h3>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><h4 id="1-恶意代码使用了哪些网络库？它们的优势是什么？"><a href="#1-恶意代码使用了哪些网络库？它们的优势是什么？" class="headerlink" title="1.恶意代码使用了哪些网络库？它们的优势是什么？"></a>1.恶意代码使用了哪些网络库？它们的优势是什么？</h4><p>恶意代码使用了<code>urlmon.dll</code>中的<code>URLDownloadToCacheFileA</code></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-5.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2-用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？"><a href="#2-用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？" class="headerlink" title="2.用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？"></a>2.用于构建网络信令的信息源元素是什么，什么样的条件会引起信令的改变？</h4><p>根据前面的分析，信息源元素是计算机的<code>GUID</code>和当前的用户名，如果换了计算机或者用户发生改变，会引起信令的改变。</p>
+<h4 id="3-为什么攻击者可能对嵌入在网络信令中的信息感兴趣？"><a href="#3-为什么攻击者可能对嵌入在网络信令中的信息感兴趣？" class="headerlink" title="3.为什么攻击者可能对嵌入在网络信令中的信息感兴趣？"></a>3.为什么攻击者可能对嵌入在网络信令中的信息感兴趣？</h4><p>因为这其中包含着计算器的<code>GUID</code>和当前的用户名。</p>
+<h4 id="4-恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？"><a href="#4-恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？" class="headerlink" title="4.恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？"></a>4.恶意代码是否使用了标准的base64编码？如果不是，编码是如何不寻常的？</h4><p>没有使用标准的base64编码，用于补位的字符不是“=”，而是“a”。</p>
+<h4 id="5-恶意代码的主要目的是什么？"><a href="#5-恶意代码的主要目的是什么？" class="headerlink" title="5.恶意代码的主要目的是什么？"></a>5.恶意代码的主要目的是什么？</h4><p>下载一个文件并且执行它</p>
+<h4 id="6-使用网络特征可能有效探测到恶意代码通信中的什么元素？"><a href="#6-使用网络特征可能有效探测到恶意代码通信中的什么元素？" class="headerlink" title="6.使用网络特征可能有效探测到恶意代码通信中的什么元素？"></a>6.使用网络特征可能有效探测到恶意代码通信中的什么元素？</h4><p>可以使用域名来进行探测</p>
+<h4 id="7-分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？"><a href="#7-分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？" class="headerlink" title="7.分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？"></a>7.分析者尝试为这个恶意代码开发一个特征时，可能会犯什么错误？</h4><p>这个没想到，看了下书上答案</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/1-6.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="8-哪些特征集可能检测到这个恶意代码（以及新的变种）？"><a href="#8-哪些特征集可能检测到这个恶意代码（以及新的变种）？" class="headerlink" title="8.哪些特征集可能检测到这个恶意代码（以及新的变种）？"></a>8.哪些特征集可能检测到这个恶意代码（以及新的变种）？</h4><p>可以用域名来作为一个检测的特征，还有BASE64编码也可以作为检测的特征之一。</p>
+<h2 id="Lab-14-2"><a href="#Lab-14-2" class="headerlink" title="Lab 14-2"></a>Lab 14-2</h2><h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>使用fakenet工具模拟网络，可以看到程序发出的网络请求。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先会读取字符串资源</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到读取的字符串是<code>http://127.0.0.1/tenfour.html</code></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>之后会创建管道，一个是<code>hWritePipe</code>另一个是<code>hReadPipe</code>，推测一个是用来写，一个是用来读。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建一个CMD进程</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建两个线程</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>先来看一下第一个线程，它会读取cmd的输出结果，然后<code>sub_401000</code>是一个base64的编码，但是其码表是魔改的，然后会进入<code>sub_401750</code>将结果发送到<code>http://127.0.0.1/tenfour.html</code></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-7.png" srcset="/img/loading.gif" lazyload></p>
+<p>base64码表</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-8.png" srcset="/img/loading.gif" lazyload></p>
+<p>初始发送的内容</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-10.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_401750</code>将编码后的数据发送出去，<code>strcat</code>会在前面加上几个字符</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-9.png" srcset="/img/loading.gif" lazyload></p>
+<p>在前面添加<code>(!&lt;</code></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-11.png" srcset="/img/loading.gif" lazyload></p>
+<p>来看一下线程2，<code>sub_401800</code>会接收数据，然后会将接收到的数据写入管道，会在cmd中执行。接收到的数据如果是exit的话会直接退出线程</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-12.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_401800</code></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-13.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后会执行<code>sub_401880</code>这个函数</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-14.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中会进行自删除</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-15.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-16.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h3><h4 id="1-恶意代码编写时直接使用IP地址的好处和坏处各是什么？"><a href="#1-恶意代码编写时直接使用IP地址的好处和坏处各是什么？" class="headerlink" title="1.恶意代码编写时直接使用IP地址的好处和坏处各是什么？"></a>1.恶意代码编写时直接使用IP地址的好处和坏处各是什么？</h4><p>还是直接借用书上的答案吧，我也不是很明白说实话。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-17.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2-这个恶意代码使用哪些网络库？使用这些库的好处和坏处是什么？"><a href="#2-这个恶意代码使用哪些网络库？使用这些库的好处和坏处是什么？" class="headerlink" title="2.这个恶意代码使用哪些网络库？使用这些库的好处和坏处是什么？"></a>2.这个恶意代码使用哪些网络库？使用这些库的好处和坏处是什么？</h4><p>使用了<code>wininet.dll</code>，我也不是很清楚优点以及缺点，就拿书上的来回答下吧。这些库的缺点之一是需要提供一个硬编码的<code>User-Agent</code>字段，另外如果需要的话，还需要硬编码可选的头部。相比于<code>Winsock API</code>，<code>WinINet</code>的优点是对于一些元素，比如cookie和缓存，可以由操作系统提供。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/2-18.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="3-恶意代码信令中URL的信息源是什么？这个信息源提供了哪些优势？"><a href="#3-恶意代码信令中URL的信息源是什么？这个信息源提供了哪些优势？" class="headerlink" title="3.恶意代码信令中URL的信息源是什么？这个信息源提供了哪些优势？"></a>3.恶意代码信令中URL的信息源是什么？这个信息源提供了哪些优势？</h4><p>是PE资源节中的IP地址，优势就是可以在不重新编译代码的情况，攻击者通过资源节来部署多个后门程序到多个命令与控制服务器位置。</p>
+<h4 id="4-恶意代码利用了HTTP协议的哪个方面，来完成它的目的？"><a href="#4-恶意代码利用了HTTP协议的哪个方面，来完成它的目的？" class="headerlink" title="4.恶意代码利用了HTTP协议的哪个方面，来完成它的目的？"></a>4.恶意代码利用了HTTP协议的哪个方面，来完成它的目的？</h4><p>使用了<code>User-Agent</code>，包含着要执行的命令以及命令的回显。</p>
+<h4 id="5-在恶意代码的初始信令中传输的是哪种信息？"><a href="#5-在恶意代码的初始信令中传输的是哪种信息？" class="headerlink" title="5.在恶意代码的初始信令中传输的是哪种信息？"></a>5.在恶意代码的初始信令中传输的是哪种信息？</h4><p>根据上面分析可以看到，是一个命令行的信息</p>
+<h4 id="6-这个恶意代码通信信道的设计存在什么缺点？"><a href="#6-这个恶意代码通信信道的设计存在什么缺点？" class="headerlink" title="6.这个恶意代码通信信道的设计存在什么缺点？"></a>6.这个恶意代码通信信道的设计存在什么缺点？</h4><p>只有传给服务器的信息进行了编码，但是接收的指令并没有进行编码。</p>
+<h4 id="7-恶意代码的编码方案是标准的吗？"><a href="#7-恶意代码的编码方案是标准的吗？" class="headerlink" title="7.恶意代码的编码方案是标准的吗？"></a>7.恶意代码的编码方案是标准的吗？</h4><p>不是标准的base64，码表被魔改了</p>
+<h4 id="8-通信是如何被终止的？"><a href="#8-通信是如何被终止的？" class="headerlink" title="8.通信是如何被终止的？"></a>8.通信是如何被终止的？</h4><p>当攻击者发送exit时，就会终止通信</p>
+<h4 id="9-这个恶意代码的目的是什么？在攻击者的工具中，它可能会起到什么作用？"><a href="#9-这个恶意代码的目的是什么？在攻击者的工具中，它可能会起到什么作用？" class="headerlink" title="9.这个恶意代码的目的是什么？在攻击者的工具中，它可能会起到什么作用？"></a>9.这个恶意代码的目的是什么？在攻击者的工具中，它可能会起到什么作用？</h4><p>一个后门工具，攻击者可以通过它来在目标主机上执行shell命令。</p>
+<h2 id="Lab-14-3"><a href="#Lab-14-3" class="headerlink" title="Lab 14-3"></a>Lab 14-3</h2><h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>查看主函数，看到是一个<code>do-while</code>循环，主要执行了三个函数，<code>sub_401457</code>、<code>sub_4011F3</code>、<code>sub_401684</code>。现在来分别分析一下这三个函数。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-1.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_401457</code>主要是在C盘下创建一个文件autobat.exe，并在其中写入信息<code>http://www.practicalmalwareanalysis.com/start.htm</code>，<code>sub_401372</code>是创建文件，如果没有打开的话，说明不存在，会创建，并且向其中写入内容，然后再调用自身。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-3.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_4011F3</code>主要是从读取服务器的数据，然后进行处理，主要是将具体的指令提取出来。<code>sub_401000</code>主要是负责将远控指令给提取出来，分析可以知道指令前主要是<code>&lt;noscript&gt;</code>，也就是指令应该是在<code>&lt;noscript&gt;</code>标签内的内容，同时最后必须是<code>96</code>结尾。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>接收到指令就会到<code>sub_401684</code>，里面是执行具体的远控命令。可以看到有四种命令。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>指令为d的时候，会下载一个文件，并且执行，<code>sub_401147</code>是一个解密的过程，应该是将接收到的数据进行解码。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-8.png" srcset="/img/loading.gif" lazyload></p>
+<p>指令为n时，会直接返回1，而根据外面的分析，返回1就会退出执行。</p>
+<p>指令为r时，会向<code>C:\autobat.exe</code>中写入内容。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-9.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-10.png" srcset="/img/loading.gif" lazyload></p>
+<p>指令为s时，会<code>sleep</code>指定的时间。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-11.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="问题-2"><a href="#问题-2" class="headerlink" title="问题"></a>问题</h3><h4 id="1-在初始信令中硬编码元素是什么？什么元素能够用于创建一个好的网络特征？"><a href="#1-在初始信令中硬编码元素是什么？什么元素能够用于创建一个好的网络特征？" class="headerlink" title="1. 在初始信令中硬编码元素是什么？什么元素能够用于创建一个好的网络特征？"></a>1. 在初始信令中硬编码元素是什么？什么元素能够用于创建一个好的网络特征？</h4><p>这些都是硬编码的元素，主要是<code>User-Agent</code>重复了，有两个，可以用于作为检测的网络特征。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-12.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-13.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2-初始信令中的什么元素可能不利于可持久使用的网络特征？"><a href="#2-初始信令中的什么元素可能不利于可持久使用的网络特征？" class="headerlink" title="2. 初始信令中的什么元素可能不利于可持久使用的网络特征？"></a>2. 初始信令中的什么元素可能不利于可持久使用的网络特征？</h4><p>域名，域名可以随时更换</p>
+<h4 id="3-恶意代码是如何获得命令的？本章中的什么例子用了类似的方法？这种技术的优点是什么？"><a href="#3-恶意代码是如何获得命令的？本章中的什么例子用了类似的方法？这种技术的优点是什么？" class="headerlink" title="3. 恶意代码是如何获得命令的？本章中的什么例子用了类似的方法？这种技术的优点是什么？"></a>3. 恶意代码是如何获得命令的？本章中的什么例子用了类似的方法？这种技术的优点是什么？</h4><p>是通过<code>&lt;noscript&gt;</code>标签来获取命令的，这种技术恶意代码可以向一个合法的网页发出信令，并且接收合法内容，这使得防御者区分恶意流量与合法流量变得困难。</p>
+<h4 id="4-当恶意代码接收到输入时，在输入上执行什么检查可以决定它是否是一个有用的命令？攻击者如何隐藏恶意代码正在寻找的命令列表？"><a href="#4-当恶意代码接收到输入时，在输入上执行什么检查可以决定它是否是一个有用的命令？攻击者如何隐藏恶意代码正在寻找的命令列表？" class="headerlink" title="4. 当恶意代码接收到输入时，在输入上执行什么检查可以决定它是否是一个有用的命令？攻击者如何隐藏恶意代码正在寻找的命令列表？"></a>4. 当恶意代码接收到输入时，在输入上执行什么检查可以决定它是否是一个有用的命令？攻击者如何隐藏恶意代码正在寻找的命令列表？</h4><p>分析中已经说明。</p>
+<h4 id="5-什么类型的编码用于命令参数？它与BASE64编码有什么不同？它提供的优点和缺点各是什么？"><a href="#5-什么类型的编码用于命令参数？它与BASE64编码有什么不同？它提供的优点和缺点各是什么？" class="headerlink" title="5. 什么类型的编码用于命令参数？它与BASE64编码有什么不同？它提供的优点和缺点各是什么？"></a>5. 什么类型的编码用于命令参数？它与BASE64编码有什么不同？它提供的优点和缺点各是什么？</h4><p>分析中说的那个编码，它不是base64编码， 优点是自制的编码方式，缺点不知道，还是借用书上的答案吧。</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-14.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="6-这个恶意代码会接收哪些命令？"><a href="#6-这个恶意代码会接收哪些命令？" class="headerlink" title="6. 这个恶意代码会接收哪些命令？"></a>6. 这个恶意代码会接收哪些命令？</h4><p>分析中分析的，会有四种命令，执行四种操作。</p>
+<h4 id="7-这个恶意代码的目的是什么？"><a href="#7-这个恶意代码的目的是什么？" class="headerlink" title="7. 这个恶意代码的目的是什么？"></a>7. 这个恶意代码的目的是什么？</h4><p>远控木马，会根据命令来执行不同的操作。</p>
+<h4 id="8-本章介绍了用独立的特征，来针对不同位置代码的想法，以增加网络特征的鲁棒性。那么在这个恶意代码中，可以针对哪些区段的代码，或是配置文件，来提取网络特征？"><a href="#8-本章介绍了用独立的特征，来针对不同位置代码的想法，以增加网络特征的鲁棒性。那么在这个恶意代码中，可以针对哪些区段的代码，或是配置文件，来提取网络特征？" class="headerlink" title="8. 本章介绍了用独立的特征，来针对不同位置代码的想法，以增加网络特征的鲁棒性。那么在这个恶意代码中，可以针对哪些区段的代码，或是配置文件，来提取网络特征？"></a>8. 本章介绍了用独立的特征，来针对不同位置代码的想法，以增加网络特征的鲁棒性。那么在这个恶意代码中，可以针对哪些区段的代码，或是配置文件，来提取网络特征？</h4><p>不太懂，借用书上的答案</p>
+<p><img src="/2021/10/13/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C14/3-15.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="9-什么样的网络特征集应该被用于检测恶意代码？"><a href="#9-什么样的网络特征集应该被用于检测恶意代码？" class="headerlink" title="9. 什么样的网络特征集应该被用于检测恶意代码？"></a>9. 什么样的网络特征集应该被用于检测恶意代码？</h4><p>主要就是域名和其中的一些参数吧</p>
+
             </div>
             <hr>
             <div>
