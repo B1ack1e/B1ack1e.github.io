@@ -203,6 +203,72 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验15">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/" target="_self">
+          恶意代码分析实战-实验15
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/" target="_self">
+          
+          
+            
+          
+          Lab 15-1分析使用IDA打开程序，看到当前的代码，有几个红色的地方，此时已经被混淆过，让IDA的识别出现了问题。
+
+按D将指令转为数据，然后跳过E8按C，重新构造代码，即可看到正确的汇编代码。
+
+重新构造了汇编代码之后，分析一下程序的流程，首先是检查是否携带参数，这里注意下，argc默认是1，携带一个参数就是2，然后这里的ebp+8是argc参数稍微说明一下。
+
+首先main有三个参数，ar
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-01-11 16:59" pubdate>
+              2022-01-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="格式化字符串漏洞">
         </a>
@@ -791,70 +857,6 @@ GDB的一些命令先写一个小DEMO用来后面的GDB调试
               <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
             
               <a href="/tags/GDB/">GDB</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="elf文件格式">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/" target="_self">
-          elf文件格式
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/10/26/elf%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/" target="_self">
-          
-          
-            
-          
-          ELF文件格式elf文件，Executable and Linking Format，“可执行可连接格式”，具有这种格式的文件称为elf文件。
-在elf规范中，把elf文件宽泛的称为“目标文件（Object File）”，这与我们通常理解的“.o”文件不同，elf文件仅指连接好的可执行文件。对于“.o”文件，可以直接称为可重定位文件。
-elf文件主要分为三种类型：
-
-可重定位文件（relocata
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-10-26 17:49" pubdate>
-              2021-10-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/PWN/">PWN</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/PWN/">PWN</a>
-            
-              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>
-            
-              <a href="/tags/ELF/">ELF</a>
             
           </div>
         

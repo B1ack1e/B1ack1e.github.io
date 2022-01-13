@@ -1,0 +1,634 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="b1ackie">
+  <meta name="keywords" content="">
+  <meta name="description" content="Lab 15-1分析使用IDA打开程序，看到当前的代码，有几个红色的地方，此时已经被混淆过，让IDA的识别出现了问题。  按D将指令转为数据，然后跳过E8按C，重新构造代码，即可看到正确的汇编代码。  重新构造了汇编代码之后，分析一下程序的流程，首先是检查是否携带参数，这里注意下，argc默认是1，携带一个参数就是2，然后这里的ebp+8是argc参数稍微说明一下。  首先main有三个参数，ar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="恶意代码分析实战-实验15">
+<meta property="og:url" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/index.html">
+<meta property="og:site_name" content="b1ackie&#39;blog">
+<meta property="og:description" content="Lab 15-1分析使用IDA打开程序，看到当前的代码，有几个红色的地方，此时已经被混淆过，让IDA的识别出现了问题。  按D将指令转为数据，然后跳过E8按C，重新构造代码，即可看到正确的汇编代码。  重新构造了汇编代码之后，分析一下程序的流程，首先是检查是否携带参数，这里注意下，argc默认是1，携带一个参数就是2，然后这里的ebp+8是argc参数稍微说明一下。  首先main有三个参数，ar">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-1.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-2.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-3.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-7.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-1.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-2.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-3.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-7.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-1.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-2.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-3.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-4.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-5.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-6.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-7.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-8.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-9.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-10.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-11.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-12.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-13.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-14.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-15.png">
+<meta property="og:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-16.png">
+<meta property="article:published_time" content="2022-01-11T08:59:49.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:14:33.280Z">
+<meta property="article:author" content="b1ackie">
+<meta property="article:tag" content="逆向工程">
+<meta property="article:tag" content="病毒分析">
+<meta property="article:tag" content="Lab">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://b1ackie.cn/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-1.png">
+  
+  <title>恶意代码分析实战-实验15 - b1ackie&#39;blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/vs2015.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"b1ackie.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="b1ackie'blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>b1ackie&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/post%E8%83%8C%E6%99%AF%E5%9B%BE.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="恶意代码分析实战-实验15">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-11 16:59" pubdate>
+        2022-01-11 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">恶意代码分析实战-实验15</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022-01-13 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="Lab-15-1"><a href="#Lab-15-1" class="headerlink" title="Lab 15-1"></a>Lab 15-1</h2><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>使用IDA打开程序，看到当前的代码，有几个红色的地方，此时已经被混淆过，让IDA的识别出现了问题。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>按<code>D</code>将指令转为数据，然后跳过<code>E8</code>按<code>C</code>，重新构造代码，即可看到正确的汇编代码。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>重新构造了汇编代码之后，分析一下程序的流程，首先是检查是否携带参数，这里注意下，<code>argc</code>默认是1，携带一个参数就是2，然后这里的<code>ebp+8</code>是<code>argc</code>参数稍微说明一下。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先<code>main</code>有三个参数，<code>argc</code>，<code>argv</code>，<code>envp</code>，此时形成栈帧，那么当前栈的<code>ebp+4</code>就是返回地址，再下面就是压入栈的参数了，参数从右向左入栈，那么<code>ebp+8</code>就是<code>argc</code>。这里拿OD动调的来看一下，就明白了。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续分析，如果参数不对的话，就会跳转到<code>0x40105E</code>处，这里是输出错误的情况</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后是参数的比较，看到这里是<code>ebp+c</code>，刚才已经分析过了，这就是<code>main</code>函数的第二个参数<code>argv</code>，再看它赋值给<code>eax</code>之后，又是<code>eax+4</code>，这是<code>argv</code>是个数组，如果带参数的话，那么<code>argv[1]</code>才是参数。</p>
+<p>看到这三处都是在比较参数的指定位置是否是指定的字符，也就是<code>pdq</code>，那么想要输出正确的条件，就需要输入参数<code>pdq</code>。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-6.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/1-7.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><h4 id="1-这个二进制程序中使用了何种对抗反汇编技术？"><a href="#1-这个二进制程序中使用了何种对抗反汇编技术？" class="headerlink" title="1. 这个二进制程序中使用了何种对抗反汇编技术？"></a>1. 这个二进制程序中使用了何种对抗反汇编技术？</h4><p>通过在正确的语句前，加一个机器码<code>0xE8</code>，这是<code>call</code>指令的机器码，它会将后面的代码识别称为要<code>call</code>的地址，依次来欺骗反汇编。</p>
+<h4 id="2-这个二进制程序使用了什么流氓机器码来欺骗反汇编过程？"><a href="#2-这个二进制程序使用了什么流氓机器码来欺骗反汇编过程？" class="headerlink" title="2. 这个二进制程序使用了什么流氓机器码来欺骗反汇编过程？"></a>2. 这个二进制程序使用了什么流氓机器码来欺骗反汇编过程？</h4><p><code>0xE8</code></p>
+<h4 id="3-这种对抗反汇编技术被使用了多少次？"><a href="#3-这种对抗反汇编技术被使用了多少次？" class="headerlink" title="3. 这种对抗反汇编技术被使用了多少次？"></a>3. 这种对抗反汇编技术被使用了多少次？</h4><p>一共使用了5次</p>
+<h4 id="4-什么命令行参数会让程序输出“Good-Job”？"><a href="#4-什么命令行参数会让程序输出“Good-Job”？" class="headerlink" title="4. 什么命令行参数会让程序输出“Good Job”？"></a>4. 什么命令行参数会让程序输出“Good Job”？</h4><p><code>pdq</code></p>
+<h2 id="Lab-15-2"><a href="#Lab-15-2" class="headerlink" title="Lab 15-2"></a>Lab 15-2</h2><h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>使用IDA打开程序，看到部分的代码被识别成为了数据，重新识别一下。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现混淆有<code>E8</code>、<code>E9</code>、<code>EB</code>这三个十六进制值，分别是<code>call</code>指令和<code>jmp</code>指令，分别对应的重新识别即可。</p>
+<p>还有这个地方，实际上就是书中说的，一个字节用在了两个汇编指令之中。首先正常执行，会执行<code>mov     ax, 5EBh</code>、<code>xor     eax, eax</code>、<code>jz      short near ptr loc_4012E6+2</code>这三个语句此时注意这个跳转指令是跳到<code>loc_4012E6+2</code>这个地方，这里也就是<code>4012E8</code>，看IDA中并没有这个地址。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>实际上这个地址的开始就是<code>EB</code>这个字节的开始，然后后面是<code>05</code>就是一个<code>jmp</code>指令了，第一次<code>EB</code>是作为<code>mov     ax, 5EBh</code>，中给<code>ax</code>赋值的值，第二次是作为跳转指令。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>重新构造了指令之后，框选所有的代码，按下<code>P</code>即可重新创建函数，再按<code>F5</code>就可以查看伪代码。</p>
+<p>看到整体的流程，在初始化网络之后，会获取<code>hostname</code>然后进行处理，主要是如果是字母<code>Z</code>会替换成<code>A</code>，如果是<code>z</code>会替换成<code>a</code>，如果是数字<code>9</code>会替换成<code>0</code>，其他的则会在原来<code>ascii</code>码的基础上加一。这个变化后的值会作为<code>USER-AGENT</code>，打开一个<code>URL</code>。读取网页内容，再其中搜索<code>Bamboo::</code>后的内容。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-4.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是从<code>401216</code>到<code>401300</code>的代码并没有被翻译成伪代码，不知道为什么。这部分的内容尝试打开一个URL。<code>sub_40130F</code>是将exe的名字进行复制。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>读取内容，然后创建一个叫Account Summary.xls.exe得文件，再将内容写入。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>执行这个文件</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/2-7.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h3><h4 id="1-程序初始化请求的URL是什么？"><a href="#1-程序初始化请求的URL是什么？" class="headerlink" title="1. 程序初始化请求的URL是什么？"></a>1. 程序初始化请求的URL是什么？</h4><p><code>http://www.practicalmalwareanalysis.com/bamboo.html</code></p>
+<h4 id="2-User-Agent域是如何产生的？"><a href="#2-User-Agent域是如何产生的？" class="headerlink" title="2. User-Agent域是如何产生的？"></a>2. User-Agent域是如何产生的？</h4><p>是通过<code>hostname</code>来通过一些改变来形成的。</p>
+<h4 id="3-初始化请求时，程序在内存页中查找什么？"><a href="#3-初始化请求时，程序在内存页中查找什么？" class="headerlink" title="3. 初始化请求时，程序在内存页中查找什么？"></a>3. 初始化请求时，程序在内存页中查找什么？</h4><p>在查找<code>Bamboo::</code></p>
+<h4 id="4-程序如何处理它从页中提取的信息？"><a href="#4-程序如何处理它从页中提取的信息？" class="headerlink" title="4. 程序如何处理它从页中提取的信息？"></a>4. 程序如何处理它从页中提取的信息？</h4><p>获取之后会再尝试打开一个URL，然后获取网页的信息写入Account Summary.xls.exe文件之中。</p>
+<h2 id="Lab-15-3"><a href="#Lab-15-3" class="headerlink" title="Lab 15-3"></a>Lab 15-3</h2><h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>使用IDA打开程序进行分析，看到是一个进程遍历的程序，它会遍历所有的进程，同时遍历进程的所有线程和模块。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>模块遍历</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>线程遍历</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-4.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>sub_4013D1</code>是一个出现错误的时候，提示错误的函数，调用<code>GetLastError</code>获取错误号，再打印出来。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-5.png" srcset="/img/loading.gif" lazyload></p>
+<p>函数刚开始就会修改返回地址，这里先将<code>0x400000</code>给<code>eax</code>，然后<code>or eax ，0x148C</code>此时eax等于<code>0x40148C</code>，这就是想要的返回地址，再写入到<code>[ebp+0x4]</code>这个地址之中，这就是原先返回值得地址。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-6.png" srcset="/img/loading.gif" lazyload></p>
+<p>在IDA中查看一下返回地址的函数，存在混淆。看到红色的地方，是<code>jmp</code>指令，那么大概又是通过跳转的混淆。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-7.png" srcset="/img/loading.gif" lazyload></p>
+<p>重新构造指令之后，查看，发现这段代码主要目的是构造一个结构化异常处理，看到框中的代码把自己的处理函数加入了<code>SEH</code>链中。然后通过<code>xor ecx,ecx</code>、<code>div ecx</code>这两条指令来触发异常。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-8.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续查看这个函数，看到一些指令都没有被识别。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-9.png" srcset="/img/loading.gif" lazyload></p>
+<p>重新构造指令。首先会调用两次解密函数<code>sub_401534</code>，解密一些信息。然后下载资源到指定文件。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-10.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后以隐藏方式启动这个文件</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-11.png" srcset="/img/loading.gif" lazyload></p>
+<p>加密的信息，前三行是第一个解密函数解密的信息，最后一行是第二个。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-12.png" srcset="/img/loading.gif" lazyload></p>
+<p>解密函数非常简单，就是一个取反的操作。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-13.png" srcset="/img/loading.gif" lazyload></p>
+<p>解密后的<code>URL</code></p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-14.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是有一个问题，就是第二部分密文，没办法进行解密，因为解密函数判断要解密的第一个字节是不是0，但是要解密的信息，起始是<code>0x403040</code>，这里是0，所以导致没办法进行解密。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-15.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们自己解密一下，看到是一个exe名称。</p>
+<p><img src="/2022/01/11/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C15/3-16.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="问题-2"><a href="#问题-2" class="headerlink" title="问题"></a>问题</h3><h4 id="1-恶意代码怎样被初始化调用？"><a href="#1-恶意代码怎样被初始化调用？" class="headerlink" title="1. 恶意代码怎样被初始化调用？"></a>1. 恶意代码怎样被初始化调用？</h4><p>通过修改主函数的返回地址，在主函数返回的时候，进行调用。</p>
+<h4 id="2-恶意代码都做了什么？"><a href="#2-恶意代码都做了什么？" class="headerlink" title="2. 恶意代码都做了什么？"></a>2. 恶意代码都做了什么？</h4><p>解密一个<code>URL</code>，在上面下载资源保存为spoolsrv.exe并且执行</p>
+<h4 id="3-恶意代码使用了什么URL？"><a href="#3-恶意代码使用了什么URL？" class="headerlink" title="3. 恶意代码使用了什么URL？"></a>3. 恶意代码使用了什么URL？</h4><p><code>http://www.practicalmalwareanalysis.com/tt.html</code></p>
+<h4 id="4-恶意代码使用了什么文件名？"><a href="#4-恶意代码使用了什么文件名？" class="headerlink" title="4. 恶意代码使用了什么文件名？"></a>4. 恶意代码使用了什么文件名？</h4><p><code>spoolsrv.exe</code></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Lab/">Lab</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/06/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">
+                        <span class="hidden-mobile">格式化字符串漏洞</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client@0.16.2/dist/Waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://blog-api-brown.vercel.app/","path":"window.location.pathname","placeholder":"说点什么","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","avatar":123,"avatarCDN":"","avatarForce":false,"wordLimit":0,"pageSize":10,"highlight":true,"requiredFields":[],"emojiCDN":null,"emojiMaps":null,"anonymous":null},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        new Waline(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          Fluid.plugins.initFancyBox('#waline .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
