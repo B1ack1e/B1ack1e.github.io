@@ -203,6 +203,74 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/11/03/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CRE-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="攻防世界RE-新手练习区">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/11/03/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CRE-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
+          攻防世界RE-新手练习区
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/11/03/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CRE-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
+          
+          
+            
+          
+          Hello CTF详细分析先查壳，看到无壳，可以直接打开。
+
+使用IDA打开，可以看到我们输入的被转为十六进制最终存储在了v10之中，然后和v13比较，我们可以看到这部分的值是
+
+437261636b4d654a757374466f7246756e
+
+那么只需要将这部分十六进制值转为字符就行了，就是flag。
+
+注册机1234int main() &#123;	unsigned char flag
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-03 18:30" pubdate>
+              2021-11-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cwriteup/">攻防世界writeup</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/CTF/">CTF</a>
+            
+              <a href="/tags/RE/">RE</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/10/29/GDB%E6%93%8D%E4%BD%9C/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="GDB学习--基本操作">
         </a>
@@ -763,71 +831,6 @@ PATH环境变量中的各个目录
               <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/">虚拟机检测</a>
             
               <a href="/tags/%E7%BC%96%E7%A8%8B/">编程</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验12">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
-          恶意代码分析实战-实验12
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/" target="_self">
-          
-          
-            
-          
-          Lab 12-1详细分析打开程序后，每隔一段时间都会弹出一个窗口
-
-使用火绒剑监控行为，发现其有注入的行为。可以看到注入的进程是Explorer.exe
-
-
-可以看出来它获取了explorer的PID然后进行了DLL注入，注入的DLL为Lab12-01.dll。它获得进程PID的方式是通过EnumProcesses、EnumProcessModules、GetModuleBaseNameA这三个函
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-09-23 14:12" pubdate>
-              2021-09-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
-            
-              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
-            
-              <a href="/tags/Lab/">Lab</a>
             
           </div>
         

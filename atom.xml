@@ -6,7 +6,7 @@
   <link href="https://b1ackie.cn/atom.xml" rel="self"/>
   
   <link href="https://b1ackie.cn/"/>
-  <updated>2022-01-19T08:51:40.313Z</updated>
+  <updated>2022-01-21T07:38:09.028Z</updated>
   <id>https://b1ackie.cn/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MFC逆向-查找控件事件</title>
+    <link href="https://b1ackie.cn/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/"/>
+    <id>https://b1ackie.cn/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/</id>
+    <published>2022-01-21T02:44:53.000Z</published>
+    <updated>2022-01-21T07:38:09.028Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近想做一下腾讯的2016游戏安全竞赛的题目，然后第一题的是一个MFC程序，很久没有调试过MFC程序了，然后来记录一下MFC逆向中如何查找到控件事件的方法吧。</p><p>以前我遇见MFC的程序，一般都是直接用API下断的方式，比如断在弹窗，获取文本这些地方。这些方法也可以用，只是感觉没有学习到的这个方法方便。这次搜索了一下，学习了一种新的方式。（怎么以前没想着搜索学习一下呢…）</p><h2 id="方法原理"><a href="#方法原理" class="headerlink" title="方法原理"></a>方法原理</h2><p>首先我们要做MFC类的逆向，比如一些CM，都是想知道当点击按钮的时候的事件，从而来逆算法。在MFC中，程序是使用消息机制来实现操作相应的，数据结构如下：</p><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">AFX_MSGMAP</span></span><br><span class="hljs-class">&#123;</span><br><span class="hljs-keyword">const</span> AFX_MSGMAP* (PASCAL* pfnGetBaseMap)();<br><span class="hljs-keyword">const</span> AFX_MSGMAP_ENTRY* lpEntries;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">AFX_MSGMAP_ENTRY</span></span><br><span class="hljs-class">&#123;</span><br>    UINT nMessage;<br>    UINT nCode;<br>    UINT nID;<br>    UINT nLastID;<br>    UINT_PTR nSig;<br>    AFX_PMSG pfn;<br>&#125;;<br></code></pre></div></td></tr></table></figure><p>其中<code>nid</code>就是控件的<code>id</code>，<code>pfn</code>代表着处理函数，当此控件被调用时，就会调用此函数。</p><h2 id="实际寻找"><a href="#实际寻找" class="headerlink" title="实际寻找"></a>实际寻找</h2><p>这里就直接拿腾讯的2016游戏安全竞赛题目来做示例了。</p><p>首先用<code>Resource Hacker</code>打开文件，此工具可以帮助我们找到控件的<code>ID</code>。我们现在想找的是名为<code>注册</code>的按钮，看到此控件的<code>ID</code>为<code>1003</code></p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/1.png"></p><p>然后使用IDA进行查找</p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/2.png"></p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/4.png"></p><p>找到rdata的数据，可以看到如下的结构</p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/3.png"></p><p>可以手动修改结构，看到此时已经修改好了结构，其中<code>sub_401E60</code>，就是我们想要找的当按下注册按钮时的事件处理函数。</p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/5.png"></p><p><img src="/2022/01/21/MFC%E9%80%86%E5%90%91-%E6%9F%A5%E6%89%BE%E6%8E%A7%E4%BB%B6%E4%BA%8B%E4%BB%B6/6.png"></p><p>接下来就可以开始进行分析了。</p><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.jianshu.com/p/6e75c5d58230">https://www.jianshu.com/p/6e75c5d58230</a></p><p><a href="https://www.cnblogs.com/h2zZhou/p/10593168.html">https://www.cnblogs.com/h2zZhou/p/10593168.html</a></p><p><a href="https://blog.csdn.net/SilverMagic/article/details/40623299">https://blog.csdn.net/SilverMagic/article/details/40623299</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近想做一下腾讯的2016游戏安全竞赛的题目，然后第一题的是一个MFC程序，很久没有调试过MFC程序了，然后来记录一下MFC逆向中如何查找到</summary>
+      
+    
+    
+    
+    <category term="逆向工程" scheme="https://b1ackie.cn/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+    
+    <category term="逆向工程" scheme="https://b1ackie.cn/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+    <category term="MFC" scheme="https://b1ackie.cn/tags/MFC/"/>
+    
+  </entry>
   
   <entry>
     <title>恶意代码分析实战-实验16</title>
@@ -520,34 +546,6 @@
     <category term="虚拟机检测" scheme="https://b1ackie.cn/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/"/>
     
     <category term="编程" scheme="https://b1ackie.cn/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>恶意代码分析实战-实验12</title>
-    <link href="https://b1ackie.cn/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/"/>
-    <id>https://b1ackie.cn/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/</id>
-    <published>2021-09-23T06:12:55.000Z</published>
-    <updated>2021-09-24T09:16:58.245Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Lab-12-1"><a href="#Lab-12-1" class="headerlink" title="Lab 12-1"></a>Lab 12-1</h2><h3 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h3><p>打开程序后，每隔一段时间都会弹出一个窗口</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-1.png"></p><p>使用火绒剑监控行为，发现其有注入的行为。可以看到注入的进程是Explorer.exe</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-2.png"></p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-3.png"></p><p>可以看出来它获取了explorer的PID然后进行了DLL注入，注入的DLL为Lab12-01.dll。它获得进程PID的方式是通过EnumProcesses、EnumProcessModules、GetModuleBaseNameA这三个函数实现的。首先通过EnumProcesses获得所有进程的PID，然后打开每个进程，再通过EnumProcessModules、GetModuleBaseNameA获取进程名字，再和explorer.exe进行比较判断。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-4.png"></p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-5.png"></p><p>现在来分析一下注入的DLL文件，DLLMAIN中创建了一个新的线程。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-6.png"></p><p>新的线程，会拼接一个字符串，也就是前面弹出窗口的标题的次数，会无限制的增长，那么创建的这个新线程应该就是弹窗函数了，进去看果然如此，最后调用sleep函数。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-7.png"></p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/1-8.png"></p><h3 id="1-在你运行恶意代码可执行文件时，会发生什么？"><a href="#1-在你运行恶意代码可执行文件时，会发生什么？" class="headerlink" title="1.在你运行恶意代码可执行文件时，会发生什么？"></a>1.在你运行恶意代码可执行文件时，会发生什么？</h3><p>会将Lab12-01.dll注入到explorer.exe中，然后每隔一分钟弹出一个窗口。</p><h3 id="2-哪个进程会被注入"><a href="#2-哪个进程会被注入" class="headerlink" title="2.哪个进程会被注入"></a>2.哪个进程会被注入</h3><p>explorer.exe</p><h3 id="3-你如何能够让恶意代码停止弹出窗口"><a href="#3-你如何能够让恶意代码停止弹出窗口" class="headerlink" title="3.你如何能够让恶意代码停止弹出窗口"></a>3.你如何能够让恶意代码停止弹出窗口</h3><p>重新启动explorer.exe</p><h3 id="4-这个恶意代码样本是如何工作的？"><a href="#4-这个恶意代码样本是如何工作的？" class="headerlink" title="4.这个恶意代码样本是如何工作的？"></a>4.这个恶意代码样本是如何工作的？</h3><p>它会进行远程线程注入将Lab12-01.dll注入到explorer.exe中，然后每分钟都会弹出一个窗口。</p><h2 id="Lab-12-2"><a href="#Lab-12-2" class="headerlink" title="Lab 12-2"></a>Lab 12-2</h2><h3 id="详细分析-1"><a href="#详细分析-1" class="headerlink" title="详细分析"></a>详细分析</h3><p>看到Main函数流程较短</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-1.png"></p><p>首先获得了svchost.exe的路径</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-2.png"></p><p>然后是从资源节读取了数据，然后有判断，如果开头不是MZ的话，会调用<code>401000</code>函数。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-3.png"></p><p>进入查看，可以看到是一个异或解密，那么这个资源节中的数据是异或0x41进行加密。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-4.png"></p><p>之后就是一个傀儡进程的创建，将shellcode注入到svchost.exe中</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-5.png"></p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-6.png"></p><p>把shellcodedump出来分析一下，发现是一个键盘记录的程序</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-7.png"></p><p>查看挂钩函数fn</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-8.png"></p><p>记录键盘输入内容</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/2-9.png"></p><h3 id="1-这个程序的目的是什么？"><a href="#1-这个程序的目的是什么？" class="headerlink" title="1.这个程序的目的是什么？"></a>1.这个程序的目的是什么？</h3><p>注入shellcode到svchost.exe，实现键盘钩子</p><h3 id="2-启动器恶意代码是如何隐蔽执行的？"><a href="#2-启动器恶意代码是如何隐蔽执行的？" class="headerlink" title="2.启动器恶意代码是如何隐蔽执行的？"></a>2.启动器恶意代码是如何隐蔽执行的？</h3><p>将shellcode注入到svchost.exe，实现了一个傀儡进程。</p><h3 id="3-恶意代码的负载存储在哪里？"><a href="#3-恶意代码的负载存储在哪里？" class="headerlink" title="3.恶意代码的负载存储在哪里？"></a>3.恶意代码的负载存储在哪里？</h3><p>存储在资源节之中</p><h3 id="4-恶意负载是如何被保护的？"><a href="#4-恶意负载是如何被保护的？" class="headerlink" title="4.恶意负载是如何被保护的？"></a>4.恶意负载是如何被保护的？</h3><p>与0x41异或加密了</p><h3 id="5-字符串列表是如何被保护的？"><a href="#5-字符串列表是如何被保护的？" class="headerlink" title="5.字符串列表是如何被保护的？"></a>5.字符串列表是如何被保护的？</h3><p>这个问题我没看懂，看了书上的答案，书上说是<code>401000</code>处函数，进行XOR编码。那个函数实际上就是解密shellcode的函数。所以它的意思应该是，shellcode中的字符串是如何被保护的。</p><h2 id="Lab-12-3"><a href="#Lab-12-3" class="headerlink" title="Lab 12-3"></a>Lab 12-3</h2><p>这就是Lab 12-2中的shellcode，刚才已经详细分析过了，就不再进行分析了。</p><h3 id="1-这个恶意负载的目的是什么？"><a href="#1-这个恶意负载的目的是什么？" class="headerlink" title="1.这个恶意负载的目的是什么？"></a>1.这个恶意负载的目的是什么？</h3><p>键盘记录</p><h3 id="2-恶意负载是如何注入自身的？"><a href="#2-恶意负载是如何注入自身的？" class="headerlink" title="2.恶意负载是如何注入自身的？"></a>2.恶意负载是如何注入自身的？</h3><p>这个我也没看懂，没明白什么叫注入自身，因为没看到注入行为，看了书上的答案，意思是</p><blockquote><p>挂钩注入，来偷取击键记录</p></blockquote><p>原来是这样，好吧…</p><h3 id="3-这个恶意程序还创建了哪些其他文件？"><a href="#3-这个恶意程序还创建了哪些其他文件？" class="headerlink" title="3.这个恶意程序还创建了哪些其他文件？"></a>3.这个恶意程序还创建了哪些其他文件？</h3><p>创建了practicalmalwareanalysis.log文件，来记录。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/3-1.png"></p><h2 id="Lab-12-4"><a href="#Lab-12-4" class="headerlink" title="Lab 12-4"></a>Lab 12-4</h2><h3 id="详细分析-2"><a href="#详细分析-2" class="headerlink" title="详细分析"></a>详细分析</h3><p>打开发现其前部分与Lab12-1是一致的，就不再进行分析饿了，只是在<code>401000</code>中是winlogon.exe，也就是前面这部分是获取winlogon.exe的PID</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-1.png"></p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-2.png"></p><p>现在来分析一下后面的部分</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-3.png"></p><p>首先是进行了提权，判断是否有SeDebugPrivilege权限，如果没有的话会进行提权。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-4.png"></p><p>然后会进行远程线程注入，注入函数是sfc_os.dll中的序号为2的函数，</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-5.png"></p><p>然后会移动文件</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-6.png"></p><p>最后是一个资源释放，释放到C:\Windows\system32\wupdmgr.exe，并且隐藏窗口启动它。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-7.png"></p><p>把资源节中的程序dump下来分析，首先看到启动了winup.exe也就是原始的wupdmgr.exe，然后会访问<a href="http://www.practicalmalwareanalysis.com/updater.exe">http://www.practicalmalwareanalysis.com/updater.exe</a> ，进行下载更新恶意代码。</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-8.png"></p><h3 id="1-位置0x401000的代码完成了什么功能"><a href="#1-位置0x401000的代码完成了什么功能" class="headerlink" title="1.位置0x401000的代码完成了什么功能"></a>1.位置0x401000的代码完成了什么功能</h3><p>判断当前进程的PID是否是winlogon.exe</p><p><img src="/2021/09/23/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C12/4-2.png"></p><h3 id="2-代码注入了哪些进程？"><a href="#2-代码注入了哪些进程？" class="headerlink" title="2.代码注入了哪些进程？"></a>2.代码注入了哪些进程？</h3><p>winlogon.exe</p><h3 id="3-使用LoadLibraryA装载了哪个DLL程序？"><a href="#3-使用LoadLibraryA装载了哪个DLL程序？" class="headerlink" title="3.使用LoadLibraryA装载了哪个DLL程序？"></a>3.使用LoadLibraryA装载了哪个DLL程序？</h3><p>sfc_os.dll</p><h3 id="4-传递给CreateRemoteThread调用的第四个参数是什么？"><a href="#4-传递给CreateRemoteThread调用的第四个参数是什么？" class="headerlink" title="4.传递给CreateRemoteThread调用的第四个参数是什么？"></a>4.传递给CreateRemoteThread调用的第四个参数是什么？</h3><p>sfc_os.dll中的序号为2的函数，是一个名为SfcTerminateWatcherThread的函数，用来关闭windows的文件保护。</p><h3 id="5-二进制主程序释放出了哪个恶意代码？"><a href="#5-二进制主程序释放出了哪个恶意代码？" class="headerlink" title="5.二进制主程序释放出了哪个恶意代码？"></a>5.二进制主程序释放出了哪个恶意代码？</h3><p>wupdmgr.exe，原始的wupdmgr.exe被放到了temp目录下，重命名为了winup.exe</p><h3 id="6-释放出恶意代码的目的是什么？"><a href="#6-释放出恶意代码的目的是什么？" class="headerlink" title="6.释放出恶意代码的目的是什么？"></a>6.释放出恶意代码的目的是什么？</h3><p>会从指定的域名中下载一些资源，来进行更新，而windows本身的wupdmgr.exe被转移到temp目录下，在持久化驻留的同时，也不影响原程序的运行。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;Lab-12-1&quot;&gt;&lt;a href=&quot;#Lab-12-1&quot; class=&quot;headerlink&quot; title=&quot;Lab 12-1&quot;&gt;&lt;/a&gt;Lab 12-1&lt;/h2&gt;&lt;h3 id=&quot;详细分析&quot;&gt;&lt;a href=&quot;#详细分析&quot; class=&quot;headerlink&quot; </summary>
-      
-    
-    
-    
-    <category term="恶意代码分析实战" scheme="https://b1ackie.cn/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/"/>
-    
-    
-    <category term="逆向工程" scheme="https://b1ackie.cn/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
-    
-    <category term="病毒分析" scheme="https://b1ackie.cn/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/"/>
-    
-    <category term="Lab" scheme="https://b1ackie.cn/tags/Lab/"/>
     
   </entry>
   
