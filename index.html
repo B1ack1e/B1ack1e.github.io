@@ -203,6 +203,75 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/02/16/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C17/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验17">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/02/16/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C17/" target="_self">
+          恶意代码分析实战-实验17
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/02/16/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C17/" target="_self">
+          
+          
+            
+          
+          Lab 17-1分析这个是实验七中的7-1，所以关于具体的功能就不再做分析了，只看一下关于虚拟机检测的部分。
+第一个是sidt指令，看到下面的jz跳转，会跳向退出的地方。
+
+第二个是str指令
+
+第三个是sub_401100函数中的sldt指令
+
+一个一个导出函数来分析下
+InstallRT问题1. 这个恶意代码使用了什么反虚拟机技术？使用了sidt、str和sldt指令。
+2. 如果你有一个商业
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-02-16 14:40" pubdate>
+              2022-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2022/02/11/%E5%90%BE%E7%88%B12022%E6%98%A5%E8%8A%82%E7%BA%A2%E5%8C%85%E9%A2%98%E7%9B%AE/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="吾爱2022春节红包题目">
         </a>
@@ -782,70 +851,6 @@ ROP代码
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/ROP/">ROP</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/11/15/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CPWN-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="攻防世界PWN-新手练习区">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/11/15/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CPWN-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
-          攻防世界PWN-新手练习区
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/11/15/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8CPWN-%E6%96%B0%E6%89%8B%E7%BB%83%E4%B9%A0%E5%8C%BA/" target="_self">
-          
-          
-            
-          
-          get_shell查看文件，看到是64位文件，通过checksec可以查看保护的机制。
-
-保护机制保护机制这稍微介绍下
-RELRO主要是用来保护重定位段对应数据区域，默认可写
-Partial RELRO表示got表不可写，got.plt可写
-Full RELRO表示got表，got.plt不可写
-Stack这主要是栈保护，canary意思是金丝雀，是栈保护，方式是在靠近栈底某个位置设置初值，防止栈
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-11-15 10:45" pubdate>
-              2021-11-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cwriteup/">攻防世界writeup</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/PWN/">PWN</a>
-            
-              <a href="/tags/CTF/">CTF</a>
             
           </div>
         

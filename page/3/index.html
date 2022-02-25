@@ -203,6 +203,72 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/10/08/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C13/" target="_self">
+          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="恶意代码分析实战-实验13">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/08/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C13/" target="_self">
+          恶意代码分析实战-实验13
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/10/08/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98-%E5%AE%9E%E9%AA%8C13/" target="_self">
+          
+          
+            
+          
+          Lab 13-1详细分析监控行为可以看到有大量的网络连接
+
+使用wireshark抓取数据包，可以看到如图的数据包内容。可以看到域名www.practicalmalwareanalysis.com还有get字段的内容V0lOLU5QTFE0SE9T。
+
+使用IDA查看程序，可以看到有两个自定义的函数sub_401300，sub_4011C9。
+
+来分析一下401300，可以看到从资源节中释放出来一
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-08 15:15" pubdate>
+              2021-10-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98/">恶意代码分析实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+            
+              <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
+            
+              <a href="/tags/Lab/">Lab</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/09/28/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A3%80%E6%B5%8B/" target="_self">
           <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="虚拟机检测">
         </a>
@@ -769,68 +835,6 @@ IDA查看，可以看到很明显的从资源节中释放文件
               <a href="/tags/%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/">病毒分析</a>
             
               <a href="/tags/shellcode/">shellcode</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/08/30/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%BF%9C%E7%A8%8BCMD/" target="_self">
-          <img src="/img/%E9%BB%98%E8%AE%A4.jpg" srcset="/img/loading.gif" lazyload alt="功能技术远程CMD">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/30/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%BF%9C%E7%A8%8BCMD/" target="_self">
-          功能技术远程CMD
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/30/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%BF%9C%E7%A8%8BCMD/" target="_self">
-          
-          
-            
-          
-          远程CMDCMD，提示进行命令输入的一种工作提示符，在windows系统下，相当于在windows窗口使用的DOS系统，简单来讲，CMD就是通过命令行实现键鼠的操作。
-现在介绍的远程CMD是指病毒木马获取控制端发送过来的CMD命令，执行后将结果回传给控制端。
-有许多的API都可以实现CMD命令，比如WinExec,CreateProcess但是这些函数不能获取执行后的操作结果。所以实现远程CMD的
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-30 15:26" pubdate>
-              2021-08-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">恶意代码</a>
-            
-              <a href="/tags/%E9%BB%91%E5%AE%A2%E7%BC%96%E7%A8%8B/">黑客编程</a>
-            
-              <a href="/tags/%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF/">功能技术</a>
             
           </div>
         
